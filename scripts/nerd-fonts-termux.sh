@@ -11,12 +11,12 @@ _require jq curl fzf
 # Check connection to your own repository
 status_code=$(curl -s -o /dev/null -I -w "%{http_code}" "https://github.com/LbsLightX/1llicit")
 if [ "$status_code" -eq "200" ]; then
-    echo "Fetching fonts list from repository, please wait."
+    echo "Fetching fonts list from repository (Stable v3.4.0), please wait."
     declare -A fonts
     while IFS= read -r entry
     do
         fonts+=(["$(basename "$entry")"]="$entry")
-    done < <(curl -fSsL https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/master?recursive=1 | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf)$","i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/" + .path | .url')
+    done < <(curl -fSsL https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1 | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf)$", "i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .url')
     choice=$(printf "%s\n" "${!fonts[@]}" | sort | fzf)
     if [ $? -eq 0 ]; then
         echo "Applying font: $choice"
