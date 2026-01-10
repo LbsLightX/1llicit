@@ -22,3 +22,8 @@ lit-colors
 ```bash
 lit-fonts
 ```
+
+- Update 1llicit
+```bash
+lit-update
+```
