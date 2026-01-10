@@ -38,7 +38,7 @@ sleep 2
 # Updating package repositories and installing packages.
 echo -n -e "Installing required packages. \033[0K\r"
 shutt apt update 2>/dev/null
-shutt apt install -y curl git zsh man jq perl fzf 2>/dev/null
+shutt apt install -y curl git zsh man jq perl fzf termux-api 2>/dev/null
 sleep 2
 
 # Installing BetterSUDO.
@@ -57,12 +57,12 @@ if [ ! -d ~/storage ]; then
 fi
 
 # Backing up some Termux/Shell stuff.
-mkdir -p ~/storage/shared/LITMux/backup
+mkdir -p ~/storage/shared/1llicit/backup
 for i in "~/.zshrc" "~/.termux/font.ttf" "~/.termux/colors.properties" "~/.termux/termux.properties"
 do
     if [ -f $i ]; then
         echo -n -e "Backing up current $i file. \033[0K\r"
-        mv -f $i ~/storage/shared/LITMux/backup/$(date +%Y_%m_%d_%H_%M)/$(basename $i)
+        mv -f $i ~/storage/shared/1llicit/backup/$(date +%Y_%m_%d_%H_%M)/$(basename $i)
         sleep 1
     fi
 done
@@ -78,10 +78,15 @@ echo -n -e "Installing Fastfetch. \033[0K\r"
 pkg install -y fastfetch > /dev/null 2>&1
 sleep 2
 
-# Changing default shell to ZSH.
-echo -n -e "Changing default shell to ZSH. \033[0K\r"
-chsh -s zsh
-sleep 2
+# Changing default shell to ZSH (if needed).
+if [[ "$SHELL" != *"zsh"* ]]; then
+   echo -n -e "Changing default shell to ZSH. \033[0K\r"
+   chsh -s zsh
+else
+   echo -n -e "Default shell is already ZSH. Skipping. \033[0K\r"
+fi
+sleep 1
+
 
 # Importing some libs from Oh-My-ZSH
 echo -n -e "Importing some libs from Oh-My-ZSH. \033[0K\r"
@@ -164,7 +169,7 @@ function lit-fonts() {
 
 function lit-update() {
     echo "Updating system packages."
-    pkg upgrade -y
+    pkg update && pkg upgrade -y
     clear
     
     echo "Updating ZSH/Zinit stuff.."
@@ -172,7 +177,7 @@ function lit-update() {
     clear
     
     echo "Updating bSUDO..."
-    curl -L 'https://github.com/agnostic-apollo/sudo/releases/latest/download/sudo' -o $PREFIX/bin/bsudo
+    curl -fsSL 'https://github.com/agnostic-apollo/sudo/releases/latest/download/sudo' -o $PREFIX/bin/bsudo
     owner="$(stat -c "%u" "$PREFIX/bin")"
     chown "$owner:$owner" "$PREFIX/bin/bsudo"
     chmod 700 "$PREFIX/bin/bsudo"
@@ -203,7 +208,7 @@ fi
 # Set a default color scheme.
 if [ ! -f ~/.termux/colors.properties ]; then
     echo -n -e "Setting up a new color scheme. \033[0K\r"
-    curl -fsSL -o ~/.termux/colors.properties 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/monokai-pro.properties'
+    curl -fsSL -o ~/.termux/colors.properties 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/monokai-pro.properties'
     sleep 2
 fi
 
@@ -215,6 +220,7 @@ if [ ! -f ~/.termux/termux.properties ]; then
 fi
 
 # Reload Termux settings.
+sleep 1
 termux-reload-settings
 
 # Run a ZSH shell, opens the p10k config wizard.
@@ -225,8 +231,10 @@ sleep 3
 # Restore cursor.
 setterm -cursor on
 
-if ! grep -lq "zsh" "$SHELL"; then
-    clear
-    exec zsh -l
-fi
+# Enable the fetch alias immediately for this session
+alias fetch='fastfetch'
+
+# Unconditional reload
+clear
+exec zsh -l
 exit
