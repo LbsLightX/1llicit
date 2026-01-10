@@ -58,7 +58,7 @@ fi
 
 # Backing up some Termux/Shell stuff.
 mkdir -p ~/storage/shared/1llicit/backup
-for i in "~/.zshrc" "~/.termux/font.ttf" "~/.termux/colors.properties" "~/.termux/termux.properties"
+for i in "$HOME/.zshrc" "$HOME/.termux/font.ttf" "$HOME/.termux/colors.properties" "$HOME/.termux/termux.properties"
 do
     if [ -f $i ]; then
         echo -n -e "Backing up current $i file. \033[0K\r"
@@ -90,7 +90,7 @@ sleep 1
 
 # Importing some libs from Oh-My-ZSH
 echo -n -e "Importing some libs from Oh-My-ZSH. \033[0K\r"
-cat <<'EOF' >> ~/.zshrc
+cat <<'EOF' >> $HOME/.zshrc
 
 # Loading some(?) Oh-My-ZSH libs with ZInit Turbo!
 zinit lucid light-mode for \
@@ -102,7 +102,7 @@ sleep 2
 
 # Addons for ZInit.
 echo -n -e "Setting up ZInit addons. \033[0K\r"
-cat <<'EOF' >> ~/.zshrc
+cat <<'EOF' >> $HOME/.zshrc
 
 # Syntax highlighting, completions, auto-suggestions and some other plugins.
 zinit wait lucid light-mode for \
@@ -119,7 +119,7 @@ sleep 2
 
 # Installing powerlevel10k theme for ZSH.
 echo -n -e "Setting up powerlevel10k theme. \033[0K\r"
-cat <<'EOF' >> ~/.zshrc
+cat <<'EOF' >> $HOME/.zshrc
 
 # Powerlevel10k Theme.
 zinit ice depth=1; zinit light romkatv/powerlevel10k
@@ -128,7 +128,7 @@ sleep 2
 
 # Setting up FZF (keybinds and completion).
 echo -n -e "Setting up FZF keybinds and completion. \033[0K\r"
-cat <<'EOF' >> ~/.zshrc
+cat <<'EOF' >> $HOME/.zshrc
 
 # FZF (keybinds and completion).
 zinit wait lucid is-snippet for \
@@ -142,7 +142,7 @@ sleep 2
 
 # Shell aliases/functions.
 echo -n -e "Adding some shell aliases/functions to make life easier. \033[0K\r"
-cat <<'EOF' >> ~/.zshrc
+cat <<'EOF' >> $HOME/.zshrc
 
 # Add your aliases/functions here!
 
