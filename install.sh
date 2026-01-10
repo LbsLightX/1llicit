@@ -231,7 +231,7 @@ fi
 # Set a default color scheme.
 if [ ! -f ~/.termux/colors.properties ]; then
     echo -n -e "Setting up a new color scheme. \033[0K\r"
-    curl -fsSL -o ~/.termux/colors.properties 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/monokai-pro.properties'
+    curl -fsSL -o ~/.termux/colors.properties 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/3024-night.properties'
     sleep 2
 fi
 
