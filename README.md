@@ -1,4 +1,4 @@
-.
+# ! 1llicit ! 1llicit ! 1llicit ! 
 
 ## One-Line Installer
 
@@ -26,4 +26,11 @@ lit-fonts
 - Update 1llicit
 ```bash
 lit-update
+```
+
+## One-Line Uninstaller
+
+To uninstall and restore your backup:
+```bash
+bash -c "$(curl -fsSL https://LbsLightX.github.io/1llicit/uninstall.sh)"
 ```
