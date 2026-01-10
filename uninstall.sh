@@ -15,10 +15,10 @@ if [ -d "$BACKUP_DIR" ]; then
     # Find the newest directory inside backup (the one most recently created)
     LATEST_BACKUP=$(ls -td "$BACKUP_DIR"/*/ 2>/dev/null | head -1)
     
-    if [ -n "$LATEST_BACKUP" ] && [ -f "${LATEST_BACKUP}zshrc" ]; then
+    if [ -n "$LATEST_BACKUP" ] && [ -f "${LATEST_BACKUP}.zshrc" ]; then
         echo "Found backup at: $LATEST_BACKUP"
         echo "Restoring .zshrc..."
-        cp -f "${LATEST_BACKUP}zshrc" "$HOME/.zshrc"
+        cp -f "${LATEST_BACKUP}.zshrc" "$HOME/.zshrc"
         echo "✅ Original configuration restored."
     else
         echo "❌ No .zshrc backup found in $LATEST_BACKUP"

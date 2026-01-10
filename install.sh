@@ -32,13 +32,12 @@ sleep 2
 
 # Upgrade packages.
 echo -n -e "Upgrading packages. \033[0K\r"
-shutt apt-get upgrade -o Dpkg::Options::='--force-confnew' -y 2>/dev/null
+shutt pkg upgrade -y -o Dpkg::Options::='--force-confnew' 2>/dev/null
 sleep 2
 
 # Updating package repositories and installing packages.
 echo -n -e "Installing required packages. \033[0K\r"
-shutt apt update 2>/dev/null
-shutt apt install -y curl git zsh man jq perl fzf termux-api 2>/dev/null
+shutt pkg install -y curl git zsh man jq perl fzf termux-api 2>/dev/null
 sleep 2
 
 # Installing BetterSUDO.
@@ -56,16 +55,28 @@ if [ ! -d ~/storage ]; then
     sleep 2
 fi
 
-# Backing up some Termux/Shell stuff.
-mkdir -p ~/storage/shared/1llicit/backup
+
+# 1. Define the specific backup folder with the current date/time
+BACKUP_PATH="$HOME/storage/shared/1llicit/backup/$(date +%Y_%m_%d_%H_%M)"
+
+# 2. Create that specific folder (the -p ensures it creates parents too)
+mkdir -p "$BACKUP_PATH"
+
+# 3. Run the loop
 for i in "$HOME/.zshrc" "$HOME/.termux/font.ttf" "$HOME/.termux/colors.properties" "$HOME/.termux/termux.properties"
 do
     if [ -f $i ]; then
         echo -n -e "Backing up current $i file. \033[0K\r"
-        mv -f $i ~/storage/shared/1llicit/backup/$(date +%Y_%m_%d_%H_%M)/$(basename $i)
+        mv -f "$i" "$BACKUP_PATH/$(basename $i)"
         sleep 1
     fi
 done
+
+# --- THIS IS THE FIX ---
+# Delete the old file so we don't append to it twice!
+rm -f "$HOME/.zshrc"
+# -----------------------
+
 sleep 2
 
 # Installing ZInit.
@@ -90,7 +101,7 @@ sleep 1
 
 # Importing some libs from Oh-My-ZSH
 echo -n -e "Importing some libs from Oh-My-ZSH. \033[0K\r"
-cat <<'EOF' >> $HOME/.zshrc
+cat <<'EOF' > $HOME/.zshrc
 
 # Loading some(?) Oh-My-ZSH libs with ZInit Turbo!
 zinit lucid light-mode for \
