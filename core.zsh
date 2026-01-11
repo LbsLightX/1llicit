@@ -53,7 +53,7 @@ function lit-colors() {
 }
 
 function lit-fonts() {
-    # 1. Dependency Check
+    # Ensure dependencies
     for pkg in jq curl fzf; do
         if ! command -v $pkg >/dev/null 2>&1; then
             echo "Installing missing dependency: $pkg"
@@ -61,54 +61,42 @@ function lit-fonts() {
         fi
     done
 
-    CACHE_FILE="$HOME/.1llicit/fonts.cache"
+    # Check connection (Using 1llicit main repo as ping target)
+    status_code=$(curl -s -o /dev/null -I -w "%{http_code}" "https://github.com/LbsLightX/1llicit")
     
-    # 2. Update Cache Logic (Force update if argument --update is passed)
-    if [[ ! -f "$CACHE_FILE" ]] || [[ "$1" == "--update" ]]; then
+    if [ "$status_code" -eq "200" ]; then
         echo "Fetching fonts list from repository (Stable v3.4.0)... please wait, this may take 1-2 minutes."
         
-        # Check connection before trying to download
-        status_code=$(curl -s -o /dev/null -I -w "%{http_code}" "https://github.com/LbsLightX/1llicit")
-        if [ "$status_code" -ne "200" ]; then
-             echo " 🌐 Please check your internet/ dns and try again."
-             return 1
-        fi
-
-        # Download and Parse to Cache File
-        # Format: "Filename|URL" (We use | as delimiter)
-        curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | \
-        jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf|otf)$","i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .path + "|" + .url' \
-        > "$CACHE_FILE"
+        # Zsh Associative Array Declaration
+        typeset -A fonts
         
-        echo "✅ Cache updated."
-    fi
-
-    # 3. Read from Cache
-    typeset -A fonts
-    # CRITICAL FIX: Renamed 'path' variable to 'fpath' to avoid breaking Zsh $PATH
-    while IFS="|" read -r fpath url
-    do
-        name=$(basename "$fpath")
-        fonts[$name]="$url"
-    done < "$CACHE_FILE"
-
-    # 4. Display Menu
-    choice=$(printf "%s\n" "${(@k)fonts}" | sort | fzf)
-    
-    if [ $? -eq 0 ]; then
-        echo "✨ Applying font: $choice"
-        mkdir -p ~/.termux
-        # Retrieve URL from array
-        if curl -fsSL "$( echo "${fonts[$choice]}" | sed 's/ /%20/g' )" -o ~/.termux/font.ttf; then
-            termux-reload-settings
-            if [ $? -ne 0 ]; then
-                echo "❌ Failed to apply font."
+        # Fetch and Parse (Using quoted URL)
+        while IFS= read -r entry
+        do
+            # Store in array: Key=Filename, Value=URL
+            fonts[$(basename "$entry")]="$entry"
+        done < <(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf|otf)$","i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .url')
+        
+        # Display menu using Zsh key expansion ${(@k)fonts}
+        choice=$(printf "%s\n" "${(@k)fonts}" | sort | fzf)
+        
+        if [ $? -eq 0 ]; then
+            echo "✨ Applying font: $choice"
+            mkdir -p ~/.termux
+            # Retrieve URL using the key
+            if curl -fsSL "$( echo "${fonts[$choice]}" | sed 's/ /%20/g' )" -o ~/.termux/font.ttf; then
+                termux-reload-settings
+                if [ $? -ne 0 ]; then
+                    echo "❌ Failed to apply font."
+                fi
+            else
+                echo " 🚫 Failed to download font."
             fi
         else
-            echo " 🚫 Failed to download font."
+            echo "⚠️ Cancelled fonts selection."
         fi
     else
-        echo "⚠️ Cancelled fonts selection."
+        echo " 🌐 Please check your internet/ dns and try again."
     fi
 }
 
