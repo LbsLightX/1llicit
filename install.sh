@@ -43,7 +43,6 @@ sleep 2
 # Installing BetterSUDO.
 echo -n -e "Installing agnostic-apollo's SUDO wrapper (as bsudo). \033[0K\r"
 curl -fsSL 'https://github.com/agnostic-apollo/sudo/releases/latest/download/sudo' -o $PREFIX/bin/bsudo
-owner="$(stat -c \"%u\" \"$PREFIX/bin\")"
 chmod 700 "$PREFIX/bin/bsudo"
 sleep 2
 
@@ -71,9 +70,13 @@ do
     fi
 done
 
-# Clean slate
+# --- CLEAN SLATE ---
+# Delete the old file so we don't append to it twice!
 rm -f "$HOME/.zshrc"
+# -------------------
+
 sleep 2
+
 
 # Changing default shell to ZSH (if needed).
 if [[ "$SHELL" != *"zsh"* ]]; then
@@ -114,7 +117,7 @@ fi
 
 source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
+(( ${_comps} )) && _comps[zinit]=_zinit
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -158,6 +161,9 @@ sleep 3
 
 # Restore cursor.
 setterm -cursor on
+
+# Enable the fetch alias immediately for this session
+alias fetch='fastfetch'
 
 # Unconditional reload
 clear
