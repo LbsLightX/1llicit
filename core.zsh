@@ -61,26 +61,29 @@ function lit-fonts() {
         fi
     done
 
-    # Check connection (Using 1llicit main repo as ping target)
+    # Check connection
     status_code=$(curl -s -o /dev/null -I -w "%{http_code}" "https://github.com/LbsLightX/1llicit")
     
     if [ "$status_code" -eq "200" ]; then
         echo "Fetching fonts list from repository (Stable v3.4.0), please wait."
-        declare -A fonts
         
-        # Fetch font list from Nerd Fonts repo
-        # CRITICAL FIX: Quoted URL to prevent Zsh 'no matches found' error
+        # Zsh Associative Array Declaration
+        typeset -A fonts
+        
+        # Fetch and Parse (Using quoted URL)
         while IFS= read -r entry
         do
-            fonts+=(["$(basename "$entry")"]="$entry")
+            # Store in array: Key=Filename, Value=URL
+            fonts[$(basename "$entry")]="$entry"
         done < <(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf)$","i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .url')
         
-        # Display menu
-        choice=$(printf "%s\n" "${!fonts[@]}" | sort | fzf)
+        # Display menu using Zsh key expansion ${(@k)fonts}
+        choice=$(printf "%s\n" "${(@k)fonts}" | sort | fzf)
         
         if [ $? -eq 0 ]; then
             echo "Applying font: $choice"
             mkdir -p ~/.termux
+            # Retrieve URL using the key
             if curl -fsSL "$( echo "${fonts[$choice]}" | sed 's/ /%20/g' )" -o ~/.termux/font.ttf; then
                 termux-reload-settings
                 if [ $? -ne 0 ]; then
