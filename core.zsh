@@ -65,7 +65,7 @@ function lit-fonts() {
     status_code=$(curl -s -o /dev/null -I -w "%{http_code}" "https://github.com/LbsLightX/1llicit")
     
     if [ "$status_code" -eq "200" ]; then
-        echo "Fetching fonts list from repository (Stable v3.4.0)... please wait, this may take 1-2 minutes."
+        echo "⏳ Fetching fonts list from repository (Stable v3.4.0). Please wait, this may take 2-3 minutes."
         
         # Zsh Associative Array Declaration
         typeset -A fonts
@@ -122,7 +122,7 @@ function lit-update() {
     echo "Updating 1llicit Core..."
     curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > $HOME/.1llicit/core.zsh
     
-    echo "Updated successfully, enjoy!"
+    echo "✨ Updated successfully, enjoy! 👯"
     sleep 2
     clear
     exec zsh
