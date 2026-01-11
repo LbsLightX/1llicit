@@ -132,3 +132,5 @@ function lit-update() {
 # 6. Aliases
 # -----------------------------------------------------------------------------
 alias fetch='fastfetch'
+
+alias 1llicit='cd "/storage/emulated/0/Download/Termux-Directory/Web-Server/1llicit-Termux"'
