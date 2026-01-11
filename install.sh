@@ -9,7 +9,7 @@ echo "                                      ";
 echo "  _     ___  _____  __  __            ";
 echo " | |   |_ _||_   _||  \/  | _  _ __ __";
 echo " | |__  | |   | |  | |\/| || || |\ \ /";
-echo " |____||___|  |_|  |_|  |_| \_,_|/_\_\\";
+echo " |____||___|  |_|  |_|  |_| \_,_|/_";
 echo "                                      ";
 echo "      Fast, beautiful, LIT AF!        ";
 echo "                                      ";
@@ -32,18 +32,18 @@ sleep 2
 
 # Upgrade packages.
 echo -n -e "Upgrading packages. \033[0K\r"
-shutt pkg upgrade -y -o Dpkg::Options::='--force-confnew' 2>/dev/null
+shutt pkg upgrade -y -o Dpkg::Options::'--force-confnew' 2>/dev/null
 sleep 2
 
 # Updating package repositories and installing packages.
 echo -n -e "Installing required packages. \033[0K\r"
-shutt pkg install -y curl git zsh man jq perl fzf termux-api 2>/dev/null
+shutt pkg install -y curl git zsh man jq perl fzf fastfetch termux-api 2>/dev/null
 sleep 2
 
 # Installing BetterSUDO.
 echo -n -e "Installing agnostic-apollo's SUDO wrapper (as bsudo). \033[0K\r"
 curl -fsSL 'https://github.com/agnostic-apollo/sudo/releases/latest/download/sudo' -o $PREFIX/bin/bsudo
-owner="$(stat -c "%u" "$PREFIX/bin")"
+owner="$(stat -c \"%u\" \"$PREFIX/bin\")"
 chown "$owner:$owner" "$PREFIX/bin/bsudo"
 chmod 700 "$PREFIX/bin/bsudo"
 sleep 2
@@ -72,21 +72,8 @@ do
     fi
 done
 
-# --- THIS IS THE FIX ---
-# Delete the old file so we don't append to it twice!
+# Clean slate
 rm -f "$HOME/.zshrc"
-# -----------------------
-
-sleep 2
-
-# Installing ZInit.
-echo -n -e "Installing ZInit framework for ZSH. \033[0K\r"
-(echo 'Y' | bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/refs/heads/main/scripts/install.sh)") &> /dev/null
-sleep 2
-
-# Installing Fastfetch (cool AF 'neofetch & androfetch' replacement)
-echo -n -e "Installing Fastfetch. \033[0K\r"
-pkg install -y fastfetch > /dev/null 2>&1
 sleep 2
 
 # Changing default shell to ZSH (if needed).
@@ -98,10 +85,25 @@ else
 fi
 sleep 1
 
+# -----------------------------------------------------------------------------
+# CORE INSTALLATION
+# -----------------------------------------------------------------------------
 
-# Importing some libs from Oh-My-ZSH
-echo -n -e "Importing some libs from Oh-My-ZSH. \033[0K\r"
+# Create hidden directory for 1llicit core
+mkdir -p "$HOME/.1llicit"
+
+# Download the Core Logic
+echo -n -e "Downloading 1llicit Core... \033[0K\r"
+curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > "$HOME/.1llicit/core.zsh"
+
+# Generate the minimal .zshrc
+echo -n -e "Generating .zshrc configuration... \033[0K\r"
 cat <<'EOF' > $HOME/.zshrc
+# Enable Powerlevel10k instant prompt.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
     print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
@@ -115,109 +117,13 @@ source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
-# Loading some(?) Oh-My-ZSH libs with ZInit Turbo!
-zinit lucid light-mode for \
-    OMZL::history.zsh \
-    OMZL::completion.zsh \
-    OMZL::key-bindings.zsh
-EOF
-sleep 2
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Addons for ZInit.
-echo -n -e "Setting up ZInit addons. \033[0K\r"
-cat <<'EOF' >> $HOME/.zshrc
-
-# Syntax highlighting, completions, auto-suggestions and some other plugins.
-zinit wait lucid light-mode for \
-  atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay" \
-      zdharma-continuum/fast-syntax-highlighting \
-      OMZP::colored-man-pages \
-      OMZP::git \
-  atload"!_zsh_autosuggest_start" \
-      zsh-users/zsh-autosuggestions \
-  blockf atpull'zinit creinstall -q .' \
-      zsh-users/zsh-completions
-EOF
-sleep 2
-
-# Installing powerlevel10k theme for ZSH.
-echo -n -e "Setting up powerlevel10k theme. \033[0K\r"
-cat <<'EOF' >> $HOME/.zshrc
-
-# Powerlevel10k Theme.
-zinit ice depth=1; zinit light romkatv/powerlevel10k
-EOF
-sleep 2
-
-# Setting up FZF (keybinds and completion).
-echo -n -e "Setting up FZF keybinds and completion. \033[0K\r"
-cat <<'EOF' >> $HOME/.zshrc
-
-# FZF (keybinds and completion).
-zinit wait lucid is-snippet for \
-    $PREFIX/share/fzf/key-bindings.zsh \
-    $PREFIX/share/fzf/completion.zsh
-
-# Use 16 colors
-export FZF_DEFAULT_OPTS='--color 16'
-EOF
-sleep 2
-
-# Shell aliases/functions.
-echo -n -e "Adding some shell aliases/functions to make life easier. \033[0K\r"
-cat <<'EOF' >> $HOME/.zshrc
-
-# Add your aliases/functions here!
-
-#### FUNCTIONS #####
-function lit-colors() {
-    if [ $(curl -s -o /dev/null -I -w "%{http_code}" https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh) -eq 200 ]; then
-    echo "Loading color scheme menu, please wait."
-    bash -c "$(curl -fsSL 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh')"
-    clear
-  else
-    echo "Can't connect to color schemes repository."
-  fi
-}
-
-function lit-fonts() {
-  if [ $(curl -s -o /dev/null -I -w "%{http_code}" https://raw.githubusercontent.com/LbsLightX/1llicit/main/scripts/nerd-fonts-termux.sh) -eq 200 ]; then
-    echo "Loading font style menu, please wait."
-    bash -c "$(curl -fsSL 'https://raw.githubusercontent.com/LbsLightX/1llicit/main/scripts/nerd-fonts-termux.sh')"
-    clear
-  else
-    echo "Can't connect to font styles repository."
-  fi
-}
-
-function lit-update() {
-    echo "Updating system packages."
-    pkg update && pkg upgrade -y
-    clear
-    
-    echo "Updating ZSH/Zinit stuff.."
-    zi update --all
-    clear
-    
-    echo "Updating bSUDO..."
-    curl -fsSL 'https://github.com/agnostic-apollo/sudo/releases/latest/download/sudo' -o $PREFIX/bin/bsudo
-    owner="$(stat -c "%u" "$PREFIX/bin")"
-    chown "$owner:$owner" "$PREFIX/bin/bsudo"
-    chmod 700 "$PREFIX/bin/bsudo"
-    clear
-    
-    echo "Updating Fastfetch...."
-    pkg install --only-upgrade fastfetch -y > /dev/null 2>&1
-    clear
-    
-    echo "Updated successfully, enjoy!"
-    sleep 2
-    clear
-}
-
-#### ALIASES #####
-alias fetch='fastfetch'
-
+# --- LOAD 1LLICIT CORE ---
+if [[ -f "$HOME/.1llicit/core.zsh" ]]; then
+    source "$HOME/.1llicit/core.zsh"
+fi
 EOF
 sleep 2
 
@@ -253,9 +159,6 @@ sleep 3
 
 # Restore cursor.
 setterm -cursor on
-
-# Enable the fetch alias immediately for this session
-alias fetch='fastfetch'
 
 # Unconditional reload
 clear

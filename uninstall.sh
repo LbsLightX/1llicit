@@ -29,7 +29,13 @@ else
     echo "Skipping restore."
 fi
 
-# 3. Optional Cleanup
+# 3. Cleanup 1llicit Core files
+if [ -d "$HOME/.1llicit" ]; then
+    echo "Removing 1llicit core files..."
+    rm -rf "$HOME/.1llicit"
+fi
+
+# 4. Optional Cleanup (Storage)
 read -p "Do you want to remove the 1llicit backup folder? (y/N) " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -37,7 +43,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Backups removed."
 fi
 
-# 4. Shell Reset
+# 5. Shell Reset
 read -p "Do you want to switch default shell back to Bash? (y/N) " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
