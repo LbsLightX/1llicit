@@ -85,9 +85,10 @@ function lit-fonts() {
 
     # 3. Read from Cache
     typeset -A fonts
-    while IFS="|" read -r path url
+    # CRITICAL FIX: Renamed 'path' variable to 'fpath' to avoid breaking Zsh $PATH
+    while IFS="|" read -r fpath url
     do
-        name=$(basename "$path")
+        name=$(basename "$fpath")
         fonts[$name]="$url"
     done < "$CACHE_FILE"
 
