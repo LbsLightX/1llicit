@@ -1,5 +1,6 @@
 # ! 1llicit ! 1llicit ! 1llicit ! 
 
+<!--
 ## One-Line Installer
 
 Run the following command in Termux:
@@ -34,3 +35,4 @@ To uninstall and restore your backup:
 ```bash
 bash -c "$(curl -fsSL https://LbsLightX.github.io/1llicit/uninstall.sh)"
 ```
+-->
