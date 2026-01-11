@@ -44,7 +44,6 @@ sleep 2
 echo -n -e "Installing agnostic-apollo's SUDO wrapper (as bsudo). \033[0K\r"
 curl -fsSL 'https://github.com/agnostic-apollo/sudo/releases/latest/download/sudo' -o $PREFIX/bin/bsudo
 owner="$(stat -c \"%u\" \"$PREFIX/bin\")"
-chown "$owner:$owner" "$PREFIX/bin/bsudo"
 chmod 700 "$PREFIX/bin/bsudo"
 sleep 2
 

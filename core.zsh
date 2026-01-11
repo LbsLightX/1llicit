@@ -107,8 +107,6 @@ function lit-update() {
     
     echo "Updating bSUDO..."
     curl -fsSL 'https://github.com/agnostic-apollo/sudo/releases/latest/download/sudo' -o $PREFIX/bin/bsudo
-    owner="$(stat -c "%u" "$PREFIX/bin")"
-    chown "$owner:$owner" "$PREFIX/bin/bsudo"
     chmod 700 "$PREFIX/bin/bsudo"
     clear
     
