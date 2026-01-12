@@ -63,10 +63,8 @@ bindkey "^?" magic-backspace
 # --- THEME MANAGER ---
 function lit-colors() {
     local options=("⦿ 1llicit Theme (Gogh Sync)" "⦿ Termux Styling (Official)" "⦿ Favorites (Recommended)")
-    # Cyber-Obsidian UI
     echo -e "\n  \033[1;34m【 THEME LIBRARY SELECTION 】\033[0m"
     echo -e "  \033[1;30m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-    # We use fzf to display the list directly instead of echo
     local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="Themes ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     case "$choice" in
@@ -88,6 +86,7 @@ function lit-colors() {
 
             local selected=$(printf "%s\n" "$themes" | fzf --prompt="Official ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
+                # Standardized Wording: Applying
                 printf "✔ Applying: $(echo $selected | sed 's/\.properties//')\n"
                 mkdir -p ~/.termux
                 curl -fsSL "https://raw.githubusercontent.com/termux/termux-styling/master/app/src/main/assets/colors/$selected" -o ~/.termux/colors.properties
@@ -107,6 +106,7 @@ function lit-colors() {
 
             local selected=$(printf "%s\n" "$themes" | fzf --prompt="Favorites ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
+                # Standardized Wording: Applying
                 printf "✔ Applying: $selected\n"
                 mkdir -p ~/.termux
                 curl -fsSL "$url_base/$selected" -o ~/.termux/colors.properties
@@ -137,7 +137,7 @@ function lit-fonts() {
     case "$choice" in
         *"Nerd Fonts"*) 
             if curl --output /dev/null --silent --head --fail "https://github.com/LbsLightX/1llicit"; then
-                printf "◷ Fetching fonts list (Stable v3.4.0)... please wait.\r"
+                printf "◷ Fetching fonts list from repository (Stable v3.4.0)... please wait.\r"
                 
                 local selection=$(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | \
                     jq -r '.tree[] | select(.path|test("\\.(ttf|otf)$"; "i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | (.path | split("/") | last) + " | " + .url' | \
@@ -147,7 +147,8 @@ function lit-fonts() {
                     local url=$(echo "$selection" | sed 's/.* | //')
                     local name=$(echo "$selection" | sed 's/ | .*//')
                     
-                    printf "✔ Applying font: $name\n"
+                    # Standardized Wording: Installing
+                    printf "✔ Installing font: $name\n"
                     mkdir -p ~/.termux
                     curl -fsSL "$(echo $url | sed 's/ /%20/g')" -o ~/.termux/font.ttf
                     termux-reload-settings
@@ -164,7 +165,8 @@ function lit-fonts() {
             local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="Meslo Variants ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
             if [[ -n "$sel" ]]; then
-                printf "✔ Installing $sel...\n"
+                # Standardized Wording: Installing
+                printf "✔ Installing: $sel\n"
                 mkdir -p ~/.termux
                 curl -fsSL "$meslo_base/${sel// /%20}" -o ~/.termux/font.ttf
                 termux-reload-settings
@@ -183,7 +185,8 @@ function lit-fonts() {
 
             local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="Favorites ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$sel" ]]; then
-                printf "✔ Installing $sel...\n"
+                # Standardized Wording: Installing
+                printf "✔ Installing: $sel\n"
                 mkdir -p ~/.termux
                 curl -fsSL "$url_base/${sel// /%20}" -o ~/.termux/font.ttf
                 termux-reload-settings
