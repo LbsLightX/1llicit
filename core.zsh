@@ -12,26 +12,29 @@ zinit lucid light-mode for \
 # -----------------------------------------------------------------------------
 # 2. Plugins (Syntax Highlighting, Autosuggestions, History Search)
 # -----------------------------------------------------------------------------
-# LOAD ORDER IS CRITICAL:
-# 1. History Substring Search (Must be loaded before Syntax Highlighting)
-# 2. Autosuggestions
-# 3. Completions
-# 4. Fast Syntax Highlighting (Must be LAST to wrap widgets correctly)
 
+# A. Standard Plugins (Completions, Man Pages, Git)
 zinit wait lucid light-mode for \
-  atinit"zpcompinit; zpcdreplay; ZSH_AUTOSUGGEST_STRATEGY=(history completion)" \
-      zsh-users/zsh-history-substring-search \
+  atinit"zpcompinit; zpcdreplay" \
       OMZP::colored-man-pages \
       OMZP::git \
-  atload"!_zsh_autosuggest_start; bindkey(' ' autosuggest-accept')" \
-      zsh-users/zsh-autosuggestions \
-  blockf atpull'zinit creinstall -q .' \
-      zsh-users/zsh-completions \
-  zdharma-continuum/fast-syntax-highlighting
+  blockf atpull'zinit creinstall -q .'
+      zsh-users/zsh-completions
 
-# Keybindings for History Substring Search (Arrows)
-bindkey('^[[A' history-substring-search-up)
-bindkey('^[[B' history-substring-search-down)
+# B. Autosuggestions (With Config)
+zinit wait lucid light-mode for \
+  atinit"ZSH_AUTOSUGGEST_STRATEGY=(history completion)" \
+  atload"!_zsh_autosuggest_start; bindkey(' ' autosuggest-accept')" \
+      zsh-users/zsh-autosuggestions
+
+# C. History Substring Search (Arrows) - Must load BEFORE Syntax Highlighting
+zinit wait lucid light-mode for \
+  atload"bindkey('^[[A' history-substring-search-up; bindkey('^[[B' history-substring-search-down')" \
+      zsh-users/zsh-history-substring-search
+
+# D. Fast Syntax Highlighting (Must be LAST)
+zinit wait lucid light-mode for \
+      zdharma-continuum/fast-syntax-highlighting
 
 # -----------------------------------------------------------------------------
 # 3. Theme (Powerlevel10k)
