@@ -6,7 +6,7 @@ setterm -cursor off
 banner () {
 clear
 echo -e "\033[1;34m" # Make it Blue
-echo "   ⠀⠀⠀  ⠀⠀⠀⠀⣴⣿⣦⠀⠀⠀⠀⠀⠀⠀  ⠀ "
+echo "   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⣦⠀⠀⠀⠀⠀⠀⠀⠀ "
 echo "  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⠂⠀⠀⠀⠀⠀⠀⠀⠀ "
 echo "  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣀⠀⠀⠀⠀⠀⠀⠀⠀ "
 echo "  ⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⣿⣿⣦⠀ "
@@ -121,7 +121,7 @@ fi
 
 source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 autoload -Uz _zinit
-(( ${_comps} )) && _comps[zinit]=_zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -157,6 +157,10 @@ fi
 # Reload Termux settings.
 sleep 1
 termux-reload-settings
+
+# Set Official 1llicit Highlighting Theme
+# Note: Zsh must be running for this, so we use zsh -c
+zsh -ic "fast-theme zdharma" > /dev/null 2>&1
 
 # Run a ZSH shell, opens the p10k config wizard.
 banner
