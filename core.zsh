@@ -55,8 +55,9 @@ function magic-backspace() {
             return
         fi
         
+        # EXPERIMENTAL: Use redisplay instead of reset-prompt to fix visual glitch
         cd ..
-        zle reset-prompt
+        zle redisplay
     else
         zle backward-delete-char
     fi
