@@ -12,8 +12,9 @@ zinit lucid light-mode for \
 # -----------------------------------------------------------------------------
 # 2. Plugins (Syntax Highlighting, Autosuggestions, History Search)
 # -----------------------------------------------------------------------------
-# EXPERIMENTAL ORDER CHANGE:
-# Documentation says Syntax Highlighting should be loaded BEFORE History Search.
+# LOAD ORDER IS CRITICAL:
+# 1. Syntax Highlighting (Must load BEFORE History Search)
+# 2. History Substring Search (Loads AFTER Syntax Highlighting)
 
 zinit wait lucid light-mode for \
   atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay" \
@@ -24,7 +25,7 @@ zinit wait lucid light-mode for \
       zsh-users/zsh-autosuggestions \
   blockf atpull'zinit creinstall -q .' \
       zsh-users/zsh-completions \
-  atload"bindkey '^[[A' history-substring-search-up; bindkey '^[[B' history-substring-search-down; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=magenta,bold'; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='fg=red,bold'" \
+  atload"bindkey '^[[A' history-substring-search-up; bindkey '^[[B' history-substring-search-down" \
       zsh-users/zsh-history-substring-search
 
 # -----------------------------------------------------------------------------
@@ -60,12 +61,11 @@ function lit-colors() {
 function lit-fonts() {
     # Ensure dependencies
     for pkg in jq curl fzf; do
-        if ! command -v $pkg >/dev/null 2>&1;
- then
+        if ! command -v $pkg >/dev/null 2>&1; then
             echo "Installing missing dependency: $pkg"
             pkg install -y $pkg
         fi
-    done
+done
 
     # Check connection (Using 1llicit main repo as ping target)
     status_code=$(curl -s -o /dev/null -I -w "%{http_code}" "https://github.com/LbsLightX/1llicit")
@@ -79,7 +79,6 @@ function lit-fonts() {
         # Fetch and Parse (Using quoted URL)
         while IFS= read -r entry
         do
-            # Store in array: Key=Filename, Value=URL
             fonts[$(basename "$entry")]="$entry"
         done < <(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf|otf)$","i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .url')
         
