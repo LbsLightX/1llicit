@@ -23,7 +23,7 @@ echo "  ⠀⠀⠀⠀⢠⣿⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⣧⠀⠀ "
 echo "  ⠀⠀⠀⢀⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣆⠀ "
 echo "  ⠀⠀⠠⢾⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣷⡤"
 echo -e "\033[0m" # Reset color
-echo "      Fast, beautiful, 1llicit!       "
+echo "      ! 1llicit !1llicit !1llicit !1llicit !       "
 echo ""
 }
 banner
@@ -164,7 +164,7 @@ zsh -ic "fast-theme zdharma" > /dev/null 2>&1
 
 # Run a ZSH shell, opens the p10k config wizard.
 banner
-echo -n -e "Installation complete, enjoy 1llicit! \033[0K\r"
+printf "✔ Installation complete! Enjoy 1llicit. 👯\n"
 sleep 3
 
 # Restore cursor.
