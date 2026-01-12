@@ -19,19 +19,19 @@ zinit lucid light-mode for \
 # 4. Fast Syntax Highlighting (Must be LAST to wrap widgets correctly)
 
 zinit wait lucid light-mode for \
-  atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay; ZSH_AUTOSUGGEST_STRATEGY=(history completion)" \
+  atinit"zpcompinit; zpcdreplay; ZSH_AUTOSUGGEST_STRATEGY=(history completion)" \
       zsh-users/zsh-history-substring-search \
       OMZP::colored-man-pages \
       OMZP::git \
-  atload"!_zsh_autosuggest_start; bindkey('^ ') autosuggest-accept" \
+  atload"!_zsh_autosuggest_start; bindkey(' ' autosuggest-accept')" \
       zsh-users/zsh-autosuggestions \
   blockf atpull'zinit creinstall -q .' \
       zsh-users/zsh-completions \
   zdharma-continuum/fast-syntax-highlighting
 
 # Keybindings for History Substring Search (Arrows)
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+bindkey('^[[A' history-substring-search-up)
+bindkey('^[[B' history-substring-search-down)
 
 # -----------------------------------------------------------------------------
 # 3. Theme (Powerlevel10k)
