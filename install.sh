@@ -36,31 +36,33 @@ shutt () {
 }
 
 # Get fastest mirrors.
-echo -n -e "Syncing with fastest mirrors. \033[0K\r"
-(echo 'n' | pkg update 2>/dev/null) | while read -r line; do
-    :
-done
-sleep 2
+printf "◷ Syncing with fastest mirrors...\r"
+(echo 'n' | pkg update 2>/dev/null) | while read -r line; do :; done
+printf "✔ Syncing with fastest mirrors... Done!\n"
+sleep 1
 
 # Upgrade packages.
-echo -n -e "Updating system. \033[0K\r"
+printf "◷ Updating system...\r"
 shutt pkg upgrade -y -o Dpkg::Options::='--force-confnew' 2>/dev/null
-sleep 2
+printf "✔ Updating system... Done!       \n"
+sleep 1
 
 # Installing required packages.
-echo -n -e "Installing required packages. \033[0K\r"
+printf "◷ Installing required packages...\r"
 shutt pkg install -y curl git zsh man jq perl fzf fastfetch termux-api 2>/dev/null
-sleep 2
+printf "✔ Installing required packages... Done!\n"
+sleep 1
 
 # Installing BetterSUDO.
-echo -n -e "Installing agnostic-apollo's SUDO wrapper (as bsudo). \033[0K\r"
+printf "◷ Installing bSUDO...\r"
 curl -fsSL 'https://github.com/agnostic-apollo/sudo/releases/latest/download/sudo' -o $PREFIX/bin/bsudo
 chmod 700 "$PREFIX/bin/bsudo"
-sleep 2
+printf "✔ Installing bSUDO... Done!      \n"
+sleep 1
 
 # Giving Storage permision to Termux App.
 if [ ! -d ~/storage ]; then
-    echo -n -e "Setting up storage access for Termux. \033[0K\r"
+    echo "Requesting storage access..."
     termux-setup-storage
     sleep 2
 fi
@@ -72,38 +74,39 @@ BACKUP_PATH="$HOME/storage/shared/1llicit/backup/$(date +%Y_%m_%d_%H_%M)"
 # 2. Create that specific folder
 mkdir -p "$BACKUP_PATH"
 
-# 3. Run the loop
+# 3. Run the loop (Transient Style)
+printf "◷ Backing up existing configuration...\r"
 for i in "$HOME/.zshrc" "$HOME/.termux/font.ttf" "$HOME/.termux/colors.properties" "$HOME/.termux/termux.properties"
 do
     if [ -f $i ]; then
-        echo -n -e "Backing up current $i file. \033[0K\r"
+        # Overwrite the line with the current file being moved
+        printf "◷ Backing up: $(basename $i)...          \r"
         mv -f "$i" "$BACKUP_PATH/$(basename $i)"
-        sleep 1
+        sleep 0.5
     fi
 done
+printf "✔ Backup complete! (Saved to storage)    \n"
+sleep 1
 
 # Clean slate
 rm -f "$HOME/.zshrc"
-sleep 2
 
 # Changing default shell to ZSH (if needed).
 if [[ "$SHELL" != *"zsh"* ]]; then
-   echo -n -e "Changing default shell to ZSH. \033[0K\r"
+   printf "◷ Changing default shell to ZSH...\r"
    chsh -s zsh
-else
-   echo -n -e "Default shell is already ZSH. Skipping. \033[0K\r"
+   printf "✔ Default shell changed to ZSH.   \n"
 fi
-sleep 1
 
 # Create hidden directory for 1llicit core
 mkdir -p "$HOME/.1llicit"
 
 # Download the Core Logic
-echo -n -e "Downloading 1llicit Core... \033[0K\r"
+printf "◷ Downloading 1llicit Core...\r"
 curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > "$HOME/.1llicit/core.zsh"
+printf "✔ Downloading 1llicit Core... Done!\n"
 
 # Generate the minimal .zshrc
-echo -n -e "Generating .zshrc configuration... \033[0K\r"
 cat <<'EOF' > $HOME/.zshrc
 # Enable Powerlevel10k instant prompt.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
@@ -131,35 +134,32 @@ if [[ -f "$HOME/.1llicit/core.zsh" ]]; then
     source "$HOME/.1llicit/core.zsh"
 fi
 EOF
-sleep 2
 
 # Installing the Powerline font for Termux.
 if [ ! -f ~/.termux/font.ttf ]; then
-    echo -n -e "Installing Powerline patched font. \033[0K\r"
-    curl -fsSL -o ~/.termux/font.ttf 'https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts/MesloLGS%20NF%20Regular.ttf'
-    sleep 2
+    printf "◷ Installing default font (MesloLGS)...\r"
+    curl -fsSL -o ~/.termux/font.ttf 'https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts/MesloLGS%20NF%20Regular.ttf' >/dev/null 2>&1
+    printf "✔ Default font installed.              \n"
 fi
 
 # Set a default color scheme.
 if [ ! -f ~/.termux/colors.properties ]; then
-    echo -n -e "Setting up a new color scheme. \033[0K\r"
-    curl -fsSL -o ~/.termux/colors.properties 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/3024-night.properties'
-    sleep 2
+    printf "◷ Setting default color scheme...\r"
+    curl -fsSL -o ~/.termux/colors.properties 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/3024-night.properties' >/dev/null 2>&1
+    printf "✔ Default color scheme set.          \n"
 fi
 
 # Set up Termux config file.
 if [ ! -f ~/.termux/termux.properties ]; then
-    echo -n -e "Setting up Termux's global configuration. \033[0K\r"
-    curl -fsSL -o ~/.termux/termux.properties 'https://raw.githubusercontent.com/LbsLightX/1llicit/main/.termux/termux.properties'
-    sleep 2
+    printf "◷ Configuring Termux keys...\r"
+    curl -fsSL -o ~/.termux/termux.properties 'https://raw.githubusercontent.com/LbsLightX/1llicit/main/.termux/termux.properties' >/dev/null 2>&1
+    printf "✔ Termux keys configured.       \n"
 fi
 
 # Reload Termux settings.
-sleep 1
 termux-reload-settings
 
 # Set Official 1llicit Highlighting Theme
-# Note: Zsh must be running for this, so we use zsh -c
 zsh -ic "fast-theme zdharma" > /dev/null 2>&1
 
 # Run a ZSH shell, opens the p10k config wizard.
