@@ -25,7 +25,7 @@ zinit wait lucid light-mode for \
       zsh-users/zsh-autosuggestions \
   blockf atpull'zinit creinstall -q .' \
       zsh-users/zsh-completions \
-  atload"bindkey '^[[A' history-substring-search-up; bindkey '^[[B' history-substring-search-down" \
+  atload"bindkey '^[[A' history-substring-search-up; bindkey '^[[B' history-substring-search-down; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=magenta,bold'; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='fg=red,bold'" \
       zsh-users/zsh-history-substring-search
 
 # -----------------------------------------------------------------------------
@@ -62,33 +62,24 @@ bindkey "^?" magic-backspace
 
 # --- THEME MANAGER ---
 function lit-colors() {
-    echo -e "\n  \033[1;34mTHEME LIBRARY SELECTION\033[0m"
-    echo -e "  \033[1;30m----------------------------------------\033[0m"
-    echo -e "  \033[1;33m1)\033[0m 🎨 1llicit Theme (Gogh Sync)"
-    echo -e "  \033[1;33m2)\033[0m 🛡️ Termux Styling (Official)"
-    echo -e "  \033[1;33m3)\033[0m ⭐ Favorites (Recommended)"
-    echo -e "  \033[1;30m----------------------------------------\033[0m"
-    echo -n "  Select option: "
-    read -k 1 choice
-    echo -e "\n"
+    local options=("🎨 1llicit Theme (Gogh Sync)" "🛡️ Termux Styling (Official)" "⭐ Favorites (Recommended)")
+    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="THEMES > " --height=10 --layout=reverse)
 
     case "$choice" in
-        1)
-            # Main Repository
-            if [ $(curl -s -o /dev/null -I -w "% {http_code}" https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh) -eq 200 ]; then
+        *"1llicit Theme"*) 
+            # Connection Check (Fixed Logic)
+            if curl --output /dev/null --silent --head --fail "https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh"; then
                 echo "Loading full library..."
                 bash -c "$(curl -fsSL 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh')"
                 clear
             else
                 echo "❌ Error: Can't connect to repository."
             fi
-            ;;
-        2)
-            # Termux Official (Simulated List)
+            ;; 
+        *"Termux Styling"*) 
             local officials=("Dracula" "Solarized-Dark" "Solarized-Light" "Gruvbox-Dark" "One-Dark" "Nord")
-            local selected=$(printf "%s\n" "${officials[@]}" | fzf --prompt="🛡️ Official > ")
+            local selected=$(printf "%s\n" "${officials[@]}" | fzf --prompt="🛡️ Official > " --height=15)
             if [[ -n "$selected" ]]; then
-                # Mapping to file names in our repo (since we have them all anyway)
                 local url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/${selected}.properties"
                 # Fix naming mismatches manually
                 [[ "$selected" == "Dracula" ]] && url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/dracula.properties"
@@ -103,14 +94,12 @@ function lit-colors() {
                 curl -fsSL "$url" -o ~/.termux/colors.properties
                 termux-reload-settings
             fi
-            ;;
-        3)
-            # Favorites Menu
+            ;; 
+        *"Favorites"*) 
             local themes=("3024-night" "Monokai-Pro" "Tokyo-Night" "Catppuccin-Mocha" "Rose-Pine")
-            local selected=$(printf "%s\n" "${themes[@]}" | fzf --prompt="⭐ Favorites > ")
+            local selected=$(printf "%s\n" "${themes[@]}" | fzf --prompt="⭐ Favorites > " --height=15)
             if [[ -n "$selected" ]]; then
                 local url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/${selected}.properties"
-                # Manual fixes
                 [[ "$selected" == "Monokai-Pro" ]] && url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/monokai-pro.properties"
                 [[ "$selected" == "Tokyo-Night" ]] && url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/tokyo-night.properties"
                 [[ "$selected" == "Catppuccin-Mocha" ]] && url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/catppuccin-mocha.properties"
@@ -121,10 +110,8 @@ function lit-colors() {
                 curl -fsSL "$url" -o ~/.termux/colors.properties
                 termux-reload-settings
             fi
-            ;;
-        *)
-            echo "Cancelled."
-            ;;
+            ;; 
+        *) ;; # Do nothing if cancelled
     esac
 }
 
@@ -138,21 +125,13 @@ function lit-fonts() {
         fi
     done
 
-    echo -e "\n  \033[1;34mFONT LIBRARY SELECTION\033[0m"
-    echo -e "  \033[1;30m----------------------------------------\033[0m"
-    echo -e "  \033[1;33m1)\033[0m 📚 Nerd Fonts (2600+)"
-    echo -e "  \033[1;33m2)\033[0m ⚡ Standard Meslo (Recommended)"
-    echo -e "  \033[1;33m3)\033[0m ⭐ Favorites"
-    echo -e "  \033[1;30m----------------------------------------\033[0m"
-    echo -n "  Select option: "
-    read -k 1 choice
-    echo -e "\n"
+    local options=("📚 Nerd Fonts (2600+)" "⚡ Standard Meslo (Recommended)" "⭐ Favorites")
+    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="FONTS > " --height=10 --layout=reverse)
 
     case "$choice" in
-        1)
-            # The Big Fetch
-            status_code=$(curl -s -o /dev/null -I -w "% {http_code}" "https://github.com/LbsLightX/1llicit")
-            if [ "$status_code" -eq "200" ]; then
+        *"Nerd Fonts"*) 
+            # Connection Check (Fixed Logic)
+            if curl --output /dev/null --silent --head --fail "https://github.com/LbsLightX/1llicit"; then
                 echo "⏳ Fetching fonts list from repository (Stable v3.4.0)... please wait, this may take 1-2 minutes."
                 typeset -A fonts
                 while IFS= read -r entry
@@ -160,29 +139,30 @@ function lit-fonts() {
                     fonts[$(basename "$entry")]="$entry"
                 done < <(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf|otf)$","i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .url')
                 
-                choice=$(printf "%s\n" "${(@k)fonts}" | sort | fzf)
-                if [ $? -eq 0 ]; then
-                    echo "✨ Applying font: $choice"
+                # Check if fzf was cancelled (empty output)
+                local selection=$(printf "%s\n" "${(@k)fonts}" | sort | fzf)
+                if [[ -n "$selection" ]]; then
+                    echo "✨ Applying font: $selection"
                     mkdir -p ~/.termux
-                    curl -fsSL "$( echo "${fonts[$choice]}" | sed 's/ /%20/g' )" -o ~/.termux/font.ttf
+                    curl -fsSL "$( echo "${fonts[$selection]}" | sed 's/ /%20/g' )" -o ~/.termux/font.ttf
                     termux-reload-settings
+                else
+                    echo "⚠️ Cancelled."
                 fi
             else
                 echo " 🌐 Please check your internet connection."
             fi
-            ;;
-        2)
-            # Instant Install
+            ;; 
+        *"Standard Meslo"*) 
             echo "✨ Installing MesloLGS NF..."
             mkdir -p ~/.termux
             curl -fsSL -o ~/.termux/font.ttf 'https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts/MesloLGS%20NF%20Regular.ttf'
             termux-reload-settings
             echo "✅ Done."
-            ;;
-        3)
-            # Favorites Menu
+            ;; 
+        *"Favorites"*) 
             local favs=("JetBrainsMono" "FiraCode" "Hack" "CascadiaCode" "VictorMono")
-            local sel=$(printf "%s\n" "${favs[@]}" | fzf --prompt="⭐ Favorites > ")
+            local sel=$(printf "%s\n" "${favs[@]}" | fzf --prompt="⭐ Favorites > " --height=15)
             if [[ -n "$sel" ]]; then
                 echo "✨ Installing $sel..."
                 local url=""
@@ -196,10 +176,8 @@ function lit-fonts() {
                 curl -fsSL "$url" -o ~/.termux/font.ttf
                 termux-reload-settings
             fi
-            ;;
-        *)
-            echo "Cancelled."
-            ;;
+            ;; 
+        *) ;;
     esac
 }
 
