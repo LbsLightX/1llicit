@@ -10,17 +10,28 @@ zinit lucid light-mode for \
     OMZL::key-bindings.zsh
 
 # -----------------------------------------------------------------------------
-# 2. Plugins (Syntax Highlighting, Autosuggestions)
+# 2. Plugins (Syntax Highlighting, Autosuggestions, History Search)
 # -----------------------------------------------------------------------------
+# LOAD ORDER IS CRITICAL:
+# 1. History Substring Search (Must be loaded before Syntax Highlighting)
+# 2. Autosuggestions
+# 3. Completions
+# 4. Fast Syntax Highlighting (Must be LAST to wrap widgets correctly)
+
 zinit wait lucid light-mode for \
   atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay" \
-      zdharma-continuum/fast-syntax-highlighting \
+      zsh-users/zsh-history-substring-search \
       OMZP::colored-man-pages \
       OMZP::git \
   atload"!_zsh_autosuggest_start" \
       zsh-users/zsh-autosuggestions \
   blockf atpull'zinit creinstall -q .' \
-      zsh-users/zsh-completions
+      zsh-users/zsh-completions \
+  zdharma-continuum/fast-syntax-highlighting
+
+# Keybindings for History Substring Search (Arrows)
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
 # -----------------------------------------------------------------------------
 # 3. Theme (Powerlevel10k)
@@ -55,7 +66,8 @@ function lit-colors() {
 function lit-fonts() {
     # Ensure dependencies
     for pkg in jq curl fzf; do
-        if ! command -v $pkg >/dev/null 2>&1; then
+        if ! command -v $pkg >/dev/null 2>&1;
+ then
             echo "Installing missing dependency: $pkg"
             pkg install -y $pkg
         fi
@@ -65,7 +77,7 @@ function lit-fonts() {
     status_code=$(curl -s -o /dev/null -I -w "%{http_code}" "https://github.com/LbsLightX/1llicit")
     
     if [ "$status_code" -eq "200" ]; then
-        echo "⏳ Fetching fonts list from repository (Stable v3.4.0)... please wait, this may take 1-2 minutes."
+        echo "Fetching fonts list from repository (Stable v3.4.0)... please wait, this may take 1-2 minutes."
         
         # Zsh Associative Array Declaration
         typeset -A fonts
@@ -73,29 +85,30 @@ function lit-fonts() {
         # Fetch and Parse (Using quoted URL)
         while IFS= read -r entry
         do
+            # Store in array: Key=Filename, Value=URL
             fonts[$(basename "$entry")]="$entry"
         done < <(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf|otf)$","i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .url')
         
-        # Display menu using Zsh key expansion
+        # Display menu using Zsh key expansion ${(@k)fonts}
         choice=$(printf "%s\n" "${(@k)fonts}" | sort | fzf)
         
         if [ $? -eq 0 ]; then
-            echo "✨ Applying font: $choice"
+            echo "Applying font: $choice"
             mkdir -p ~/.termux
             # Retrieve URL using the key
             if curl -fsSL "$( echo "${fonts[$choice]}" | sed 's/ /%20/g' )" -o ~/.termux/font.ttf; then
                 termux-reload-settings
                 if [ $? -ne 0 ]; then
-                    echo "❌ Failed to apply font."
+                    echo "Failed to apply font."
                 fi
             else
-                echo " 🚫 Failed to download font."
+                echo "Failed to download font."
             fi
         else
-            echo "⚠️ Cancelled fonts selection."
+            echo "Cancelled fonts selection."
         fi
     else
-        echo " 🌐 Please check your internet/ dns and try again."
+        echo "Make sure you're connected to the internet!"
     fi
 }
 
@@ -121,7 +134,7 @@ function lit-update() {
     echo "Updating 1llicit Core..."
     curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > $HOME/.1llicit/core.zsh
     
-    echo "✨ Updated successfully, enjoy! 👯"
+    echo "Updated successfully, enjoy!"
     sleep 2
     clear
     exec zsh
