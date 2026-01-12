@@ -20,6 +20,7 @@ zinit lucid light-mode for \
 
 zinit wait lucid light-mode for \
   atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay" \
+  atload"bindkey '^[[A' history-substring-search-up; bindkey '^[[B' history-substring-search-down; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=magenta,bold'; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='fg=red,bold'" \
       zsh-users/zsh-history-substring-search \
       OMZP::colored-man-pages \
       OMZP::git \
@@ -28,14 +29,6 @@ zinit wait lucid light-mode for \
   blockf atpull'zinit creinstall -q .' \
       zsh-users/zsh-completions \
   zdharma-continuum/fast-syntax-highlighting
-
-# Keybindings for History Substring Search (Arrows)
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
-
-# Visual Highlighting for History Search
-HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=magenta,bold'
-HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='fg=red,bold'
 
 # -----------------------------------------------------------------------------
 # 3. Theme (Powerlevel10k)
@@ -71,7 +64,7 @@ function lit-fonts() {
     # Ensure dependencies
     for pkg in jq curl fzf; do
         if ! command -v $pkg >/dev/null 2>&1;
-        then
+ then
             echo "Installing missing dependency: $pkg"
             pkg install -y $pkg
         fi
@@ -81,7 +74,7 @@ function lit-fonts() {
     status_code=$(curl -s -o /dev/null -I -w "%{http_code}" "https://github.com/LbsLightX/1llicit")
     
     if [ "$status_code" -eq "200" ]; then
-        echo "⏳ Fetching fonts list from repository (Stable v3.4.0). Please wait, this may take 1-2 minutes."
+        echo "⏳ Fetching fonts list from repository (Stable v3.4.0)... please wait, this may take 1-2 minutes."
         
         # Zsh Associative Array Declaration
         typeset -A fonts
@@ -89,6 +82,7 @@ function lit-fonts() {
         # Fetch and Parse (Using quoted URL)
         while IFS= read -r entry
         do
+            # Store in array: Key=Filename, Value=URL
             fonts[$(basename "$entry")]="$entry"
         done < <(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf|otf)$","i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .url')
         
