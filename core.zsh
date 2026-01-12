@@ -68,16 +68,15 @@ function lit-colors() {
     case "$choice" in
         *"1llicit Theme"*) 
             if curl --output /dev/null --silent --head --fail "https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh"; then
-                echo "Loading full library..."
+                # Removed "Loading..." echo to prevent it sticking on screen
                 bash -c "$(curl -fsSL 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh')"
-                # Removed 'clear' here too, just in case
             else
                 echo "❌ Error: Can't connect to repository."
             fi
             ;; 
         *"Termux Styling"*) 
             local officials=("Dracula" "Solarized-Dark" "Solarized-Light" "Gruvbox-Dark" "One-Dark" "Nord")
-            local selected=$(printf "%s\n" "${officials[@]}" | fzf --prompt="Official > " --height=15 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local selected=$(printf "%s\n" "${officials[@]}" | fzf --prompt="Official > " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
                 local url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/${selected}.properties"
                 # Fix naming mismatches manually
@@ -105,7 +104,7 @@ function lit-colors() {
                 return
             fi
 
-            local selected=$(printf "%s\n" "$themes" | fzf --prompt="Favorites > " --height=15 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local selected=$(printf "%s\n" "$themes" | fzf --prompt="Favorites > " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
                 echo "✨ Applying: $selected"
                 mkdir -p ~/.termux
@@ -139,9 +138,9 @@ function lit-fonts() {
                 while IFS= read -r entry
                 do
                     fonts[$(basename "$entry")]="$entry"
-                done < <(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf|otf)$", "i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .url')
+                done < <(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf|otf)$","i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .url')
                 
-                local selection=$(printf "%s\n" "${(@k)fonts}" | sort | fzf --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+                local selection=$(printf "%s\n" "${(@k)fonts}" | sort | fzf --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
                 if [[ -n "$selection" ]]; then
                     echo "✨ Applying font: $selection"
                     mkdir -p ~/.termux
@@ -157,7 +156,7 @@ function lit-fonts() {
         *"Standard Meslo"*) 
             local meslo_base="https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts"
             local variants=("MesloLGS NF Regular.ttf" "MesloLGS NF Bold.ttf" "MesloLGS NF Italic.ttf" "MesloLGS NF Bold Italic.ttf")
-            local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="Meslo Variants > " --height=10 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="Meslo Variants > " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
             if [[ -n "$sel" ]]; then
                 echo "✨ Installing $sel..."
@@ -178,7 +177,7 @@ function lit-fonts() {
                 return
             fi
 
-            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="Favorites > " --height=15 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="Favorites > " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$sel" ]]; then
                 echo "✨ Installing $sel..."
                 mkdir -p ~/.termux
