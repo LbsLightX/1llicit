@@ -80,17 +80,20 @@ function lit-colors() {
             local themes=$(curl -fsSL "https://api.github.com/repos/termux/termux-styling/contents/app/src/main/assets/colors" | jq -r '.[].name' | command grep ".properties")
             
             if [ -z "$themes" ]; then
-                echo "✕ Error: Could not fetch official themes."
+                printf "✕ Error: Could not fetch official themes.\n"
                 return
             fi
+            
+            # Clear fetching message
+            printf "%*s\r" "${COLUMNS:-80}" ""
 
             local selected=$(printf "%s\n" "$themes" | fzf --prompt="Official ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
-                # Standardized Wording: Applying
-                printf "✔ Applying: $(echo $selected | sed 's/\.properties//')\n"
+                printf "◷ Applying color scheme: $(echo $selected | sed 's/\.properties//')...\r"
                 mkdir -p ~/.termux
-                curl -fsSL "https://raw.githubusercontent.com/termux/termux-styling/master/app/src/main/assets/colors/$selected" -o ~/.termux/colors.properties
+                curl -fsSL "https://raw.githubusercontent.com/termux/termux-styling/master/app/src/main/assets/colors/$selected" -o ~/.termux/colors.properties >/dev/null 2>&1
                 termux-reload-settings
+                printf "✔ Done!                                         \n"
             else
                 echo "⚠ Cancelled."
             fi
@@ -106,16 +109,16 @@ function lit-colors() {
 
             local selected=$(printf "%s\n" "$themes" | fzf --prompt="Favorites ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
-                # Standardized Wording: Applying
-                printf "✔ Applying: $selected\n"
+                printf "◷ Applying color scheme: $selected...\r"
                 mkdir -p ~/.termux
-                curl -fsSL "$url_base/$selected" -o ~/.termux/colors.properties
+                curl -fsSL "$url_base/$selected" -o ~/.termux/colors.properties >/dev/null 2>&1
                 termux-reload-settings
+                printf "✔ Done!                                         \n"
             else
                 echo "⚠ Cancelled."
             fi
             ;; 
-        *) ;; 
+        *) ;;
     esac
 }
 
@@ -123,9 +126,9 @@ function lit-colors() {
 function lit-fonts() {
     for pkg in jq curl fzf; do
         if ! command -v $pkg >/dev/null 2>&1; then
-            printf "◷ Installing missing dependency: $pkg\r"
+            printf "◷ Installing missing dependency: $pkg...\r"
             pkg install -y $pkg >/dev/null 2>&1
-            echo "✔ Installed: $pkg"
+            printf "✔ Installed: $pkg                         \n"
         fi
     done
 
@@ -143,15 +146,18 @@ function lit-fonts() {
                     jq -r '.tree[] | select(.path|test("\\.(ttf|otf)$"; "i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | (.path | split("/") | last) + " | " + .url' | \
                     fzf --delimiter=" | " --with-nth=1 --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
                 
+                # Clear fetching message before showing result
+                printf "%*s\r" "${COLUMNS:-80}" ""
+
                 if [[ -n "$selection" ]]; then
                     local url=$(echo "$selection" | sed 's/.* | //')
                     local name=$(echo "$selection" | sed 's/ | .*//')
                     
-                    # Standardized Wording: Installing
-                    printf "✔ Installing font: $name\n"
+                    printf "◷ Installing font: $name...\r"
                     mkdir -p ~/.termux
-                    curl -fsSL "$(echo $url | sed 's/ /%20/g')" -o ~/.termux/font.ttf
+                    curl -fsSL "$(echo $url | sed 's/ /%20/g')" -o ~/.termux/font.ttf >/dev/null 2>&1
                     termux-reload-settings
+                    printf "✔ Done!                                         \n"
                 else
                     echo "⚠ Cancelled."
                 fi
@@ -165,11 +171,12 @@ function lit-fonts() {
             local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="Meslo Variants ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
             if [[ -n "$sel" ]]; then
-                # Standardized Wording: Installing
-                printf "✔ Installing: $sel\n"
+                printf "◷ Installing font: $sel...\r"
                 mkdir -p ~/.termux
-                curl -fsSL "$meslo_base/${sel// /%20}" -o ~/.termux/font.ttf
+                # FIX: Use Zsh native substitution for URL encoding
+                curl -fsSL "$meslo_base/${sel// /%20}" -o ~/.termux/font.ttf >/dev/null 2>&1
                 termux-reload-settings
+                printf "✔ Done!                                         \n"
             else
                 echo "⚠ Cancelled."
             fi
@@ -185,39 +192,47 @@ function lit-fonts() {
 
             local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="Favorites ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$sel" ]]; then
-                # Standardized Wording: Installing
-                printf "✔ Installing: $sel\n"
+                printf "◷ Installing font: $sel...\r"
                 mkdir -p ~/.termux
-                curl -fsSL "$url_base/${sel// /%20}" -o ~/.termux/font.ttf
+                # FIX: URL encoding for Favorites too
+                curl -fsSL "$url_base/${sel// /%20}" -o ~/.termux/font.ttf >/dev/null 2>&1
                 termux-reload-settings
+                printf "✔ Done!                                         \n"
             else
                 echo "⚠ Cancelled."
             fi
             ;; 
-        *) ;; 
+        *) ;;
     esac
 }
 
 function lit-update() {
     printf "◷ Updating system packages...\r"
     pkg update && pkg upgrade -y >/dev/null 2>&1
+    printf "✔ Updating system packages... Done!\n"
     
     printf "◷ Updating ZSH/Zinit stuff...\r"
     zi update --all >/dev/null 2>&1
+    printf "✔ Updating ZSH/Zinit stuff... Done!\n"
     
     printf "◷ Updating bSUDO...\r"
     curl -fsSL 'https://github.com/agnostic-apollo/sudo/releases/latest/download/sudo' -o $PREFIX/bin/bsudo >/dev/null 2>&1
     chmod 700 "$PREFIX/bin/bsudo"
+    printf "✔ Updating bSUDO... Done!\n"
     
     printf "◷ Updating Fastfetch...\r"
     pkg install --only-upgrade fastfetch -y > /dev/null 2>&1
+    printf "✔ Updating Fastfetch... Done!\n"
     
     # Self-Update Mechanism (Reloads this core file)
     printf "◷ Updating 1llicit Core...\r"
     curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > $HOME/.1llicit/core.zsh
+    printf "✔ Updating 1llicit Core... Done!\n"
     
-    echo "✔ Updated successfully!"
+    echo "✨ All updates complete! 👯"
     sleep 1
     clear
     exec zsh
 }
+
+# -----------------------------------------------------------------------------
