@@ -13,22 +13,20 @@ zinit lucid light-mode for \
 # 2. Plugins (Syntax Highlighting, Autosuggestions, History Search)
 # -----------------------------------------------------------------------------
 # LOAD ORDER IS CRITICAL:
-# 1. History Substring Search (Must be loaded before Syntax Highlighting)
-# 2. Autosuggestions
-# 3. Completions
-# 4. Fast Syntax Highlighting (Must be LAST to wrap widgets correctly)
+# 1. Syntax Highlighting (Must load BEFORE History Search)
+# 2. History Substring Search (Loads AFTER Syntax Highlighting)
 
 zinit wait lucid light-mode for \
   atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay" \
-  atload"bindkey '^[[A' history-substring-search-up; bindkey '^[[B' history-substring-search-down; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=magenta,bold'; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='fg=red,bold'" \
-      zsh-users/zsh-history-substring-search \
+      zdharma-continuum/fast-syntax-highlighting \
       OMZP::colored-man-pages \
       OMZP::git \
   atload"!_zsh_autosuggest_start" \
       zsh-users/zsh-autosuggestions \
   blockf atpull'zinit creinstall -q .' \
       zsh-users/zsh-completions \
-  zdharma-continuum/fast-syntax-highlighting
+  atload"bindkey '^[[A' history-substring-search-up; bindkey '^[[B' history-substring-search-down; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=magenta,bold'; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='fg=red,bold'" \
+      zsh-users/zsh-history-substring-search
 
 # -----------------------------------------------------------------------------
 # 3. Theme (Powerlevel10k)
@@ -65,7 +63,7 @@ bindkey "^?" magic-backspace
 # --- THEME MANAGER ---
 function lit-colors() {
     local options=("1) 1llicit Theme (Gogh Sync)" "2) Termux Styling (Official)" "3) Favorites (Recommended)")
-    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="THEMES > " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ]")
+    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="THEMES > " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     case "$choice" in
         *"1llicit Theme"*) 
@@ -76,12 +74,13 @@ function lit-colors() {
             else
                 echo "❌ Error: Can't connect to repository."
             fi
-            ;; 
+            ;;;;
         *"Termux Styling"*) 
             local officials=("Dracula" "Solarized-Dark" "Solarized-Light" "Gruvbox-Dark" "One-Dark" "Nord")
-            local selected=$(printf "%s\n" "${officials[@]}" | fzf --prompt="Official > " --height=15 --header="[ Ctrl-c to Cancel ]")
+            local selected=$(printf "%s\n" "${officials[@]}" | fzf --prompt="Official > " --height=15 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
                 local url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/${selected}.properties"
+                # Fix naming mismatches manually
                 [[ "$selected" == "Dracula" ]] && url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/dracula.properties"
                 [[ "$selected" == "Solarized-Dark" ]] && url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/solarized-dark.properties"
                 [[ "$selected" == "Solarized-Light" ]] && url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/solarized-light.properties"
@@ -94,25 +93,26 @@ function lit-colors() {
                 curl -fsSL "$url" -o ~/.termux/colors.properties
                 termux-reload-settings
             fi
-            ;; 
+            ;;;;
         *"Favorites"*) 
             local url_base="https://raw.githubusercontent.com/LbsLightX/1llicit/main/favorites/themes"
-            local themes=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/themes" | jq -r '.[].name' | grep ".properties")
+            local themes=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/themes" | jq -r '.[].name' | command grep ".properties")
             
             if [ -z "$themes" ]; then
                 echo "⚠️ No favorites found in repository."
                 return
             fi
 
-            local selected=$(printf "%s\n" "$themes" | fzf --prompt="⭐ Favorites > " --height=15 --header="[ Ctrl-c to Cancel ]")
+            local selected=$(printf "%s\n" "$themes" | fzf --prompt="⭐ Favorites > " --height=15 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
                 echo "✨ Applying: $selected"
                 mkdir -p ~/.termux
                 curl -fsSL "$url_base/$selected" -o ~/.termux/colors.properties
                 termux-reload-settings
             fi
-            ;; 
-        *) ;; 
+            ;;;;
+        *)
+            ;;
     esac
 }
 
@@ -126,7 +126,7 @@ function lit-fonts() {
     done
 
     local options=("1) Nerd Fonts (2600+)" "2) Standard Meslo (Recommended)" "3) Favorites")
-    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="FONTS > " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ]")
+    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="FONTS > " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     case "$choice" in
         *"Nerd Fonts"*) 
@@ -138,21 +138,23 @@ function lit-fonts() {
                     fonts[$(basename "$entry")]="$entry"
                 done < <(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf|otf)$","i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .url')
                 
-                local selection=$(printf "%s\n" "${(@k)fonts}" | sort | fzf --header="[ Ctrl-c to Cancel ]")
+                local selection=$(printf "%s\n" "${(@k)fonts}" | sort | fzf --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
                 if [[ -n "$selection" ]]; then
                     echo "✨ Applying font: $selection"
                     mkdir -p ~/.termux
                     curl -fsSL "$( echo "${fonts[$selection]}" | sed 's/ /%20/g' )" -o ~/.termux/font.ttf
                     termux-reload-settings
+                else
+                    echo "⚠️ Cancelled."
                 fi
             else
                 echo " 🌐 Connection error."
             fi
-            ;; 
+            ;;;;
         *"Standard Meslo"*) 
             local meslo_base="https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts"
             local variants=("MesloLGS NF Regular.ttf" "MesloLGS NF Bold.ttf" "MesloLGS NF Italic.ttf" "MesloLGS NF Bold Italic.ttf")
-            local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="⚡ Meslo Variants > " --height=10 --header="[ Ctrl-c to Cancel ]")
+            local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="⚡ Meslo Variants > " --height=10 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
             if [[ -n "$sel" ]]; then
                 echo "✨ Installing $sel..."
@@ -161,25 +163,27 @@ function lit-fonts() {
                 termux-reload-settings
                 echo "✅ Done."
             fi
-            ;; 
+            ;;;;
         *"Favorites"*) 
             local url_base="https://raw.githubusercontent.com/LbsLightX/1llicit/main/favorites/fonts"
-            local fonts_list=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/fonts" | jq -r '.[].name' | grep -E ".ttf|.otf")
+            # Fixed: Use 'command grep' to avoid alias conflicts with rg
+            local fonts_list=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/fonts" | jq -r '.[].name' | command grep -E ".ttf|.otf")
             
             if [ -z "$fonts_list" ]; then
                 echo "⚠️ No favorites found in repository."
                 return
             fi
 
-            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="⭐ Favorites > " --height=15 --header="[ Ctrl-c to Cancel ]")
+            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="⭐ Favorites > " --height=15 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$sel" ]]; then
                 echo "✨ Installing $sel..."
                 mkdir -p ~/.termux
                 curl -fsSL "$url_base/$sel" -o ~/.termux/font.ttf
                 termux-reload-settings
             fi
-            ;; 
-        *) ;; 
+            ;;;;
+        *)
+            ;;
     esac
 }
 
