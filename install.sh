@@ -5,14 +5,26 @@ setterm -cursor off
 
 banner () {
 clear
-echo "                                      ";
-echo "  _     ___  _____  __  __            ";
-echo " | |   |_ _||_   _||  \/  | _  _ __ __";
-echo " | |__  | |   | |  | |\/| || || |\ \ /";
-echo " |____||___|  |_|  |_|  |_| \_,_|/_";
-echo "                                      ";
-echo "      Fast, beautiful, LIT AF!        ";
-echo "                                      ";
+echo -e "\033[1;34m" # Make it Blue
+echo "   ⠀⠀⠀⠀⠀  ⠀⠀⠀⠀⣴⣿⣦⠀⠀⠀⠀⠀⠀⠀  ⠀ "
+echo "  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⠂⠀⠀⠀⠀⠀⠀⠀⠀ "
+echo "  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣀⠀⠀⠀⠀⠀⠀⠀⠀ "
+echo "  ⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⣿⣿⣦⠀ "
+echo "  ⠀⠀⠀⠀⠀⠀⣴⣿⢿⣷⠒⠲⣾⣾⣿⣿ "
+echo "  ⠀⠀⠀⠀⣴⣿⠟⠁⠀⢿⣿⠁⣿⣿⣿⠻⣿⣄⠀⠀⠀⠀ "
+echo "  ⠀⠀⣠⡾⠟⠁⠀⠀⠀⢸⣿⣸⣿⣿⣿⣆⠙⢿⣷⡀⠀⠀ "
+echo "  ⣰⡿⠋⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⠀⠀⠉⠻⣿⡀ "
+echo "  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣆⠂⠀ "
+echo "  ⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⡿⣿⣿⣿⣿⡄⠀⠀⠀⠀ "
+echo "  ⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⠿⠟⠀⠀⠻⣿⣿⡇⠀⠀⠀⠀ "
+echo "  ⠀⠀⠀⠀⠀⠀⢀⣾⡿⠃⠀⠀⠀⠀⠀⠘⢿⣿⡀⠀⠀⠀ "
+echo "  ⠀⠀⠀⠀⠀⣰⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣷⡀⠀⠀ "
+echo "  ⠀⠀⠀⠀⢠⣿⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⣧⠀⠀ "
+echo "  ⠀⠀⠀⢀⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣆⠀ "
+echo "  ⠀⠀⠠⢾⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣷⡤"
+echo -e "\033[0m" # Reset color
+echo "      Fast, beautiful, 1llicit!       "
+echo ""
 }
 banner
 
@@ -31,11 +43,11 @@ done
 sleep 2
 
 # Upgrade packages.
-echo -n -e "Upgrading packages. \033[0K\r"
-shutt pkg upgrade -y -o Dpkg::Options::'--force-confnew' 2>/dev/null
+echo -n -e "Updating system. \033[0K\r"
+shutt pkg upgrade -y -o Dpkg::Options::='--force-confnew' 2>/dev/null
 sleep 2
 
-# Updating package repositories and installing packages.
+# Installing required packages.
 echo -n -e "Installing required packages. \033[0K\r"
 shutt pkg install -y curl git zsh man jq perl fzf fastfetch termux-api 2>/dev/null
 sleep 2
@@ -57,7 +69,7 @@ fi
 # 1. Define the specific backup folder with the current date/time
 BACKUP_PATH="$HOME/storage/shared/1llicit/backup/$(date +%Y_%m_%d_%H_%M)"
 
-# 2. Create that specific folder (the -p ensures it creates parents too)
+# 2. Create that specific folder
 mkdir -p "$BACKUP_PATH"
 
 # 3. Run the loop
@@ -70,13 +82,9 @@ do
     fi
 done
 
-# --- CLEAN SLATE ---
-# Delete the old file so we don't append to it twice!
+# Clean slate
 rm -f "$HOME/.zshrc"
-# -------------------
-
 sleep 2
-
 
 # Changing default shell to ZSH (if needed).
 if [[ "$SHELL" != *"zsh"* ]]; then
@@ -86,10 +94,6 @@ else
    echo -n -e "Default shell is already ZSH. Skipping. \033[0K\r"
 fi
 sleep 1
-
-# -----------------------------------------------------------------------------
-# CORE INSTALLATION
-# -----------------------------------------------------------------------------
 
 # Create hidden directory for 1llicit core
 mkdir -p "$HOME/.1llicit"
@@ -137,7 +141,6 @@ if [ ! -f ~/.termux/font.ttf ]; then
 fi
 
 # Set a default color scheme.
-# UPDATED: Points to themes/ folder
 if [ ! -f ~/.termux/colors.properties ]; then
     echo -n -e "Setting up a new color scheme. \033[0K\r"
     curl -fsSL -o ~/.termux/colors.properties 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/3024-night.properties'
@@ -157,7 +160,7 @@ termux-reload-settings
 
 # Run a ZSH shell, opens the p10k config wizard.
 banner
-echo -n -e "Installation complete, gimme cookies! \033[0K\r"
+echo -n -e "Installation complete, enjoy 1llicit! \033[0K\r"
 sleep 3
 
 # Restore cursor.
