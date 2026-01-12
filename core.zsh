@@ -160,7 +160,8 @@ function lit-fonts() {
             if [[ -n "$sel" ]]; then
                 echo "✨ Installing $sel..."
                 mkdir -p ~/.termux
-                curl -fsSL "$meslo_base/$(echo $sel | sed 's/ /%20/g')" -o ~/.termux/font.ttf
+                # FIX 1: Applied URL encoding here (Safe to keep)
+                curl -fsSL "$meslo_base/${sel// /%20}" -o ~/.termux/font.ttf
                 termux-reload-settings
                 echo "✅ Done."
             else
@@ -180,7 +181,8 @@ function lit-fonts() {
             if [[ -n "$sel" ]]; then
                 echo "✨ Installing $sel..."
                 mkdir -p ~/.termux
-                curl -fsSL "$url_base/$sel" -o ~/.termux/font.ttf
+                # FIX 2: Applied URL encoding to Favorites as well!
+                curl -fsSL "$url_base/${sel// /%20}" -o ~/.termux/font.ttf
                 termux-reload-settings
             else
                 echo "⚠️ Cancelled."
@@ -204,7 +206,7 @@ function lit-update() {
     chmod 700 "$PREFIX/bin/bsudo"
     clear
     
-    echo "Updating Fastfetch..."
+    echo "Updating Fastfetch...."
     pkg install --only-upgrade fastfetch -y > /dev/null 2>&1
     clear
     
