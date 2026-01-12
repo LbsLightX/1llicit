@@ -47,9 +47,14 @@ export FZF_DEFAULT_OPTS='--color 16'
 # 5. Custom Functions & Widgets
 # -----------------------------------------------------------------------------
 
-# Magic Backspace: cd .. on empty line
+# Magic Backspace: cd .. on empty line (Stops at HOME)
 function magic-backspace() {
     if [[ -z "$BUFFER" ]]; then
+        # Safety Check: Stop if already at HOME
+        if [[ "$PWD" == "$HOME" ]]; then
+            return
+        fi
+        
         cd ..
         zle reset-prompt
     else
@@ -57,7 +62,6 @@ function magic-backspace() {
     fi
 }
 zle -N magic-backspace
-# Corrected binding with explicit quotes
 bindkey "^?" magic-backspace
 
 function lit-colors() {
