@@ -75,7 +75,7 @@ function 1ll-colors() {
             else
                 echo "│ ⊖ Error: Can't connect to repository."
             fi
-            ;;;;
+            ;;
         *"Termux Styling"*) 
             printf "│ ◷ Fetching official Termux themes...\r"
             local themes=$(curl -fsSL "https://api.github.com/repos/termux/termux-styling/contents/app/src/main/assets/colors" | jq -r '.[].name' | command grep ".properties")
@@ -97,7 +97,7 @@ function 1ll-colors() {
             else
                 echo "│ ⚠ Cancelled."
             fi
-            ;;;;
+            ;;
         *"Favorites"*) 
             local url_base="https://raw.githubusercontent.com/LbsLightX/1llicit/main/favorites/themes"
             local themes=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/themes" | jq -r '.[].name' | command grep ".properties")
@@ -117,7 +117,7 @@ function 1ll-colors() {
             else
                 echo "│ ⚠ Cancelled."
             fi
-            ;;;;
+            ;;
         *) ;; 
     esac
     echo "╰──────────────────────"
@@ -187,7 +187,7 @@ function 1ll-fonts() {
             else
                 echo "│ ☍ Connection error."
             fi
-            ;;;;
+            ;;
         *"Standard Meslo"*) 
             local meslo_base="https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts"
             local variants=("MesloLGS NF Regular.ttf" "MesloLGS NF Bold.ttf" "MesloLGS NF Italic.ttf" "MesloLGS NF Bold Italic.ttf")
@@ -202,7 +202,7 @@ function 1ll-fonts() {
             else
                 echo "│ ⚠ Cancelled."
             fi
-            ;;;;
+            ;;
         *"Favorites"*) 
             local url_base="https://raw.githubusercontent.com/LbsLightX/1llicit/main/favorites/fonts"
             local fonts_list=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/fonts" | jq -r '.[].name' | command grep -E ".ttf|.otf")
@@ -222,7 +222,7 @@ function 1ll-fonts() {
             else
                 echo "│ ⚠ Cancelled."
             fi
-            ;;;;
+            ;;
         *) ;; 
     esac
     echo "╰──────────────────────"

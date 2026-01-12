@@ -1,6 +1,8 @@
 # ! 1llicit ! 1llicit ! 1llicit ! 
 
 <!--
+"[✨Personal💅] A complete framework for Termux. Automated Zsh   + P10k + Nerd Fonts environment."
+
 ## One-Line Installer
 
 Run the following command in Termux:
