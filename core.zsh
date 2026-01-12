@@ -74,10 +74,10 @@ function lit-colors() {
             else
                 echo "❌ Error: Can't connect to repository."
             fi
-            ;;
+            ;; 
         *"Termux Styling"*) 
             local officials=("Dracula" "Solarized-Dark" "Solarized-Light" "Gruvbox-Dark" "One-Dark" "Nord")
-            local selected=$(printf "%s\n" "${officials[@]}" | fzf --prompt="Official > " --height=15 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local selected=$(printf "%s\n" "${officials[@]}" | fzf --prompt="Official > " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
                 local url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/${selected}.properties"
                 # Fix naming mismatches manually
@@ -95,7 +95,7 @@ function lit-colors() {
             else
                 echo "⚠️ Cancelled."
             fi
-            ;;
+            ;; 
         *"Favorites"*) 
             local url_base="https://raw.githubusercontent.com/LbsLightX/1llicit/main/favorites/themes"
             local themes=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/themes" | jq -r '.[].name' | command grep ".properties")
@@ -105,7 +105,7 @@ function lit-colors() {
                 return
             fi
 
-            local selected=$(printf "%s\n" "$themes" | fzf --prompt="Favorites > " --height=15 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local selected=$(printf "%s\n" "$themes" | fzf --prompt="Favorites > " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
                 echo "✨ Applying: $selected"
                 mkdir -p ~/.termux
@@ -114,7 +114,7 @@ function lit-colors() {
             else
                 echo "⚠️ Cancelled."
             fi
-            ;;
+            ;; 
         *) ;;
     esac
 }
@@ -136,17 +136,15 @@ function lit-fonts() {
             if curl --output /dev/null --silent --head --fail "https://github.com/LbsLightX/1llicit"; then
                 echo "⏳ Fetching fonts list from repository (Stable v3.4.0)... please wait, this may take 1-2 minutes."
                 
-                # Optimized Fetch: Pipe directly to FZF (No Loop)
-                # Format: "Filename | URL"
-                # FZF shows: Column 1 (Filename)
+                # Optimized Fetch: Direct Pipe
+                # FIX 1: Strict Regex for .ttf|.otf (case insensitive)
+                # FIX 2: Layout=reverse and Height=15
                 local selection=$(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | \
-                    jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf|otf)$","i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .path + " | " + .url' | \
-                    fzf --delimiter=" | " --with-nth=1 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+                    jq -r '.tree[] | select(.path|test("\\.(ttf|otf)$"; "i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .path + " | " + .url' | \
+                    fzf --delimiter=" | " --with-nth=1 --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
                 
                 if [[ -n "$selection" ]]; then
-                    # Extract URL (Everything after " | ")
                     local url=$(echo "$selection" | sed 's/.* | //')
-                    # Extract Filename (Everything before " | ")
                     local name=$(echo "$selection" | sed 's/ | .*//' | xargs basename)
                     
                     echo "✨ Applying font: $name"
@@ -159,11 +157,11 @@ function lit-fonts() {
             else
                 echo " 🌐 Connection error."
             fi
-            ;;
+            ;; 
         *"Standard Meslo"*) 
             local meslo_base="https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts"
             local variants=("MesloLGS NF Regular.ttf" "MesloLGS NF Bold.ttf" "MesloLGS NF Italic.ttf" "MesloLGS NF Bold Italic.ttf")
-            local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="Meslo Variants > " --height=10 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="Meslo Variants > " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
             if [[ -n "$sel" ]]; then
                 echo "✨ Installing $sel..."
@@ -174,7 +172,7 @@ function lit-fonts() {
             else
                 echo "⚠️ Cancelled."
             fi
-            ;;
+            ;; 
         *"Favorites"*) 
             local url_base="https://raw.githubusercontent.com/LbsLightX/1llicit/main/favorites/fonts"
             local fonts_list=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/fonts" | jq -r '.[].name' | command grep -E ".ttf|.otf")
@@ -184,7 +182,7 @@ function lit-fonts() {
                 return
             fi
 
-            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="Favorites > " --height=15 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="Favorites > " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$sel" ]]; then
                 echo "✨ Installing $sel..."
                 mkdir -p ~/.termux
@@ -193,7 +191,7 @@ function lit-fonts() {
             else
                 echo "⚠️ Cancelled."
             fi
-            ;;
+            ;; 
         *) ;;
     esac
 }
