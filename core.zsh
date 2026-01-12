@@ -12,23 +12,20 @@ zinit lucid light-mode for \
 # -----------------------------------------------------------------------------
 # 2. Plugins (Syntax Highlighting, Autosuggestions, History Search)
 # -----------------------------------------------------------------------------
-# LOAD ORDER IS CRITICAL:
-# 1. History Substring Search (Must be loaded before Syntax Highlighting)
-# 2. Autosuggestions
-# 3. Completions
-# 4. Fast Syntax Highlighting (Must be LAST to wrap widgets correctly)
+# EXPERIMENTAL ORDER CHANGE:
+# Documentation says Syntax Highlighting should be loaded BEFORE History Search.
 
 zinit wait lucid light-mode for \
   atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay" \
-  atload"bindkey '^[[A' history-substring-search-up; bindkey '^[[B' history-substring-search-down; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=magenta,bold'; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='fg=red,bold'" \
-      zsh-users/zsh-history-substring-search \
+      zdharma-continuum/fast-syntax-highlighting \
       OMZP::colored-man-pages \
       OMZP::git \
   atload"!_zsh_autosuggest_start" \
       zsh-users/zsh-autosuggestions \
   blockf atpull'zinit creinstall -q .' \
       zsh-users/zsh-completions \
-  zdharma-continuum/fast-syntax-highlighting
+  atload"bindkey '^[[A' history-substring-search-up; bindkey '^[[B' history-substring-search-down; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=magenta,bold'; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='fg=red,bold'" \
+      zsh-users/zsh-history-substring-search
 
 # -----------------------------------------------------------------------------
 # 3. Theme (Powerlevel10k)
@@ -86,7 +83,7 @@ function lit-fonts() {
             fonts[$(basename "$entry")]="$entry"
         done < <(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf|otf)$","i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .url')
         
-        # Display menu using Zsh key expansion ${(@k)fonts}
+        # Display menu using Zsh key expansion
         choice=$(printf "%s\n" "${(@k)fonts}" | sort | fzf)
         
         if [ $? -eq 0 ]; then
