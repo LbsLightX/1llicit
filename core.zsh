@@ -44,12 +44,24 @@ zinit wait lucid is-snippet for \
 export FZF_DEFAULT_OPTS='--color 16'
 
 # -----------------------------------------------------------------------------
-# 5. Custom Functions
+# 5. Custom Functions & Widgets
 # -----------------------------------------------------------------------------
+
+# Magic Backspace: cd .. on empty line
+function magic-backspace() {
+    if [[ -z "$BUFFER" ]]; then
+        cd ..
+        zle reset-prompt
+    else
+        zle backward-delete-char
+    fi
+}
+zle -N magic-backspace
+bindkey'^?' magic-backspace
 
 function lit-colors() {
     # Check connection
-    if [ $(curl -s -o /dev/null -I -w "%{http_code}" https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh) -eq 200 ]; then
+    if [ $(curl -s -o /dev/null -I -w "% {http_code}") -eq 200 ]; then
         echo "Loading color scheme menu, please wait."
         bash -c "$(curl -fsSL 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh')"
         clear
@@ -65,13 +77,13 @@ function lit-fonts() {
             echo "Installing missing dependency: $pkg"
             pkg install -y $pkg
         fi
-done
+    done
 
     # Check connection (Using 1llicit main repo as ping target)
-    status_code=$(curl -s -o /dev/null -I -w "%{http_code}" "https://github.com/LbsLightX/1llicit")
+    status_code=$(curl -s -o /dev/null -I -w "% {http_code}" "https://github.com/LbsLightX/1llicit")
     
     if [ "$status_code" -eq "200" ]; then
-        echo "⏳ Fetching fonts list from repository (Stable v3.4.0)... please wait, this may take 1-2 minutes."
+        echo "⏳ Fetching fonts list from repository (Stable v3.4.0). Please wait, this may take 1-2 minutes."
         
         # Zsh Associative Array Declaration
         typeset -A fonts
@@ -82,7 +94,7 @@ done
             fonts[$(basename "$entry")]="$entry"
         done < <(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf|otf)$","i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .url')
         
-        # Display menu using Zsh key expansion
+        # Display menu using Zsh key expansion ${(@k)fonts}
         choice=$(printf "%s\n" "${(@k)fonts}" | sort | fzf)
         
         if [ $? -eq 0 ]; then
