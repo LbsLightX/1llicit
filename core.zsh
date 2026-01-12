@@ -19,11 +19,11 @@ zinit lucid light-mode for \
 # 4. Fast Syntax Highlighting (Must be LAST to wrap widgets correctly)
 
 zinit wait lucid light-mode for \
-  atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay" \
+  atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay; ZSH_AUTOSUGGEST_STRATEGY=(history completion)" \
       zsh-users/zsh-history-substring-search \
       OMZP::colored-man-pages \
       OMZP::git \
-  atload"!_zsh_autosuggest_start" \
+  atload"!_zsh_autosuggest_start; bindkey('^ ') autosuggest-accept" \
       zsh-users/zsh-autosuggestions \
   blockf atpull'zinit creinstall -q .' \
       zsh-users/zsh-completions \
@@ -66,12 +66,11 @@ function lit-colors() {
 function lit-fonts() {
     # Ensure dependencies
     for pkg in jq curl fzf; do
-        if ! command -v $pkg >/dev/null 2>&1;
- then
+        if ! command -v $pkg >/dev/null 2>&1; then
             echo "Installing missing dependency: $pkg"
             pkg install -y $pkg
         fi
-    done
+done
 
     # Check connection (Using 1llicit main repo as ping target)
     status_code=$(curl -s -o /dev/null -I -w "%{http_code}" "https://github.com/LbsLightX/1llicit")
@@ -82,13 +81,13 @@ function lit-fonts() {
         # Zsh Associative Array Declaration
         typeset -A fonts
         
-        # Fetch and Parse
+        # Fetch and Parse (Using quoted URL)
         while IFS= read -r entry
         do
             fonts[$(basename "$entry")]="$entry"
         done < <(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf|otf)$","i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .url')
         
-        # Display menu using Zsh key expansion ${(@k)fonts}
+        # Display menu using Zsh key expansion
         choice=$(printf "%s\n" "${(@k)fonts}" | sort | fzf)
         
         if [ $? -eq 0 ]; then

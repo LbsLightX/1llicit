@@ -6,7 +6,7 @@ setterm -cursor off
 banner () {
 clear
 echo -e "\033[1;34m" # Make it Blue
-echo "   ⠀⠀⠀⠀⠀  ⠀⠀⠀⠀⣴⣿⣦⠀⠀⠀⠀⠀⠀⠀  ⠀ "
+echo "   ⠀⠀⠀  ⠀⠀⠀⠀⣴⣿⣦⠀⠀⠀⠀⠀⠀⠀  ⠀ "
 echo "  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⠂⠀⠀⠀⠀⠀⠀⠀⠀ "
 echo "  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣀⠀⠀⠀⠀⠀⠀⠀⠀ "
 echo "  ⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⣿⣿⣦⠀ "
