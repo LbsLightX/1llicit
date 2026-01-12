@@ -75,7 +75,7 @@ function 1ll-colors() {
             else
                 echo "│ ⊖ Error: Can't connect to repository."
             fi
-            ;;
+            ;; 
         *"Termux Styling"*) 
             printf "│ ◷ Fetching official Termux themes...\r"
             local themes=$(curl -fsSL "https://api.github.com/repos/termux/termux-styling/contents/app/src/main/assets/colors" | jq -r '.[].name' | command grep ".properties")
@@ -97,7 +97,7 @@ function 1ll-colors() {
             else
                 echo "│ ⚠ Cancelled."
             fi
-            ;;
+            ;; 
         *"Favorites"*) 
             local url_base="https://raw.githubusercontent.com/LbsLightX/1llicit/main/favorites/themes"
             local themes=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/themes" | jq -r '.[].name' | command grep ".properties")
@@ -117,7 +117,7 @@ function 1ll-colors() {
             else
                 echo "│ ⚠ Cancelled."
             fi
-            ;;
+            ;; 
         *) ;; 
     esac
     echo "╰──────────────────────"
@@ -130,19 +130,31 @@ function 1ll-syntax() {
         return 1
     fi
 
-    local themes=$(fast-theme -l | awk '{print $1}')
+    local options=("⦿ Browse Theme List (Preview)" "⦿ Select via Menu (Quick)")
     
     echo -e "\n  ╭── \033[1;34mSYNTAX THEME\033[0m ❀ ──"
-    
-    local selected=$(echo "$themes" | fzf --prompt="│ Syntax ⫸ " --height=15 --layout=reverse --header="│ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
-    
-    if [[ -n "$selected" ]]; then
-        printf "│ ◷ Applying: $selected...\r"
-        fast-theme "$selected" >/dev/null 2>&1
-        printf "│ ❀ Applied: $selected                                    \n"
-    else
-        echo "│ ⚠ Cancelled."
-    fi
+    local mode=$(printf "%s\n" "${options[@]}" | fzf --prompt="│ Mode ⫸ " --height=10 --layout=reverse --header="│ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+
+    case "$mode" in
+        *"Browse"*) 
+            # Run the official preview tool
+            echo "│ ◷ Loading previews..."
+            fast-theme -l
+            ;; 
+        *"Select"*) 
+            local themes=$(fast-theme -l | awk '{print $1}')
+            local selected=$(echo "$themes" | fzf --prompt="│ Syntax ⫸ " --height=15 --layout=reverse --header="│ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            
+            if [[ -n "$selected" ]]; then
+                printf "│ ◷ Applying: $selected...\r"
+                fast-theme "$selected" >/dev/null 2>&1
+                printf "│ ❀ Applied: $selected                                    \n"
+            else
+                echo "│ ⚠ Cancelled."
+            fi
+            ;; 
+        *) ;; 
+    esac
     echo "╰───────────────────"
 }
 
@@ -187,7 +199,7 @@ function 1ll-fonts() {
             else
                 echo "│ ☍ Connection error."
             fi
-            ;;
+            ;; 
         *"Standard Meslo"*) 
             local meslo_base="https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts"
             local variants=("MesloLGS NF Regular.ttf" "MesloLGS NF Bold.ttf" "MesloLGS NF Italic.ttf" "MesloLGS NF Bold Italic.ttf")
@@ -202,7 +214,7 @@ function 1ll-fonts() {
             else
                 echo "│ ⚠ Cancelled."
             fi
-            ;;
+            ;; 
         *"Favorites"*) 
             local url_base="https://raw.githubusercontent.com/LbsLightX/1llicit/main/favorites/fonts"
             local fonts_list=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/fonts" | jq -r '.[].name' | command grep -E ".ttf|.otf")
@@ -222,7 +234,7 @@ function 1ll-fonts() {
             else
                 echo "│ ⚠ Cancelled."
             fi
-            ;;
+            ;; 
         *) ;; 
     esac
     echo "╰──────────────────────"
