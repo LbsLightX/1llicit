@@ -74,7 +74,7 @@ function lit-colors() {
             else
                 echo "❌ Error: Can't connect to repository."
             fi
-            ;;
+            ;; 
         *"Termux Styling"*) 
             local officials=("Dracula" "Solarized-Dark" "Solarized-Light" "Gruvbox-Dark" "One-Dark" "Nord")
             local selected=$(printf "%s\n" "${officials[@]}" | fzf --prompt="Official > " --height=15 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
@@ -93,7 +93,7 @@ function lit-colors() {
                 curl -fsSL "$url" -o ~/.termux/colors.properties
                 termux-reload-settings
             fi
-            ;;
+            ;; 
         *"Favorites"*) 
             local url_base="https://raw.githubusercontent.com/LbsLightX/1llicit/main/favorites/themes"
             local themes=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/themes" | jq -r '.[].name' | command grep ".properties")
@@ -103,16 +103,15 @@ function lit-colors() {
                 return
             fi
 
-            local selected=$(printf "%s\n" "$themes" | fzf --prompt="⭐ Favorites > " --height=15 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local selected=$(printf "%s\n" "$themes" | fzf --prompt="Favorites > " --height=15 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
                 echo "✨ Applying: $selected"
                 mkdir -p ~/.termux
                 curl -fsSL "$url_base/$selected" -o ~/.termux/colors.properties
                 termux-reload-settings
             fi
-            ;;
-        *)
-            ;;
+            ;; 
+        *) ;; 
     esac
 }
 
@@ -125,6 +124,7 @@ function lit-fonts() {
         fi
     done
 
+    # Emojis REMOVED from options as requested
     local options=("1) Nerd Fonts (2600+)" "2) Standard Meslo (Recommended)" "3) Favorites")
     local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="FONTS > " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
@@ -150,11 +150,11 @@ function lit-fonts() {
             else
                 echo " 🌐 Connection error."
             fi
-            ;;
+            ;; 
         *"Standard Meslo"*) 
             local meslo_base="https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts"
             local variants=("MesloLGS NF Regular.ttf" "MesloLGS NF Bold.ttf" "MesloLGS NF Italic.ttf" "MesloLGS NF Bold Italic.ttf")
-            local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="⚡ Meslo Variants > " --height=10 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="Meslo Variants > " --height=10 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
             if [[ -n "$sel" ]]; then
                 echo "✨ Installing $sel..."
@@ -163,10 +163,9 @@ function lit-fonts() {
                 termux-reload-settings
                 echo "✅ Done."
             fi
-            ;;
+            ;; 
         *"Favorites"*) 
             local url_base="https://raw.githubusercontent.com/LbsLightX/1llicit/main/favorites/fonts"
-            # Fixed: Use 'command grep' to avoid alias conflicts with rg
             local fonts_list=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/fonts" | jq -r '.[].name' | command grep -E ".ttf|.otf")
             
             if [ -z "$fonts_list" ]; then
@@ -174,16 +173,15 @@ function lit-fonts() {
                 return
             fi
 
-            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="⭐ Favorites > " --height=15 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="Favorites > " --height=15 --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$sel" ]]; then
                 echo "✨ Installing $sel..."
                 mkdir -p ~/.termux
                 curl -fsSL "$url_base/$sel" -o ~/.termux/font.ttf
                 termux-reload-settings
             fi
-            ;;
-        *)
-            ;;
+            ;; 
+        *) ;; 
     esac
 }
 
