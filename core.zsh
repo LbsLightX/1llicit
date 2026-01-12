@@ -57,11 +57,12 @@ function magic-backspace() {
     fi
 }
 zle -N magic-backspace
-bindkey'^?' magic-backspace
+# Corrected binding with explicit quotes
+bindkey "^?" magic-backspace
 
 function lit-colors() {
     # Check connection
-    if [ $(curl -s -o /dev/null -I -w "% {http_code}") -eq 200 ]; then
+    if [ $(curl -s -o /dev/null -I -w "% {http_code}" https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh) -eq 200 ]; then
         echo "Loading color scheme menu, please wait."
         bash -c "$(curl -fsSL 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh')"
         clear
