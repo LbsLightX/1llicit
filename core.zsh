@@ -33,6 +33,10 @@ zinit wait lucid light-mode for \
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
+# Visual Highlighting for History Search
+HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=magenta,bold'
+HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='fg=red,bold'
+
 # -----------------------------------------------------------------------------
 # 3. Theme (Powerlevel10k)
 # -----------------------------------------------------------------------------
@@ -67,7 +71,7 @@ function lit-fonts() {
     # Ensure dependencies
     for pkg in jq curl fzf; do
         if ! command -v $pkg >/dev/null 2>&1;
- then
+        then
             echo "Installing missing dependency: $pkg"
             pkg install -y $pkg
         fi
@@ -77,7 +81,7 @@ function lit-fonts() {
     status_code=$(curl -s -o /dev/null -I -w "%{http_code}" "https://github.com/LbsLightX/1llicit")
     
     if [ "$status_code" -eq "200" ]; then
-        echo "Fetching fonts list from repository (Stable v3.4.0)... please wait, this may take 1-2 minutes."
+        echo "⏳ Fetching fonts list from repository (Stable v3.4.0). Please wait, this may take 1-2 minutes."
         
         # Zsh Associative Array Declaration
         typeset -A fonts
@@ -85,7 +89,6 @@ function lit-fonts() {
         # Fetch and Parse (Using quoted URL)
         while IFS= read -r entry
         do
-            # Store in array: Key=Filename, Value=URL
             fonts[$(basename "$entry")]="$entry"
         done < <(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf|otf)$","i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .url')
         
@@ -93,22 +96,22 @@ function lit-fonts() {
         choice=$(printf "%s\n" "${(@k)fonts}" | sort | fzf)
         
         if [ $? -eq 0 ]; then
-            echo "Applying font: $choice"
+            echo "✨ Applying font: $choice"
             mkdir -p ~/.termux
             # Retrieve URL using the key
             if curl -fsSL "$( echo "${fonts[$choice]}" | sed 's/ /%20/g' )" -o ~/.termux/font.ttf; then
                 termux-reload-settings
                 if [ $? -ne 0 ]; then
-                    echo "Failed to apply font."
+                    echo "❌ Failed to apply font."
                 fi
             else
-                echo "Failed to download font."
+                echo " 🚫 Failed to download font."
             fi
         else
-            echo "Cancelled fonts selection."
+            echo "⚠️ Cancelled fonts selection."
         fi
     else
-        echo "Make sure you're connected to the internet!"
+        echo " 🌐 Please check your internet/ dns and try again."
     fi
 }
 
@@ -134,7 +137,7 @@ function lit-update() {
     echo "Updating 1llicit Core..."
     curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > $HOME/.1llicit/core.zsh
     
-    echo "Updated successfully, enjoy!"
+    echo "✨ Updated successfully, enjoy! 👯"
     sleep 2
     clear
     exec zsh
