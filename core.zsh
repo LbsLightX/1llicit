@@ -10,31 +10,17 @@ zinit lucid light-mode for \
     OMZL::key-bindings.zsh
 
 # -----------------------------------------------------------------------------
-# 2. Plugins (Syntax Highlighting, Autosuggestions, History Search)
+# 2. Plugins (Syntax Highlighting, Autosuggestions)
 # -----------------------------------------------------------------------------
-
-# A. Standard Plugins (Completions, Man Pages, Git)
 zinit wait lucid light-mode for \
-  atinit"zpcompinit; zpcdreplay" \
+  atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay" \
+      zdharma-continuum/fast-syntax-highlighting \
       OMZP::colored-man-pages \
       OMZP::git \
-  blockf atpull'zinit creinstall -q .'
+  atload"!_zsh_autosuggest_start" \
+      zsh-users/zsh-autosuggestions \
+  blockf atpull'zinit creinstall -q .' \
       zsh-users/zsh-completions
-
-# B. Autosuggestions (With Config)
-zinit wait lucid light-mode for \
-  atinit"ZSH_AUTOSUGGEST_STRATEGY=(history completion)" \
-  atload"!_zsh_autosuggest_start; bindkey(' ' autosuggest-accept')" \
-      zsh-users/zsh-autosuggestions
-
-# C. History Substring Search (Arrows) - Must load BEFORE Syntax Highlighting
-zinit wait lucid light-mode for \
-  atload"bindkey('^[[A' history-substring-search-up; bindkey('^[[B' history-substring-search-down')" \
-      zsh-users/zsh-history-substring-search
-
-# D. Fast Syntax Highlighting (Must be LAST)
-zinit wait lucid light-mode for \
-      zdharma-continuum/fast-syntax-highlighting
 
 # -----------------------------------------------------------------------------
 # 3. Theme (Powerlevel10k)
@@ -73,7 +59,7 @@ function lit-fonts() {
             echo "Installing missing dependency: $pkg"
             pkg install -y $pkg
         fi
-done
+    done
 
     # Check connection (Using 1llicit main repo as ping target)
     status_code=$(curl -s -o /dev/null -I -w "%{http_code}" "https://github.com/LbsLightX/1llicit")
