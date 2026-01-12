@@ -68,9 +68,7 @@ function lit-colors() {
     case "$choice" in
         *"1llicit Theme"*) 
             if curl --output /dev/null --silent --head --fail "https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh"; then
-                echo "Loading full library..."
                 bash -c "$(curl -fsSL 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh')"
-                clear
             else
                 echo "❌ Error: Can't connect to repository."
             fi
@@ -80,7 +78,6 @@ function lit-colors() {
             local selected=$(printf "%s\n" "${officials[@]}" | fzf --prompt="Official > " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
                 local url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/${selected}.properties"
-                # Fix naming mismatches manually
                 [[ "$selected" == "Dracula" ]] && url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/dracula.properties"
                 [[ "$selected" == "Solarized-Dark" ]] && url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/solarized-dark.properties"
                 [[ "$selected" == "Solarized-Light" ]] && url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/solarized-light.properties"
@@ -136,16 +133,14 @@ function lit-fonts() {
             if curl --output /dev/null --silent --head --fail "https://github.com/LbsLightX/1llicit"; then
                 echo "⏳ Fetching fonts list from repository (Stable v3.4.0)... please wait, this may take 1-2 minutes."
                 
-                # Optimized Fetch: Direct Pipe
-                # FIX 1: Strict Regex for .ttf|.otf (case insensitive)
-                # FIX 2: Layout=reverse and Height=15
+                # OPTIMIZED: Clean Filename Display using jq (split/last)
                 local selection=$(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | \
-                    jq -r '.tree[] | select(.path|test("\\.(ttf|otf)$"; "i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .path + " | " + .url' | \
+                    jq -r '.tree[] | select(.path|test("\\.(ttf|otf)$"; "i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | (.path | split("/") | last) + " | " + .url' | \
                     fzf --delimiter=" | " --with-nth=1 --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
                 
                 if [[ -n "$selection" ]]; then
                     local url=$(echo "$selection" | sed 's/.* | //')
-                    local name=$(echo "$selection" | sed 's/ | .*//' | xargs basename)
+                    local name=$(echo "$selection" | sed 's/ | .*//')
                     
                     echo "✨ Applying font: $name"
                     mkdir -p ~/.termux
