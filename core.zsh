@@ -70,7 +70,7 @@ function lit-colors() {
             if curl --output /dev/null --silent --head --fail "https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh"; then
                 echo "Loading full library..."
                 bash -c "$(curl -fsSL 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh')"
-                clear
+                # Removed 'clear' here too, just in case
             else
                 echo "❌ Error: Can't connect to repository."
             fi
@@ -92,6 +92,8 @@ function lit-colors() {
                 mkdir -p ~/.termux
                 curl -fsSL "$url" -o ~/.termux/colors.properties
                 termux-reload-settings
+            else
+                echo "⚠️ Cancelled."
             fi
             ;; 
         *"Favorites"*) 
@@ -109,6 +111,8 @@ function lit-colors() {
                 mkdir -p ~/.termux
                 curl -fsSL "$url_base/$selected" -o ~/.termux/colors.properties
                 termux-reload-settings
+            else
+                echo "⚠️ Cancelled."
             fi
             ;; 
         *) ;; 
@@ -124,7 +128,6 @@ function lit-fonts() {
         fi
     done
 
-    # Emojis REMOVED from options as requested
     local options=("1) Nerd Fonts (2600+)" "2) Standard Meslo (Recommended)" "3) Favorites")
     local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="FONTS > " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
@@ -136,7 +139,7 @@ function lit-fonts() {
                 while IFS= read -r entry
                 do
                     fonts[$(basename "$entry")]="$entry"
-                done < <(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf|otf)$","i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .url')
+                done < <(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf|otf)$", "i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .url')
                 
                 local selection=$(printf "%s\n" "${(@k)fonts}" | sort | fzf --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
                 if [[ -n "$selection" ]]; then
@@ -162,6 +165,8 @@ function lit-fonts() {
                 curl -fsSL "$meslo_base/$(echo $sel | sed 's/ /%20/g')" -o ~/.termux/font.ttf
                 termux-reload-settings
                 echo "✅ Done."
+            else
+                echo "⚠️ Cancelled."
             fi
             ;; 
         *"Favorites"*) 
@@ -179,6 +184,8 @@ function lit-fonts() {
                 mkdir -p ~/.termux
                 curl -fsSL "$url_base/$sel" -o ~/.termux/font.ttf
                 termux-reload-settings
+            else
+                echo "⚠️ Cancelled."
             fi
             ;; 
         *) ;; 
