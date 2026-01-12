@@ -74,20 +74,20 @@ function lit-colors() {
             fi
             ;; 
         *"Termux Styling"*) 
-            local officials=("Dracula" "Solarized-Dark" "Solarized-Light" "Gruvbox-Dark" "One-Dark" "Nord")
-            local selected=$(printf "%s\n" "${officials[@]}" | fzf --prompt="Official > " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
-            if [[ -n "$selected" ]]; then
-                local url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/${selected}.properties"
-                [[ "$selected" == "Dracula" ]] && url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/dracula.properties"
-                [[ "$selected" == "Solarized-Dark" ]] && url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/solarized-dark.properties"
-                [[ "$selected" == "Solarized-Light" ]] && url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/solarized-light.properties"
-                [[ "$selected" == "Gruvbox-Dark" ]] && url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/gruvbox-dark.properties"
-                [[ "$selected" == "One-Dark" ]] && url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/one-dark.properties"
-                [[ "$selected" == "Nord" ]] && url="https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/nord.properties"
+            # REAL FETCH from official Termux Styling repository
+            echo "⏳ Fetching official Termux themes..."
+            local themes=$(curl -fsSL "https://api.github.com/repos/termux/termux-styling/contents/app/src/main/assets/colors" | jq -r '.[].name' | command grep ".properties")
+            
+            if [ -z "$themes" ]; then
+                echo "❌ Error: Could not fetch official themes."
+                return
+            fi
 
-                echo "✨ Applying: $selected"
+            local selected=$(printf "%s\n" "$themes" | fzf --prompt="Official > " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            if [[ -n "$selected" ]]; then
+                echo "✨ Applying Official: $(echo $selected | sed 's/\.properties//')"
                 mkdir -p ~/.termux
-                curl -fsSL "$url" -o ~/.termux/colors.properties
+                curl -fsSL "https://raw.githubusercontent.com/termux/termux-styling/master/app/src/main/assets/colors/$selected" -o ~/.termux/colors.properties
                 termux-reload-settings
             else
                 echo "⚠️ Cancelled."
@@ -133,7 +133,6 @@ function lit-fonts() {
             if curl --output /dev/null --silent --head --fail "https://github.com/LbsLightX/1llicit"; then
                 echo "⏳ Fetching fonts list from repository (Stable v3.4.0)... please wait, this may take 1-2 minutes."
                 
-                # OPTIMIZED: Clean Filename Display using jq (split/last)
                 local selection=$(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | \
                     jq -r '.tree[] | select(.path|test("\\.(ttf|otf)$"; "i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | (.path | split("/") | last) + " | " + .url' | \
                     fzf --delimiter=" | " --with-nth=1 --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
