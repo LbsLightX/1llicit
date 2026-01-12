@@ -61,7 +61,7 @@ zle -N magic-backspace
 bindkey "^?" magic-backspace
 
 # --- THEME MANAGER (Colors) ---
-function lit-colors() {
+function 1ll-colors() {
     local options=("⦿ 1llicit Theme (Gogh Sync)" "⦿ Termux Styling (Official)" "⦿ Favorites (Recommended)")
     echo -e "\n  \033[1;34m【 THEME LIBRARY SELECTION 】\033[0m"
     echo -e "  \033[1;30m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
@@ -122,14 +122,14 @@ function lit-colors() {
 }
 
 # --- SYNTAX HIGHLIGHTING MANAGER ---
-function lit-theme() {
+function 1ll-syntax() {
     # Verify fast-theme exists
     if ! command -v fast-theme >/dev/null 2>&1; then
         echo "✕ Error: fast-syntax-highlighting plugin not loaded."
         return 1
     fi
 
-    # Get list of themes (fast-theme -l prints raw list)
+    # Get list of themes
     local themes=$(fast-theme -l | awk '{print $1}')
     
     echo -e "\n  \033[1;34m【 SYNTAX THEME SELECTION 】\033[0m"
@@ -147,7 +147,7 @@ function lit-theme() {
 }
 
 # --- FONT MANAGER ---
-function lit-fonts() {
+function 1ll-fonts() {
     for pkg in jq curl fzf; do
         if ! command -v $pkg >/dev/null 2>&1; then
             printf "◷ Installing missing dependency: $pkg...\r"
@@ -227,7 +227,7 @@ function lit-fonts() {
     esac
 }
 
-function lit-update() {
+function 1ll-update() {
     printf "◷ Updating system packages...\r"
     pkg update && pkg upgrade -y >/dev/null 2>&1
     printf "✔ Updating system packages... Done!\n"
