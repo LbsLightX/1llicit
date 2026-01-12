@@ -12,6 +12,10 @@ zinit lucid light-mode for \
 # -----------------------------------------------------------------------------
 # 2. Plugins (Syntax Highlighting, Autosuggestions, History Search)
 # -----------------------------------------------------------------------------
+# LOAD ORDER IS CRITICAL:
+# 1. Syntax Highlighting (Must load BEFORE History Search)
+# 2. History Substring Search (Loads AFTER Syntax Highlighting)
+
 zinit wait lucid light-mode for \
   atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay" \
       zdharma-continuum/fast-syntax-highlighting \
@@ -60,7 +64,7 @@ bindkey "^?" magic-backspace
 function 1ll-colors() {
     local options=("⦿ 1llicit Theme (Gogh Sync)" "⦿ Termux Styling (Official)" "⦿ Favorites (Recommended)")
     
-    echo -e "\n  ╭── \033[1;34mTHEME LIBRARY\033[0m ──"
+    echo -e "\n  ╭── \033[1;34mTHEME LIBRARY\033[0m ✿ ──"
     # Using the bar style requested
     local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="│ ⫸ " --height=10 --layout=reverse --header="│ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
@@ -89,7 +93,7 @@ function 1ll-colors() {
                 mkdir -p ~/.termux
                 curl -fsSL "https://raw.githubusercontent.com/termux/termux-styling/master/app/src/main/assets/colors/$selected" -o ~/.termux/colors.properties >/dev/null 2>&1
                 termux-reload-settings
-                printf "│ ⊕ Applied: $(echo $selected | sed 's/\.properties//')         \n"
+                printf "│ ❀ Applied: $(echo $selected | sed 's/\.properties//')         \n"
             else
                 echo "│ ⚠ Cancelled."
             fi
@@ -109,13 +113,12 @@ function 1ll-colors() {
                 mkdir -p ~/.termux
                 curl -fsSL "$url_base/$selected" -o ~/.termux/colors.properties >/dev/null 2>&1
                 termux-reload-settings
-                printf "│ ⊕ Applied: $selected         \n"
+                printf "│ ❀ Applied: $selected         \n"
             else
                 echo "│ ⚠ Cancelled."
             fi
             ;;;;
-        *)
-            ;;;
+        *) ;; 
     esac
     echo "╰──────────────────────"
 }
@@ -129,14 +132,14 @@ function 1ll-syntax() {
 
     local themes=$(fast-theme -l | awk '{print $1}')
     
-    echo -e "\n  ╭── \033[1;34mSYNTAX THEME\033[0m ──"
+    echo -e "\n  ╭── \033[1;34mSYNTAX THEME\033[0m ❀ ──"
     
     local selected=$(echo "$themes" | fzf --prompt="│ Syntax ⫸ " --height=15 --layout=reverse --header="│ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
     
     if [[ -n "$selected" ]]; then
         printf "│ ◷ Applying: $selected...\r"
         fast-theme "$selected" >/dev/null 2>&1
-        printf "│ ⊕ Applied: $selected                                    \n"
+        printf "│ ❀ Applied: $selected                                    \n"
     else
         echo "│ ⚠ Cancelled."
     fi
@@ -145,7 +148,7 @@ function 1ll-syntax() {
 
 # --- FONT MANAGER ---
 function 1ll-fonts() {
-    echo -e "\n  ╭── \033[1;34mFONT LIBRARY\033[0m ──"
+    echo -e "\n  ╭── \033[1;34mFONT LIBRARY\033[0m ✽ ──"
     
     for pkg in jq curl fzf; do
         if ! command -v $pkg >/dev/null 2>&1; then
@@ -177,7 +180,7 @@ function 1ll-fonts() {
                     mkdir -p ~/.termux
                     curl -fsSL "$(echo $url | sed 's/ /%20/g')" -o ~/.termux/font.ttf >/dev/null 2>&1
                     termux-reload-settings
-                    printf "│ ⊕ Installed: $name                                         \n"
+                    printf "│ ❀ Installed: $name                                         \n"
                 else
                     echo "│ ⚠ Cancelled."
                 fi
@@ -195,7 +198,7 @@ function 1ll-fonts() {
                 mkdir -p ~/.termux
                 curl -fsSL "$meslo_base/${sel// /%20}" -o ~/.termux/font.ttf >/dev/null 2>&1
                 termux-reload-settings
-                printf "│ ⊕ Installed: $sel                                         \n"
+                printf "│ ❀ Installed: $sel                                         \n"
             else
                 echo "│ ⚠ Cancelled."
             fi
@@ -215,19 +218,18 @@ function 1ll-fonts() {
                 mkdir -p ~/.termux
                 curl -fsSL "$url_base/${sel// /%20}" -o ~/.termux/font.ttf >/dev/null 2>&1
                 termux-reload-settings
-                printf "│ ⊕ Installed: $sel                                         \n"
+                printf "│ ❀ Installed: $sel                                         \n"
             else
                 echo "│ ⚠ Cancelled."
             fi
             ;;;;
-        *)
-            ;;;
+        *) ;; 
     esac
-    echo "╰───────────────────"
+    echo "╰──────────────────────"
 }
 
 function 1ll-update() {
-    echo -e "\n  ╭── \033[1;34mSYSTEM UPDATE\033[0m ──"
+    echo -e "\n  ╭── \033[1;34mSYSTEM UPDATE\033[0m ❁ ──"
     
     printf "│ ◷ Updating system packages...\r"
     pkg update && pkg upgrade -y >/dev/null 2>&1
