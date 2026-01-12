@@ -10,7 +10,7 @@ zinit lucid light-mode for \
     OMZL::key-bindings.zsh
 
 # -----------------------------------------------------------------------------
-# 2. Plugins (Syntax Highlighting, Autosuggestions)
+# 2. Plugins (Standard + History Search)
 # -----------------------------------------------------------------------------
 zinit wait lucid light-mode for \
   atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay" \
@@ -20,7 +20,13 @@ zinit wait lucid light-mode for \
   atload"!_zsh_autosuggest_start" \
       zsh-users/zsh-autosuggestions \
   blockf atpull'zinit creinstall -q .' \
-      zsh-users/zsh-completions
+      zsh-users/zsh-completions \
+  zsh-users/zsh-history-substring-search
+
+# Keybindings for History Substring Search (Arrows)
+# These MUST come after the plugin is loaded
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
 # -----------------------------------------------------------------------------
 # 3. Theme (Powerlevel10k)
@@ -61,7 +67,7 @@ function lit-fonts() {
         fi
     done
 
-    # Check connection (Using 1llicit main repo as ping target)
+    # Check connection
     status_code=$(curl -s -o /dev/null -I -w "%{http_code}" "https://github.com/LbsLightX/1llicit")
     
     if [ "$status_code" -eq "200" ]; then
@@ -70,20 +76,18 @@ function lit-fonts() {
         # Zsh Associative Array Declaration
         typeset -A fonts
         
-        # Fetch and Parse (Using quoted URL)
+        # Fetch and Parse
         while IFS= read -r entry
         do
-            # Store in array: Key=Filename, Value=URL
             fonts[$(basename "$entry")]="$entry"
         done < <(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | jq -r '.tree[] | select(.path|match("^patched-fonts/.*\\.(ttf|otf)$","i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | .url')
         
-        # Display menu using Zsh key expansion ${(@k)fonts}
+        # Display menu using Zsh key expansion
         choice=$(printf "%s\n" "${(@k)fonts}" | sort | fzf)
         
         if [ $? -eq 0 ]; then
             echo "✨ Applying font: $choice"
             mkdir -p ~/.termux
-            # Retrieve URL using the key
             if curl -fsSL "$( echo "${fonts[$choice]}" | sed 's/ /%20/g' )" -o ~/.termux/font.ttf; then
                 termux-reload-settings
                 if [ $? -ne 0 ]; then
@@ -118,7 +122,7 @@ function lit-update() {
     pkg install --only-upgrade fastfetch -y > /dev/null 2>&1
     clear
     
-    # Self-Update Mechanism (Reloads this core file)
+    # Self-Update Mechanism
     echo "Updating 1llicit Core..."
     curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > $HOME/.1llicit/core.zsh
     
