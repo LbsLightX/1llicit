@@ -62,9 +62,12 @@ bindkey "^?" magic-backspace
 
 # --- THEME MANAGER ---
 function lit-colors() {
-    local options=("1) 1llicit Theme (Gogh Sync)" "2) Termux Styling (Official)" "3) Favorites (Recommended)")
-    # Using Obsidian Arrow for prompt
-    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="Themes ▶ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+    local options=("⦿ 1llicit Theme (Gogh Sync)" "⦿ Termux Styling (Official)" "⦿ Favorites (Recommended)")
+    # Cyber-Obsidian UI
+    echo -e "\n  \033[1;34m【 THEME LIBRARY SELECTION 】\033[0m"
+    echo -e "  \033[1;30m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+    # We use fzf to display the list directly instead of echo
+    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="Themes ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     case "$choice" in
         *"1llicit Theme"*) 
@@ -83,7 +86,7 @@ function lit-colors() {
                 return
             fi
 
-            local selected=$(printf "%s\n" "$themes" | fzf --prompt="Official ▶ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local selected=$(printf "%s\n" "$themes" | fzf --prompt="Official ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
                 printf "✔ Applying: $(echo $selected | sed 's/\.properties//')\n"
                 mkdir -p ~/.termux
@@ -102,7 +105,7 @@ function lit-colors() {
                 return
             fi
 
-            local selected=$(printf "%s\n" "$themes" | fzf --prompt="Favorites ▶ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local selected=$(printf "%s\n" "$themes" | fzf --prompt="Favorites ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
                 printf "✔ Applying: $selected\n"
                 mkdir -p ~/.termux
@@ -112,7 +115,7 @@ function lit-colors() {
                 echo "⚠ Cancelled."
             fi
             ;; 
-        *) ;;
+        *) ;; 
     esac
 }
 
@@ -126,8 +129,10 @@ function lit-fonts() {
         fi
     done
 
-    local options=("1) Nerd Fonts (2600+)" "2) Standard Meslo (Recommended)" "3) Favorites")
-    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="Fonts ▶ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+    local options=("⦿ Nerd Fonts (2600+)" "⦿ Standard Meslo (Recommended)" "⦿ Favorites")
+    echo -e "\n  \033[1;34m【 FONT LIBRARY SELECTION 】\033[0m"
+    echo -e "  \033[1;30m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="Fonts ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     case "$choice" in
         *"Nerd Fonts"*) 
@@ -156,7 +161,7 @@ function lit-fonts() {
         *"Standard Meslo"*) 
             local meslo_base="https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts"
             local variants=("MesloLGS NF Regular.ttf" "MesloLGS NF Bold.ttf" "MesloLGS NF Italic.ttf" "MesloLGS NF Bold Italic.ttf")
-            local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="Meslo Variants ▶ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="Meslo Variants ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
             if [[ -n "$sel" ]]; then
                 printf "✔ Installing $sel...\n"
@@ -176,7 +181,7 @@ function lit-fonts() {
                 return
             fi
 
-            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="Favorites ▶ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="Favorites ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$sel" ]]; then
                 printf "✔ Installing $sel...\n"
                 mkdir -p ~/.termux
@@ -186,7 +191,7 @@ function lit-fonts() {
                 echo "⚠ Cancelled."
             fi
             ;; 
-        *) ;;
+        *) ;; 
     esac
 }
 
