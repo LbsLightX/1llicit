@@ -60,7 +60,7 @@ function magic-backspace() {
 zle -N magic-backspace
 bindkey "^?" magic-backspace
 
-# --- THEME MANAGER ---
+# --- THEME MANAGER (Colors) ---
 function lit-colors() {
     local options=("⦿ 1llicit Theme (Gogh Sync)" "⦿ Termux Styling (Official)" "⦿ Favorites (Recommended)")
     echo -e "\n  \033[1;34m【 THEME LIBRARY SELECTION 】\033[0m"
@@ -84,7 +84,6 @@ function lit-colors() {
                 return
             fi
             
-            # Wipe loading message
             printf "%*s\r" "${COLUMNS:-80}" ""
 
             local selected=$(printf "%s\n" "$themes" | fzf --prompt="Official ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
@@ -118,8 +117,33 @@ function lit-colors() {
                 echo "⚠ Cancelled."
             fi
             ;; 
-        *) ;;
+        *) ;; 
     esac
+}
+
+# --- SYNTAX HIGHLIGHTING MANAGER ---
+function lit-theme() {
+    # Verify fast-theme exists
+    if ! command -v fast-theme >/dev/null 2>&1; then
+        echo "✕ Error: fast-syntax-highlighting plugin not loaded."
+        return 1
+    fi
+
+    # Get list of themes (fast-theme -l prints raw list)
+    local themes=$(fast-theme -l | awk '{print $1}')
+    
+    echo -e "\n  \033[1;34m【 SYNTAX THEME SELECTION 】\033[0m"
+    echo -e "  \033[1;30m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+    
+    local selected=$(echo "$themes" | fzf --prompt="Syntax ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+    
+    if [[ -n "$selected" ]]; then
+        printf "◷ Applying syntax theme: $selected...\r"
+        fast-theme "$selected" >/dev/null 2>&1
+        printf "✔ Applied: $selected                                    \n"
+    else
+        echo "⚠ Cancelled."
+    fi
 }
 
 # --- FONT MANAGER ---
@@ -146,7 +170,6 @@ function lit-fonts() {
                     jq -r '.tree[] | select(.path|test("\\.(ttf|otf)$"; "i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | (.path | split("/") | last) + " | " + .url' | \
                     fzf --delimiter=" | " --with-nth=1 --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
                 
-                # Wipe loading message
                 printf "%*s\r" "${COLUMNS:-80}" ""
 
                 if [[ -n "$selection" ]]; then
@@ -173,7 +196,6 @@ function lit-fonts() {
             if [[ -n "$sel" ]]; then
                 printf "◷ Installing font: $sel...\r"
                 mkdir -p ~/.termux
-                # FIX: Use Zsh native substitution for URL encoding
                 curl -fsSL "$meslo_base/${sel// /%20}" -o ~/.termux/font.ttf >/dev/null 2>&1
                 termux-reload-settings
                 printf "✔ Done!                                         \n"
@@ -194,7 +216,6 @@ function lit-fonts() {
             if [[ -n "$sel" ]]; then
                 printf "◷ Installing font: $sel...\r"
                 mkdir -p ~/.termux
-                # FIX: URL encoding for Favorites too
                 curl -fsSL "$url_base/${sel// /%20}" -o ~/.termux/font.ttf >/dev/null 2>&1
                 termux-reload-settings
                 printf "✔ Done!                                         \n"
@@ -202,7 +223,7 @@ function lit-fonts() {
                 echo "⚠ Cancelled."
             fi
             ;; 
-        *) ;;
+        *) ;; 
     esac
 }
 
