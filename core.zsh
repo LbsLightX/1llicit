@@ -75,7 +75,7 @@ function lit-colors() {
             ;; 
         *"Termux Styling"*) 
             # REAL FETCH from official Termux Styling repository
-            echo "⏳ Fetching official Termux themes..."
+            echo "Fetching official Termux themes..."
             local themes=$(curl -fsSL "https://api.github.com/repos/termux/termux-styling/contents/app/src/main/assets/colors" | jq -r '.[].name' | command grep ".properties")
             
             if [ -z "$themes" ]; then
@@ -131,7 +131,7 @@ function lit-fonts() {
     case "$choice" in
         *"Nerd Fonts"*) 
             if curl --output /dev/null --silent --head --fail "https://github.com/LbsLightX/1llicit"; then
-                echo "⏳ Fetching fonts list from repository (Stable v3.4.0)... please wait, this may take 1-2 minutes."
+                echo "Fetching fonts list from repository (Stable v3.4.0)... please wait, this may take 1-2 minutes."
                 
                 local selection=$(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | \
                     jq -r '.tree[] | select(.path|test("\\.(ttf|otf)$"; "i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | (.path | split("/") | last) + " | " + .url' | \
@@ -193,11 +193,11 @@ function lit-fonts() {
 }
 
 function lit-update() {
-    echo "Updating system packages."
+    echo "Updating system packages..."
     pkg update && pkg upgrade -y
     clear
     
-    echo "Updating ZSH/Zinit stuff.."
+    echo "Updating ZSH/Zinit stuff..."
     zi update --all
     clear
     
@@ -206,7 +206,7 @@ function lit-update() {
     chmod 700 "$PREFIX/bin/bsudo"
     clear
     
-    echo "Updating Fastfetch...."
+    echo "Updating Fastfetch..."
     pkg install --only-upgrade fastfetch -y > /dev/null 2>&1
     clear
     
@@ -214,13 +214,8 @@ function lit-update() {
     echo "Updating 1llicit Core..."
     curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > $HOME/.1llicit/core.zsh
     
-    echo "✨ Updated successfully, enjoy! 👯"
+    echo "✨ Updated successfully, Enjoy! 👯"
     sleep 2
     clear
     exec zsh
 }
-
-# -----------------------------------------------------------------------------
-# 6. Aliases
-# -----------------------------------------------------------------------------
-alias fetch='fastfetch'
