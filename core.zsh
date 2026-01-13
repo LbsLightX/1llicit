@@ -130,18 +130,14 @@ function 1ll-syntax() {
         return 1
     fi
 
-    local options=("⦿ Browse Theme List (Preview)" "⦿ Select via Menu (Quick)")
+   # Only one option for now, but ready for more!
+    local options=("⦿ Fast-Theme (Default)")
     
     echo -e "\n  ╭── \033[1;34mSYNTAX THEME\033[0m ❀ ──"
     local mode=$(printf "%s\n" "${options[@]}" | fzf --prompt="│ Mode ⫸ " --height=10 --layout=reverse --header="│ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     case "$mode" in
-        *"Browse"*) 
-            # Run the official preview tool
-            echo "│ ◷ Loading previews..."
-            fast-theme -l
-            ;; 
-        *"Select"*) 
+        *"Fast-Theme"*) 
             local themes=$(fast-theme -l | awk '{print $1}')
             local selected=$(echo "$themes" | fzf --prompt="│ Syntax ⫸ " --height=15 --layout=reverse --header="│ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
@@ -155,7 +151,7 @@ function 1ll-syntax() {
             ;; 
         *) ;; 
     esac
-    echo "╰───────────────────"
+    echo "╰──────────────────────"
 }
 
 # --- FONT MANAGER ---
@@ -264,7 +260,7 @@ function 1ll-update() {
     curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > $HOME/.1llicit/core.zsh
     printf "│ ⊕ 1llicit Core updated.      \n"
     
-    echo "╰───────────────────"
+    echo "╰──────────────────────"
     echo "✨ All updates complete! 👯"
     sleep 1
     clear
