@@ -245,22 +245,22 @@ function 1ll-update() {
     pkg upgrade -y -qq >/dev/null 2>&1
     printf "│ ⊕ System packages updated.    \n"
     
-    printf "│ ◷ Updating ZSH/Zinit stuff...\r"
+    printf "│ ◷ Updating ZSH/Zinit stuff (may take 1-2 minutes) \r"
     zi update --all >/dev/null 2>&1
-    printf "│ ⊕ ZSH/Zinit updated.         \n"
+    printf "│ ⊕ ZSH/Zinit updated.                                  \n"
     
     printf "│ ◷ Updating bSUDO...\r"
     curl -fsSL 'https://github.com/agnostic-apollo/sudo/releases/latest/download/sudo' -o $PREFIX/bin/bsudo >/dev/null 2>&1
     chmod 700 "$PREFIX/bin/bsudo"
-    printf "│ ⊕ bSUDO updated.             \n"
+    printf "│ ⊕ bSUDO updated.        \n"
     
     printf "│ ◷ Updating Fastfetch...\r"
     pkg install --only-upgrade fastfetch -y > /dev/null 2>&1
-    printf "│ ⊕ Fastfetch updated.         \n"
+    printf "│ ⊕ Fastfetch updated.        \n"
     
     printf "│ ◷ Updating 1llicit Core...\r"
     curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > $HOME/.1llicit/core.zsh
-    printf "│ ⊕ 1llicit Core updated.      \n"
+    printf "│ ⊕ 1llicit Core updated.       \n"
     
     echo "╰──────────────────────"
     echo "✨ All updates complete. Enjoy! 👯"
