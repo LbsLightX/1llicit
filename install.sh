@@ -72,12 +72,12 @@ for i in "$HOME/.zshrc" "$HOME/.termux/font.ttf" "$HOME/.termux/colors.propertie
 do
     if [ -f $i ]; then
         # Overwrite the line with the current file being moved
-        printf "◷ Backing up: $(basename $i)...          \r"
+        printf "◷ Backing up: $(basename $i)...\r"
         mv -f "$i" "$BACKUP_PATH/$(basename $i)"
         sleep 0.5
     fi
 done
-printf "✔ Backup complete! (Saved to storage)    \n"
+printf "✔ Backup complete! (Saved to storage) \n"
 sleep 1
 
 # Clean slate

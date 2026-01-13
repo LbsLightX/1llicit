@@ -240,8 +240,10 @@ function 1ll-update() {
     echo -e "\n  ╭── \033[1;34mSYSTEM UPDATE\033[0m ❁ ──"
     
     printf "│ ◷ Updating system packages...\r"
-    pkg update && pkg upgrade -y >/dev/null 2>&1
-    printf "│ ⊕ System packages updated.   \n"
+ # Added -qq and ensured all streams are redirected /dev/null
+    pkg update -y -qq >/dev/null 2>&1
+    pkg upgrade -y -qq >/dev/null 2>&1
+    printf "│ ⊕ System packages updated.    \n"
     
     printf "│ ◷ Updating ZSH/Zinit stuff...\r"
     zi update --all >/dev/null 2>&1
@@ -261,7 +263,7 @@ function 1ll-update() {
     printf "│ ⊕ 1llicit Core updated.      \n"
     
     echo "╰──────────────────────"
-    echo "✨ All updates complete! 👯"
+    echo "✨ All updates complete. Enjoy! 👯"
     sleep 1
     clear
     exec zsh
