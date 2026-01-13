@@ -38,27 +38,19 @@ shutt () {
 # Get fastest mirrors.
 printf "◷ Syncing with fastest mirrors...\r"
 (echo 'n' | pkg update 2>/dev/null) | while read -r line; do :; done
-printf "✔ Syncing with fastest mirrors... Done!\n"
-sleep 1
 
 # Upgrade packages.
 printf "◷ Updating system...\r"
 shutt pkg upgrade -y -o Dpkg::Options::='--force-confnew' 2>/dev/null
-printf "✔ Updating system... Done!       \n"
-sleep 1
 
 # Installing required packages.
 printf "◷ Installing required packages...\r"
 shutt pkg install -y curl git zsh man jq perl fzf fastfetch termux-api 2>/dev/null
-printf "✔ Installing required packages... Done!\n"
-sleep 1
 
 # Installing BetterSUDO.
 printf "◷ Installing bSUDO...\r"
 curl -fsSL 'https://github.com/agnostic-apollo/sudo/releases/latest/download/sudo' -o $PREFIX/bin/bsudo
 chmod 700 "$PREFIX/bin/bsudo"
-printf "✔ Installing bSUDO... Done!      \n"
-sleep 1
 
 # Giving Storage permision to Termux App.
 if [ ! -d ~/storage ]; then
@@ -95,7 +87,6 @@ rm -f "$HOME/.zshrc"
 if [[ "$SHELL" != *"zsh"* ]]; then
    printf "◷ Changing default shell to ZSH...\r"
    chsh -s zsh
-   printf "✔ Default shell changed to ZSH.   \n"
 fi
 
 # Create hidden directory for 1llicit core
@@ -139,21 +130,18 @@ EOF
 if [ ! -f ~/.termux/font.ttf ]; then
     printf "◷ Installing default font (MesloLGS)...\r"
     curl -fsSL -o ~/.termux/font.ttf 'https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts/MesloLGS%20NF%20Regular.ttf' >/dev/null 2>&1
-    printf "✔ Default font installed.              \n"
 fi
 
 # Set a default color scheme.
 if [ ! -f ~/.termux/colors.properties ]; then
     printf "◷ Setting default color scheme...\r"
     curl -fsSL -o ~/.termux/colors.properties 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/3024-night.properties' >/dev/null 2>&1
-    printf "✔ Default color scheme set.          \n"
 fi
 
 # Set up Termux config file.
 if [ ! -f ~/.termux/termux.properties ]; then
     printf "◷ Configuring Termux keys...\r"
     curl -fsSL -o ~/.termux/termux.properties 'https://raw.githubusercontent.com/LbsLightX/1llicit/main/.termux/termux.properties' >/dev/null 2>&1
-    printf "✔ Termux keys configured.       \n"
 fi
 
 # Reload Termux settings.
