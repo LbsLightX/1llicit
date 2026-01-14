@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # 1llicit Uninstaller
-# Heavy Box Edition
+# Heavy Box Edition (Fixed Colors & Length)
 
 # Colors & Styles
 B="\033[1m"
@@ -13,20 +13,21 @@ CYAN="\033[1;36m"
 WHITE="\033[1;97m"
 RESET="\033[0m"
 
-echo -e "\n${WHITE}${B}╔═════════ UNINSTALLER ══════════════════════════════ ◈${RESET}"
+# Header: Border is default/reset, Title is Bold White
+echo -e "\n╔═══════════════ ${WHITE}${B}UNINSTALLER${RESET} ══════════════ ◈"
 echo "╬"
 
 # 1. Verification
 echo -e "╬ ${RED}${B}[!] WARNING:${RESET} This will remove 1llicit configuration."
-echo -e "╬     Your original ${B}.zshrc${RESET} will be restored."
+echo -e "╬     Your original ${RED}${B}.zshrc${RESET} will be restored."
 echo "╬"
 echo -ne "╬ ${YELLOW}${B}[?]${RESET} Are you sure? (y/N) "
 read -n 1 -r REPLY
-echo ""
+[[ -n "$REPLY" ]] && echo ""
 
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo "╬ ${RED}${B}[-]${RESET} Aborted."
-    echo -e "╚════════════════════════════════════════════════════ ◈"
+    echo -e "╬ ${RED}${B}[-]${RESET} Aborted."
+    echo -e "╚══════════════════════════════════════════ ◈"
     exit 1
 fi
 
@@ -44,7 +45,7 @@ if [ -d "$BACKUP_DIR" ]; then
         echo -e "╬ ${GREEN}${B}[+]${RESET} Restored shell configuration."
     else
         echo -e "╬ ${RED}${B}[!]${RESET} No .zshrc backup found."
-        echo -e "╬     Hint: Check $BACKUP_DIR manually."
+        echo -e "╬     Hint: Check ${B}${BACKUP_DIR/$HOME/\~}${RESET} manually."
     fi
 else
     echo -e "╬ ${RED}${B}[!]${RESET} No backup directory found."
@@ -61,7 +62,8 @@ fi
 echo "╬"
 echo -ne "╬ ${YELLOW}${B}[?]${RESET} Remove backup folder? (y/N) "
 read -n 1 -r REPLY
-echo ""
+[[ -n "$REPLY" ]] && echo ""
+
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     rm -rf "$HOME/storage/shared/1llicit"
     echo -e "╬ ${GREEN}${B}[+]${RESET} Backups removed."
@@ -73,11 +75,12 @@ fi
 echo "╬"
 echo -ne "╬ ${YELLOW}${B}[?]${RESET} Switch default shell back to Bash? (y/N) "
 read -n 1 -r REPLY
-echo ""
+[[ -n "$REPLY" ]] && echo ""
+
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     chsh -s bash
     echo -e "╬ ${GREEN}${B}[+]${RESET} Shell switched to Bash."
 fi
 
 echo "╬"
-echo -e "╚═════════ ${GREEN}${B}UNINSTALL COMPLETE${RESET} ═══════════════════════ ◈"
+echo -e "╚═══════════ ${GREEN}${B}UNINSTALL COMPLETE${RESET} ═══════════ ◈"
