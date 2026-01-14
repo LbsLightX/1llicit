@@ -60,10 +60,9 @@ function magic-backspace() {
 zle -N magic-backspace
 bindkey "^?" magic-backspace
 
-# Styles for UI
+# Colors & Styles
 B="\033[1m"
 DIM="\033[2m"
-UNDER="\033[4m"
 GREEN="\033[1;32m"
 RED="\033[1;31m"
 YELLOW="\033[1;33m"
@@ -75,16 +74,22 @@ RESET="\033[0m"
 function 1ll-colors() {
     local options=("⦿ 1llicit Theme (Gogh Sync)" "⦿ Termux Styling (Official)" "⦿ Favorites (Recommended)")
     
-    # Fixed Header Color: Border normal, Title White/Bold
-    echo -e "\n╔══════════════ ${WHITE}${B}${UNDER}THEME LIBRARY${RESET} ═════════════ ◈"
+    echo -e "\n${WHITE}${B}╔═════════ THEME LIBRARY ════════════════════════════ ◈${RESET}"
     local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Selection ⫸ " --height=10 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+
+    if [[ -z "$choice" ]]; then
+        echo -e "╬ ${RED}${B}[-]${RESET} Cancelled."
+        echo -e "╚════════════════════════════════════════════════════ ◈"
+        return
+    fi
 
     case "$choice" in
         *"1llicit Theme"*) 
-            if curl --output /dev/null --silent --head --fail "https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh"; then
-                bash -c "$(curl -fsSL 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh')"
+            # OFFLINE MODE: Run local script
+            if [ -f "/storage/emulated/0/Download/Termux-Directory/Web-Server/1llicit-Termux/1llicit-colors/install.sh" ]; then
+                bash "/storage/emulated/0/Download/Termux-Directory/Web-Server/1llicit-Termux/1llicit-colors/install.sh"
             else
-                echo -e "╬ ${RED}${B}[!] Error:${RESET} Can't connect to repository."
+                echo -e "╬ ${RED}${B}[!] Error:${RESET} Local colors script not found."
             fi
             ;; 
         *"Termux Styling"*) 
@@ -106,17 +111,18 @@ function 1ll-colors() {
                 curl -fsSL "https://raw.githubusercontent.com/termux/termux-styling/master/app/src/main/assets/colors/$selected" -o ~/.termux/colors.properties >/dev/null 2>&1
                 termux-reload-settings
                 printf "\r\033[K"
-                echo -e "╬ ${GREEN}${B}[+] Applied color scheme:${RESET} $(echo $selected | sed 's/\.properties//')"
+                echo -e "╬ ${GREEN}${B}[+]${RESET} Applied: $(echo $selected | sed 's/\.properties//')"
             else
-                echo -e "╬ ${RED}${B}[-] Cancelled.${RESET}"
+                echo -e "╬ ${RED}${B}[-]${RESET} Cancelled."
             fi
             ;; 
         *"Favorites"*) 
-            local url_base="https://raw.githubusercontent.com/LbsLightX/1llicit/main/favorites/themes"
-            local themes=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/themes" | jq -r '.[].name' | command grep ".properties")
+            # OFFLINE MODE: Use local files
+            local local_themes_dir="/storage/emulated/0/Download/Termux-Directory/Web-Server/1llicit-Termux/1llicit/favorites/themes"
+            local themes=$(ls "$local_themes_dir" | grep ".properties")
             
             if [ -z "$themes" ]; then
-                echo -e "╬ ${RED}${B}[-] Cancelled:${RESET} No favorites found in repository."
+                echo -e "╬ ${RED}${B}[!]${RESET} No favorites found locally."
                 return
             fi
 
@@ -124,17 +130,17 @@ function 1ll-colors() {
             if [[ -n "$selected" ]]; then
                 printf "╬ ${CYAN}[*]${RESET} Applying color scheme: $selected...\r"
                 mkdir -p ~/.termux
-                curl -fsSL "$url_base/$selected" -o ~/.termux/colors.properties >/dev/null 2>&1
+                cp "$local_themes_dir/$selected" ~/.termux/colors.properties
                 termux-reload-settings
                 printf "\r\033[K"
-                echo -e "╬ ${GREEN}${B}[+] Applied color scheme:${RESET} $selected"
+                echo -e "╬ ${GREEN}${B}[+]${RESET} Applied: $selected"
             else
-                echo -e "╬ ${RED}${B}[-] Cancelled.${RESET}"
+                echo -e "╬ ${RED}${B}[-]${RESET} Cancelled."
             fi
             ;; 
         *) ;; 
     esac
-    echo -e "╚══════════════════════════════════════════ ◈"
+    echo -e "╚════════════════════════════════════════════════════ ◈"
 }
 
 # --- SYNTAX HIGHLIGHTING MANAGER ---
@@ -144,15 +150,23 @@ function 1ll-syntax() {
         return 1
     fi
 
-    # Only one option: The Quick Menu
-    local options=("⦿ Fast themes (Recommended)")
+    local options=("⦿ Browse Theme List (Preview)" "⦿ Select Theme (Fast-Theme)")
     
-    echo -e "\n╔═══════════════════ ${WHITE}${B}${UNDER}SYNTAX THEME${RESET} ═══════════════════ ◈"
+    echo -e "\n${WHITE}${B}╔═════════ SYNTAX THEME ═════════════════════════════ ◈${RESET}"
     local mode=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Mode ⫸ " --height=10 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
+    if [[ -z "$mode" ]]; then
+        echo -e "╬ ${RED}${B}[-]${RESET} Cancelled."
+        echo -e "╚════════════════════════════════════════════════════ ◈"
+        return
+    fi
+
     case "$mode" in
-        *"Select via Menu"*) 
-            # This logic only runs after you select the option above
+        *"Browse"*) 
+            echo -e "╬ ${CYAN}[*]${RESET} Loading previews..."
+            fast-theme -l
+            ;; 
+        *"Select"*) 
             local themes=$(fast-theme -l | awk '{print $1}')
             local selected=$(echo "$themes" | fzf --prompt="╬ Syntax ⫸ " --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
@@ -160,9 +174,9 @@ function 1ll-syntax() {
                 printf "╬ ${CYAN}[*]${RESET} Applying syntax theme: $selected...\r"
                 fast-theme "$selected" >/dev/null 2>&1
                 printf "\r\033[K"
-                echo -e "╬ ${GREEN}${B}[+] Applied syntax theme:${RESET} $selected"
+                echo -e "╬ ${GREEN}${B}[+]${RESET} Applied: $selected"
             else
-                echo -e "╬ ${RED}${B}[-] Cancelled.${RESET}"
+                echo -e "╬ ${RED}${B}[-]${RESET} Cancelled."
             fi
             ;; 
         *) ;; 
@@ -170,22 +184,27 @@ function 1ll-syntax() {
     echo -e "╚════════════════════════════════════════════════════ ◈"
 }
 
-
 # --- FONT MANAGER ---
 function 1ll-fonts() {
-    echo -e "\n╔══════════════ ${WHITE}${B}${UNDER}FONT LIBRARY${RESET} ══════════════ ◈"
+    echo -e "\n${WHITE}${B}╔═════════ FONT LIBRARY ═════════════════════════════ ◈${RESET}"
     
     for pkg in jq curl fzf; do
         if ! command -v $pkg >/dev/null 2>&1; then
             printf "╬ ${CYAN}[*]${RESET} Installing dependency: $pkg...\r"
             pkg install -y $pkg >/dev/null 2>&1
             printf "\r\033[K"
-            echo -e "╬ ${GREEN}${B}[+] Installed dependency:${RESET} $pkg"
+            echo -e "╬ ${GREEN}${B}[+]${RESET} Installed dependency: $pkg"
         fi
     done
 
     local options=("⦿ Nerd Fonts (2600+)" "⦿ Standard Meslo (Recommended)" "⦿ Favorites")
-    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Font options ⫸ " --height=10 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Fonts ⫸ " --height=10 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+
+    if [[ -z "$choice" ]]; then
+        echo -e "╬ ${RED}${B}[-]${RESET} Cancelled."
+        echo -e "╚════════════════════════════════════════════════════ ◈"
+        return
+    fi
 
     case "$choice" in
         *"Nerd Fonts"*) 
@@ -194,7 +213,7 @@ function 1ll-fonts() {
                 
                 local selection=$(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | \
                     jq -r '.tree[] | select(.path|test("\\.(ttf|otf)$"; "i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | (.path | split("/") | last) + " | " + .url' | \
-                    fzf --delimiter=" | " --with-nth=1 --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]" --prompt="╬ Nerd Fonts ⫸ ")
+                    fzf --delimiter=" | " --with-nth=1 --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]" --prompt="╬ Select ⫸ ")
                 
                 printf "\r\033[K"
 
@@ -207,9 +226,9 @@ function 1ll-fonts() {
                     curl -fsSL "$(echo $url | sed 's/ /%20/g')" -o ~/.termux/font.ttf >/dev/null 2>&1
                     termux-reload-settings
                     printf "\r\033[K"
-                    echo -e "╬ ${GREEN}${B}[+] Installed font:${RESET} $name"
+                    echo -e "╬ ${GREEN}${B}[+]${RESET} Installed: $name"
                 else
-                    echo -e "╬ ${RED}${B}[-] Cancelled.${RESET}"
+                    echo -e "╬ ${RED}${B}[-]${RESET} Cancelled."
                 fi
             else
                 echo -e "╬ ${RED}${B}[!]${RESET} Connection error."
@@ -226,39 +245,40 @@ function 1ll-fonts() {
                 curl -fsSL "$meslo_base/${sel// /%20}" -o ~/.termux/font.ttf >/dev/null 2>&1
                 termux-reload-settings
                 printf "\r\033[K"
-                echo -e "╬ ${GREEN}${B}[+] Installed font:${RESET} $sel"
+                echo -e "╬ ${GREEN}${B}[+]${RESET} Installed: $sel"
             else
-                echo -e "╬ ${RED}${B}[-] Cancelled.${RESET}"
+                echo -e "╬ ${RED}${B}[-]${RESET} Cancelled."
             fi
             ;; 
         *"Favorites"*) 
-            local url_base="https://raw.githubusercontent.com/LbsLightX/1llicit/main/favorites/fonts"
-            local fonts_list=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/fonts" | jq -r '.[].name' | command grep -E ".ttf|.otf")
+            # OFFLINE MODE: Use local files
+            local local_fonts_dir="/storage/emulated/0/Download/Termux-Directory/Web-Server/1llicit-Termux/1llicit/favorites/fonts"
+            local fonts_list=$(ls "$local_fonts_dir" | grep -E ".ttf|.otf")
             
             if [ -z "$fonts_list" ]; then
-                echo -e "╬ ${RED}${B}[-] Cancelled:${RESET} No favorites found in repository."
+                echo -e "╬ ${RED}${B}[!]${RESET} No favorites found locally."
                 return
             fi
 
-            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="╬ Fav ⫸ " --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="╬ Favorites ⫸ " --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$sel" ]]; then
                 printf "╬ ${CYAN}[*]${RESET} Installing font: $sel...\r"
                 mkdir -p ~/.termux
-                curl -fsSL "$url_base/${sel// /%20}" -o ~/.termux/font.ttf >/dev/null 2>&1
+                cp "$local_fonts_dir/$sel" ~/.termux/font.ttf
                 termux-reload-settings
                 printf "\r\033[K"
-                echo -e "╬ ${GREEN}${B}[+] Installed font:${RESET} $sel"
+                echo -e "╬ ${GREEN}${B}[+]${RESET} Installed: $sel"
             else
-                echo -e "╬ ${RED}${B}[-] Cancelled.${RESET}"
+                echo -e "╬ ${RED}${B}[-]${RESET} Cancelled."
             fi
             ;; 
         *) ;; 
     esac
-    echo -e "╚══════════════════════════════════════════ ◈"
+    echo -e "╚════════════════════════════════════════════════════ ◈"
 }
 
 function 1ll-update() {
-    echo -e "\n╔══════════════ ${WHITE}${B}${UNDER}SYSTEM UPDATE${RESET} ═════════════ ◈"
+    echo -e "\n${WHITE}${B}╔═════════ SYSTEM UPDATE ════════════════════════════ ◈${RESET}"
     echo "╬"
     
     printf "╬ ${CYAN}[*]${RESET} Updating system packages...\r"
@@ -267,8 +287,7 @@ function 1ll-update() {
     printf "\r\033[K"
     echo -e "╬ ${GREEN}•${RESET} System packages updated.    [ ${GREEN}OK${RESET} ]"
     
-    printf "╬ ${CYAN}[*]${RESET} Updating ZSH/Zinit stuff (may take 1-2 minutes)...
-"
+    printf "╬ ${CYAN}[*]${RESET} Updating ZSH/Zinit stuff...\r"
     zi update --all >/dev/null 2>&1
     printf "\r\033[K"
     echo -e "╬ ${GREEN}•${RESET} ZSH/Zinit updated.          [ ${GREEN}OK${RESET} ]"
@@ -284,13 +303,14 @@ function 1ll-update() {
     printf "\r\033[K"
     echo -e "╬ ${GREEN}•${RESET} Fastfetch updated.          [ ${GREEN}OK${RESET} ]"
     
-    printf "╬ ${CYAN}[*]${RESET} Updating 1llicit Core...\r"
-    curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > $HOME/.1llicit/core.zsh
+    printf "╬ ${CYAN}[*]${RESET} Updating 1llicit Core (Local)...\r"
+    # OFFLINE MODE: Copy local file
+    cp "/storage/emulated/0/Download/Termux-Directory/Web-Server/1llicit-Termux/1llicit/core.zsh" "$HOME/.1llicit/core.zsh"
     printf "\r\033[K"
     echo -e "╬ ${GREEN}•${RESET} 1llicit Core updated.       [ ${GREEN}OK${RESET} ]"
     
     echo "╬"
-    echo -e "╚════════════════ ${GREEN}${B}COMPLETE${RESET} ═══════════════ ◈"
+    echo -e "╚═════════ ${GREEN}${B}COMPLETE${RESET} ════════════════════════════════ ◈"
     sleep 1
     clear
     exec zsh
