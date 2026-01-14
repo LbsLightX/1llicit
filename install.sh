@@ -1,11 +1,40 @@
 #!/usr/bin/env bash
 
+# 1llicit Installer
+# Pro-Minimalist Edition
+
+# Colors & Styles
+B="\033[1m"
+DIM="\033[2m"
+GREEN="\033[32m"
+RED="\033[31m"
+CYAN="\033[36m"
+WHITE="\033[97m"
+RESET="\033[0m"
+
+# Utility: Print status line
+# Usage: status "Message" "STATUS"
+status() {
+    local msg="$1"
+    local stat="$2"
+    local color="${GREEN}"
+    [[ "$stat" == "FAIL" ]] && color="${RED}"
+    [[ "$stat" == "SKIP" ]] && color="${CYAN}"
+    
+    # Reduced padding for tighter layout
+    local width=35
+    local pad=$((width - ${#msg}))
+    # Ensure pad is not negative
+    [[ $pad -lt 0 ]] && pad=1
+    
+    printf "║ • %s%*s [ ${color}${stat}${RESET} ]\n" "$msg" "$pad" ""
+}
+
 # Turn off cursor.
 setterm -cursor off
 
-banner () {
 clear
-echo -e "\033[1;34m" # Make it Blue
+echo -e "\033[1;34m"
 echo "   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⣦⠀⠀⠀⠀⠀⠀⠀⠀ "
 echo "  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⠂⠀⠀⠀⠀⠀⠀⠀⠀ "
 echo "  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣀⠀⠀⠀⠀⠀⠀⠀⠀ "
@@ -22,82 +51,81 @@ echo "  ⠀⠀⠀⠀⠀⣰⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣷⡀⠀⠀ "
 echo "  ⠀⠀⠀⠀⢠⣿⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⣧⠀⠀ "
 echo "  ⠀⠀⠀⢀⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣆⠀ "
 echo "  ⠀⠀⠠⢾⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣷⡤"
-echo -e "\033[0m" # Reset color
-echo " ! 1llicit ! 1llicit ! 1llicit ! "
+echo -e "\033[0m"
+echo -e "${WHITE}${B}   !-1llicit-!-1llicit-!-1llicit-!${RESET}"
 echo ""
-}
-banner
+echo -e "${WHITE}${B}╔══ SETUP SEQUENCE ═════════════════════════════════════${RESET}"
+echo "║"
 
-# Handy function to silence stuff.
-shutt () {
-    { "$@" || return $?; } | while read -r line; do
-        :
-    done
-}
-
-# Get fastest mirrors.
-printf "◷ Syncing with fastest mirrors...\r"
+# 1. Mirrors
+printf "║ • Syncing mirrors...\r"
 (echo 'n' | pkg update 2>/dev/null) | while read -r line; do :; done
+printf "\r\033[K" # Clear line
+status "Syncing mirrors" "OK"
 
-# Upgrade packages.
-printf "◷ Updating system...\r"
-shutt pkg upgrade -y -o Dpkg::Options::='--force-confnew' 2>/dev/null
+# 2. Update
+printf "║ • Updating system...\r"
+pkg upgrade -y -o Dpkg::Options::='--force-confnew' >/dev/null 2>&1
+printf "\r\033[K"
+status "Updating system" "OK"
 
-# Installing required packages.
-printf "◷ Installing required packages...\r"
-shutt pkg install -y curl git zsh man jq perl fzf fastfetch termux-api 2>/dev/null
+# 3. Packages
+printf "║ • Installing packages...\r"
+pkg install -y curl git zsh man jq perl fzf fastfetch termux-api >/dev/null 2>&1
+printf "\r\033[K"
+status "Installing packages" "OK"
 
-# Installing BetterSUDO.
-printf "◷ Installing bSUDO...\r"
-curl -fsSL 'https://github.com/agnostic-apollo/sudo/releases/latest/download/sudo' -o $PREFIX/bin/bsudo
+# 4. BSUDO
+printf "║ • Installing bSUDO...\r"
+curl -fsSL 'https://github.com/agnostic-apollo/sudo/releases/latest/download/sudo' -o $PREFIX/bin/bsudo >/dev/null 2>&1
 chmod 700 "$PREFIX/bin/bsudo"
+printf "\r\033[K"
+status "Installing bSUDO" "OK"
 
-# Giving Storage permision to Termux App.
+# 5. Storage
 if [ ! -d ~/storage ]; then
-    echo "Requesting storage access..."
+    printf "║ • Requesting storage...\r"
     termux-setup-storage
     sleep 2
+    printf "\r\033[K"
+    status "Storage access" "OK"
 fi
 
-
-# 1. Define the specific backup folder with the current date/time
+# 6. Backup
 BACKUP_PATH="$HOME/storage/shared/1llicit/backup/$(date +%Y_%m_%d_%H_%M)"
-
-# 2. Create that specific folder
 mkdir -p "$BACKUP_PATH"
-
-# 3. Run the loop (Transient Style)
-printf "◷ Backing up existing configuration...\r"
+printf "║ • Backing up configs...\r"
 for i in "$HOME/.zshrc" "$HOME/.termux/font.ttf" "$HOME/.termux/colors.properties" "$HOME/.termux/termux.properties"
 do
     if [ -f $i ]; then
-        # Overwrite the line with the current file being moved
-        printf "◷ Backing up: $(basename $i)...\r"
         mv -f "$i" "$BACKUP_PATH/$(basename $i)"
-        sleep 0.5
     fi
 done
-printf "✔ Backup complete! (Saved to storage) \n"
-sleep 1
+printf "\r\033[K"
+status "Backup configurations" "OK"
 
 # Clean slate
 rm -f "$HOME/.zshrc"
 
-# Changing default shell to ZSH (if needed).
+# 7. Shell
 if [[ "$SHELL" != *"zsh"* ]]; then
-   printf "◷ Changing default shell to ZSH...\r"
    chsh -s zsh
+   status "Default shell -> Zsh" "OK"
 fi
 
-# Create hidden directory for 1llicit core
+# 8. Core Download
 mkdir -p "$HOME/.1llicit"
+printf "║ • Downloading Core...\r"
+if curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > "$HOME/.1llicit/core.zsh"; then
+    printf "\r\033[K"
+    status "Downloading Core" "OK"
+else
+    printf "\r\033[K"
+    status "Downloading Core" "FAIL"
+    exit 1
+fi
 
-# Download the Core Logic
-printf "◷ Downloading 1llicit Core...\r"
-curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > "$HOME/.1llicit/core.zsh"
-printf "✔ Downloading 1llicit Core... Done!\n"
-
-# Generate the minimal .zshrc
+# 9. Generate Config
 cat <<'EOF' > $HOME/.zshrc
 # Enable Powerlevel10k instant prompt.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
@@ -125,35 +153,32 @@ if [[ -f "$HOME/.1llicit/core.zsh" ]]; then
     source "$HOME/.1llicit/core.zsh"
 fi
 EOF
+status "Generating .zshrc" "OK"
 
-# Installing the Powerline font for Termux.
+# 10. Assets
 if [ ! -f ~/.termux/font.ttf ]; then
-    printf "◷ Installing default font (MesloLGS)...\r"
     curl -fsSL -o ~/.termux/font.ttf 'https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts/MesloLGS%20NF%20Regular.ttf' >/dev/null 2>&1
+    status "Installing Default Font" "OK"
 fi
 
-# Set a default color scheme.
 if [ ! -f ~/.termux/colors.properties ]; then
-    printf "◷ Setting default color scheme...\r"
     curl -fsSL -o ~/.termux/colors.properties 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/3024-night.properties' >/dev/null 2>&1
+    status "Setting Default Theme" "OK"
 fi
 
-# Set up Termux config file.
 if [ ! -f ~/.termux/termux.properties ]; then
-    printf "◷ Configuring Termux keys...\r"
     curl -fsSL -o ~/.termux/termux.properties 'https://raw.githubusercontent.com/LbsLightX/1llicit/main/.termux/termux.properties' >/dev/null 2>&1
+    status "Configuring Keys" "OK"
 fi
 
-# Reload Termux settings.
+# Reload
 termux-reload-settings
-
-# Set Official 1llicit Highlighting Theme
 zsh -ic "fast-theme zdharma" > /dev/null 2>&1
 
-# Run a ZSH shell, opens the p10k config wizard.
-banner
-printf "✔ Installation complete! Enjoy 1llicit. 👯\n"
-sleep 3
+echo "║"
+echo -e "╚══ ${GREEN}${B}INSTALLATION COMPLETE${RESET} ═════════════════════════════"
+echo ""
+sleep 2
 
 # Restore cursor.
 setterm -cursor on

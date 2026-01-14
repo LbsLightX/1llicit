@@ -75,7 +75,7 @@ function 1ll-colors() {
             else
                 echo "│ ⊖ Error: Can't connect to repository."
             fi
-            ;; 
+            ;;
         *"Termux Styling"*) 
             printf "│ ◷ Fetching official Termux themes...\r"
             local themes=$(curl -fsSL "https://api.github.com/repos/termux/termux-styling/contents/app/src/main/assets/colors" | jq -r '.[].name' | command grep ".properties")
@@ -125,19 +125,23 @@ function 1ll-colors() {
 
 # --- SYNTAX HIGHLIGHTING MANAGER ---
 function 1ll-syntax() {
-    if ! command -v fast-theme >/dev/null 2>&1; then
+    if ! command -v fast-theme >/dev/null 2>&1;
+        then
         echo "│ ⊖ Error: fast-syntax-highlighting plugin not loaded."
         return 1
     fi
 
-   # Only one option for now, but ready for more!
-    local options=("⦿ Fast-Theme (Default)")
+    local options=("⦿ Browse Theme List (Preview)" "⦿ Select via Menu (Quick)")
     
     echo -e "\n  ╭── \033[1;34mSYNTAX THEME\033[0m ❀ ──"
     local mode=$(printf "%s\n" "${options[@]}" | fzf --prompt="│ Mode ⫸ " --height=10 --layout=reverse --header="│ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     case "$mode" in
-        *"Fast-Theme"*) 
+        *"Browse"*) 
+            echo "│ ◷ Loading previews..."
+            fast-theme -l
+            ;; 
+        *"Select"*) 
             local themes=$(fast-theme -l | awk '{print $1}')
             local selected=$(echo "$themes" | fzf --prompt="│ Syntax ⫸ " --height=15 --layout=reverse --header="│ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
@@ -151,7 +155,7 @@ function 1ll-syntax() {
             ;; 
         *) ;; 
     esac
-    echo "╰──────────────────────"
+    echo "╰───────────────────"
 }
 
 # --- FONT MANAGER ---
@@ -159,7 +163,8 @@ function 1ll-fonts() {
     echo -e "\n  ╭── \033[1;34mFONT LIBRARY\033[0m ✽ ──"
     
     for pkg in jq curl fzf; do
-        if ! command -v $pkg >/dev/null 2>&1; then
+        if ! command -v $pkg >/dev/null 2>&1;
+            then
             printf "│ ◷ Installing dependency: $pkg...\r"
             pkg install -y $pkg >/dev/null 2>&1
             printf "│ ⊕ Installed: $pkg                         \n"
@@ -240,7 +245,7 @@ function 1ll-update() {
     echo -e "\n  ╭── \033[1;34mSYSTEM UPDATE\033[0m ❁ ──"
     
     printf "│ ◷ Updating system packages...\r"
- # Added -qq and ensured all streams are redirected /dev/null
+    # Added -qq and ensured all streams are redirected /dev/null
     pkg update -y -qq >/dev/null 2>&1
     pkg upgrade -y -qq >/dev/null 2>&1
     printf "│ ⊕ System packages updated.    \n"
@@ -263,7 +268,7 @@ function 1ll-update() {
     printf "│ ⊕ 1llicit Core updated.       \n"
     
     echo "╰──────────────────────"
-    echo "✨ All updates complete. Enjoy! 👯"
+    echo "✨ All updates complete! 👯"
     sleep 1
     clear
     exec zsh

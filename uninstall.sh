@@ -1,71 +1,119 @@
 #!/usr/bin/env bash
-
+#
 # 1llicit Uninstaller
-# "True Gold" Edition
+# True Gold Edition
+#
 
-echo -e "\n  ╭── \033[1;31mUNINSTALL 1LLICIT\033[0m ☠  ──"
-echo "│"
-echo "│ ☠  WARNING: This will remove 1llicit configuration."
-echo "│    Your original .zshrc will be restored."
-echo "│"
-echo -n "│ ◷ Are you sure? (y/N) " 
-read -n 1 -r REPLY
-echo ""
+# ─────────────────────────────
+# UI STYLES
+# ─────────────────────────────
+BOLD="\033[1m"
+UNDER="\033[4m"
+DIM="\033[2m"
 
-if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo "│ ⚠ Aborted."
-    echo "╰──────────────────────"
+GREEN="\033[1;32m"
+RED="\033[1;31m"
+YELLOW="\033[1;33m"
+CYAN="\033[1;36m"
+WHITE="\033[1;97m"
+
+RESET="\033[0m"
+
+# ─────────────────────────────
+# HEADER
+# ─────────────────────────────
+echo
+echo -e "╔═════════ ${WHITE}${BOLD}${UNDER}UNINSTALL 1LLICIT${RESET} ═════════ ◈"
+echo "╬"
+echo -e "╬ ${RED}${BOLD}[!] WARNING${RESET}"
+echo -e "╬     ${DIM}Removes all 1llicit configuration files.${RESET}"
+echo -e "╬     ${DIM}Restores shell config from backup, if available.${RESET}"
+echo "╬"
+
+# ─────────────────────────────
+# PRIMARY CONFIRMATION
+# ─────────────────────────────
+echo -ne "╬ ${CYAN}${BOLD}[?]${RESET} Continue with uninstall? (y/N) "
+read -r REPLY
+REPLY=${REPLY:0:1}
+echo "╬"
+
+if [[ ! "$REPLY" =~ ^[Yy]$ ]]; then
+    echo -e "╬ ${RED}${BOLD}[!] Aborted${RESET}"
+    echo "╚════════════════════════════════════ ◈"
     exit 1
 fi
 
-echo "│"
+echo "╬"
 
-# 2. Find Backup
+# ─────────────────────────────
+# RESTORE BACKUP (.zshrc)
+# ─────────────────────────────
 BACKUP_DIR="$HOME/storage/shared/1llicit/backup"
+
 if [ -d "$BACKUP_DIR" ]; then
-    # Find the newest directory inside backup
     LATEST_BACKUP=$(ls -td "$BACKUP_DIR"/*/ 2>/dev/null | head -1)
-    
+
     if [ -n "$LATEST_BACKUP" ] && [ -f "${LATEST_BACKUP}.zshrc" ]; then
-        printf "│ ◷ Found backup: $(basename $LATEST_BACKUP)\r"
-        sleep 0.5
+        echo -e "╬ ${GREEN}${BOLD}[+] Found:${RESET} Backup $(basename "$LATEST_BACKUP")"
         cp -f "${LATEST_BACKUP}.zshrc" "$HOME/.zshrc"
-        printf "│ ⊕ Original configuration restored.          \n"
+        echo -e "╬ ${GREEN}${BOLD}[+] Restored:${RESET} Shell configuration"
     else
-        echo "│ ✕ No .zshrc backup found in $LATEST_BACKUP"
-        echo "│   Hint: Check $BACKUP_DIR manually."
+        echo -e "╬ ${RED}${BOLD}[!] Missing:${RESET} Valid .zshrc backup"
+        echo -e "╬     ${DIM}Manual review recommended:${RESET}"
+        echo -e "╬     ${DIM}$BACKUP_DIR${RESET}"
     fi
 else
-    echo "│ ✕ No backup directory found at $BACKUP_DIR"
-    echo "│   Skipping restore."
+    echo -e "╬ ${RED}${BOLD}[!] Missing:${RESET} Backup directory"
+    echo -e "╬     ${DIM}Skipping restore step.${RESET}"
 fi
 
-# 3. Cleanup 1llicit Core files
+# ─────────────────────────────
+# REMOVE CORE FILES
+# ─────────────────────────────
 if [ -d "$HOME/.1llicit" ]; then
     rm -rf "$HOME/.1llicit"
-    echo "│ ⊕ Removed 1llicit core files."
+    echo -e "╬ ${GREEN}${BOLD}[+] Removed:${RESET} Core files"
+else
+    echo -e "╬ ${RED}${BOLD}[-] Skipped:${RESET} No core files found"
 fi
 
-# 4. Optional Cleanup (Storage)
-echo "│"
-echo -n "│ ◷ Remove backup folder? (y/N) "
-read -n 1 -r REPLY
-echo ""
-if [[ $REPLY =~ ^[Yy]$ ]]; then
+# ─────────────────────────────
+# OPTIONAL: REMOVE BACKUPS
+# ─────────────────────────────
+echo "╬"
+echo -ne "╬ ${CYAN}${BOLD}[?]${RESET} Remove backup folder from shared storage? (y/N) "
+read -r REPLY
+REPLY=${REPLY:0:1}
+echo "╬"
+
+if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     rm -rf "$HOME/storage/shared/1llicit"
-    echo "│ ⊕ Backups removed."
+    echo -e "╬ ${GREEN}${BOLD}[+] Removed:${RESET} Backup folder"
+else
+    echo -e "╬ ${RED}${BOLD}[-] Skipped:${RESET} Backup folder retained"
 fi
 
-# 5. Shell Reset
-echo "│"
-echo -n "│ ◷ Switch default shell back to Bash? (y/N) "
-read -n 1 -r REPLY
-echo ""
-if [[ $REPLY =~ ^[Yy]$ ]]; then
+# ─────────────────────────────
+# OPTIONAL: RESET SHELL
+# ─────────────────────────────
+echo "╬"
+echo -ne "╬ ${CYAN}${BOLD}[?]${RESET} Reset default shell to Bash? (y/N) "
+read -r REPLY
+REPLY=${REPLY:0:1}
+echo "╬"
+
+if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     chsh -s bash
-    echo "│ ⊕ Shell switched to Bash."
+    echo -e "╬ ${GREEN}${BOLD}[+] Applied:${RESET} Default shell set to Bash"
+else
+    echo -e "╬ ${RED}${BOLD}[-] Skipped:${RESET} Shell unchanged"
 fi
 
-echo "│"
-echo "│ ◷ Uninstall complete. Please restart Termux."
-echo "╰──────────────────────"
+# ─────────────────────────────
+# COMPLETION
+# ─────────────────────────────
+echo "╬"
+echo -e "╬ ${WHITE}${BOLD}${UNDER}Please restart Termux for all changes to take effect.${RESET}"
+echo "╬"
+echo "╚════════════════════════════════════ ◈"
