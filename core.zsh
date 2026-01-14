@@ -63,6 +63,7 @@ bindkey "^?" magic-backspace
 # Styles for UI
 B="\033[1m"
 DIM="\033[2m"
+UNDER="\033[4m"
 GREEN="\033[1;32m"
 RED="\033[1;31m"
 YELLOW="\033[1;33m"
@@ -75,7 +76,7 @@ function 1ll-colors() {
     local options=("⦿ 1llicit Theme (Gogh Sync)" "⦿ Termux Styling (Official)" "⦿ Favorites (Recommended)")
     
     # Fixed Header Color: Border normal, Title White/Bold
-    echo -e "\n╔══════════════ ${WHITE}${B}THEME LIBRARY${RESET} ═════════════ ◈"
+    echo -e "\n╔══════════════ ${WHITE}${B}${UNDER}THEME LIBRARY${RESET} ═════════════ ◈"
     local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Selection ⫸ " --height=10 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     case "$choice" in
@@ -144,9 +145,9 @@ function 1ll-syntax() {
     fi
 
     # Only one option: The Quick Menu
-    local options=("⦿ Select via Menu (Quick)")
+    local options=("⦿ Fast themes (Recommended)")
     
-    echo -e "\n${WHITE}${B}╔═══════════════════ SYNTAX THEME ═══════════════════ ◈${RESET}"
+    echo -e "\n╔═══════════════════ ${WHITE}${B}${UNDER}SYNTAX THEME${RESET} ═══════════════════ ◈"
     local mode=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Mode ⫸ " --height=10 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     case "$mode" in
@@ -172,7 +173,7 @@ function 1ll-syntax() {
 
 # --- FONT MANAGER ---
 function 1ll-fonts() {
-    echo -e "\n╔══════════════ ${WHITE}${B}FONT LIBRARY${RESET} ══════════════ ◈"
+    echo -e "\n╔══════════════ ${WHITE}${B}${UNDER}FONT LIBRARY${RESET} ══════════════ ◈"
     
     for pkg in jq curl fzf; do
         if ! command -v $pkg >/dev/null 2>&1; then
@@ -184,7 +185,7 @@ function 1ll-fonts() {
     done
 
     local options=("⦿ Nerd Fonts (2600+)" "⦿ Standard Meslo (Recommended)" "⦿ Favorites")
-    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Fonts ⫸ " --height=10 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Font options ⫸ " --height=10 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     case "$choice" in
         *"Nerd Fonts"*) 
@@ -193,7 +194,7 @@ function 1ll-fonts() {
                 
                 local selection=$(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | \
                     jq -r '.tree[] | select(.path|test("\\.(ttf|otf)$"; "i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | (.path | split("/") | last) + " | " + .url' | \
-                    fzf --delimiter=" | " --with-nth=1 --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]" --prompt="╬ Select ⫸ ")
+                    fzf --delimiter=" | " --with-nth=1 --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]" --prompt="╬ Nerd Fonts ⫸ ")
                 
                 printf "\r\033[K"
 
@@ -239,7 +240,7 @@ function 1ll-fonts() {
                 return
             fi
 
-            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="╬ Favorites ⫸ " --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="╬ Fav ⫸ " --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$sel" ]]; then
                 printf "╬ ${CYAN}[*]${RESET} Installing font: $sel...\r"
                 mkdir -p ~/.termux
@@ -257,7 +258,7 @@ function 1ll-fonts() {
 }
 
 function 1ll-update() {
-    echo -e "\n╔══════════════ ${WHITE}${B}SYSTEM UPDATE${RESET} ═════════════ ◈"
+    echo -e "\n╔══════════════ ${WHITE}${B}${UNDER}SYSTEM UPDATE${RESET} ═════════════ ◈"
     echo "╬"
     
     printf "╬ ${CYAN}[*]${RESET} Updating system packages...\r"

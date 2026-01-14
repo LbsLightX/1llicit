@@ -6,6 +6,7 @@
 # Colors & Styles
 B="\033[1m"
 DIM="\033[2m"
+UNDER="\033[4m"
 GREEN="\033[1;32m"
 RED="\033[1;31m"
 YELLOW="\033[1;33m"
@@ -37,7 +38,7 @@ echo "  ⠀⠀⠠⢾⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣷⡤"
 echo -e "\033[0m"
 echo -e "${WHITE}${B}   !-1llicit-!-1llicit-!-1llicit-!${RESET}"
 echo ""
-echo -e "╔═════════ ${WHITE}${B}INSTALLER${RESET} ════════════════════════════════ ◈"
+echo -e "╔═════════ ${WHITE}${B}${UNDER}INSTALLER${RESET} ════════════════════════════════ ◈"
 echo "╬"
 
 # 1. Mirrors

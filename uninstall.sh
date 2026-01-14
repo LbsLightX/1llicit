@@ -6,6 +6,7 @@
 # Colors & Styles
 B="\033[1m"
 DIM="\033[2m"
+UNDER="\033[4m"
 GREEN="\033[1;32m"
 RED="\033[1;31m"
 YELLOW="\033[1;33m"
@@ -14,7 +15,7 @@ WHITE="\033[1;97m"
 RESET="\033[0m"
 
 # Header: Border is default/reset, Title is Bold White
-echo -e "\n╔═══════════════ ${WHITE}${B}UNINSTALLER${RESET} ══════════════ ◈"
+echo -e "\n╔═══════════════ ${WHITE}${B}${UNDER}UNINSTALLER${RESET} ══════════════ ◈"
 echo "╬"
 
 # 1. Verification
