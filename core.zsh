@@ -12,10 +12,6 @@ zinit lucid light-mode for \
 # -----------------------------------------------------------------------------
 # 2. Plugins (Syntax Highlighting, Autosuggestions, History Search)
 # -----------------------------------------------------------------------------
-# LOAD ORDER IS CRITICAL:
-# 1. Syntax Highlighting (Must load BEFORE History Search)
-# 2. History Substring Search (Loads AFTER Syntax Highlighting)
-
 zinit wait lucid light-mode for \
   atinit"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay" \
       zdharma-continuum/fast-syntax-highlighting \
@@ -60,7 +56,7 @@ function magic-backspace() {
 zle -N magic-backspace
 bindkey "^?" magic-backspace
 
-# Colors & Styles
+# Styles
 B="\033[1m"
 DIM="\033[2m"
 GREEN="\033[1;32m"
@@ -77,6 +73,7 @@ function 1ll-colors() {
     echo -e "\n${WHITE}${B}╔═════════ THEME LIBRARY ════════════════════════════ ◈${RESET}"
     local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Selection ⫸ " --height=10 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
+    # Fix 1: Handle Main Menu Cancellation
     if [[ -z "$choice" ]]; then
         echo -e "╬ ${RED}${B}[-]${RESET} Cancelled."
         echo -e "╚════════════════════════════════════════════════════ ◈"
@@ -85,11 +82,10 @@ function 1ll-colors() {
 
     case "$choice" in
         *"1llicit Theme"*) 
-            # OFFLINE MODE: Run local script
-            if [ -f "/storage/emulated/0/Download/Termux-Directory/Web-Server/1llicit-Termux/1llicit-colors/install.sh" ]; then
-                bash "/storage/emulated/0/Download/Termux-Directory/Web-Server/1llicit-Termux/1llicit-colors/install.sh"
+            if curl --output /dev/null --silent --head --fail "https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh"; then
+                bash -c "$(curl -fsSL 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh')"
             else
-                echo -e "╬ ${RED}${B}[!] Error:${RESET} Local colors script not found."
+                echo -e "╬ ${RED}${B}[!] Error:${RESET} Can't connect to repository."
             fi
             ;; 
         *"Termux Styling"*) 
@@ -161,6 +157,7 @@ function 1ll-syntax() {
         return
     fi
 
+    # Fix 3: Logic Matching
     case "$mode" in
         *"Browse"*) 
             echo -e "╬ ${CYAN}[*]${RESET} Loading previews..."
@@ -260,7 +257,7 @@ function 1ll-fonts() {
                 return
             fi
 
-            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="╬ Favorites ⫸ " --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local selected=$(printf "%s\n" "$fonts_list" | fzf --prompt="╬ Favorites ⫸ " --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$sel" ]]; then
                 printf "╬ ${CYAN}[*]${RESET} Installing font: $sel...\r"
                 mkdir -p ~/.termux
@@ -287,7 +284,8 @@ function 1ll-update() {
     printf "\r\033[K"
     echo -e "╬ ${GREEN}•${RESET} System packages updated.    [ ${GREEN}OK${RESET} ]"
     
-    printf "╬ ${CYAN}[*]${RESET} Updating ZSH/Zinit stuff...\r"
+    # Fix 4: Clear Line Logic
+    printf "╬ ${CYAN}[*]${RESET} Updating ZSH/Zinit stuff (may take 1-2 minutes)..."
     zi update --all >/dev/null 2>&1
     printf "\r\033[K"
     echo -e "╬ ${GREEN}•${RESET} ZSH/Zinit updated.          [ ${GREEN}OK${RESET} ]"
@@ -303,7 +301,7 @@ function 1ll-update() {
     printf "\r\033[K"
     echo -e "╬ ${GREEN}•${RESET} Fastfetch updated.          [ ${GREEN}OK${RESET} ]"
     
-    printf "╬ ${CYAN}[*]${RESET} Updating 1llicit Core (Local)...\r"
+    printf "╬ ${CYAN}[*]${RESET} Updating 1llicit Core (Local)..."
     # OFFLINE MODE: Copy local file
     cp "/storage/emulated/0/Download/Termux-Directory/Web-Server/1llicit-Termux/1llicit/core.zsh" "$HOME/.1llicit/core.zsh"
     printf "\r\033[K"
