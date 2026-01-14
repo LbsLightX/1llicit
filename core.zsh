@@ -63,6 +63,7 @@ bindkey "^?" magic-backspace
 # Styles
 B="\033[1m"
 DIM="\033[2m"
+UNDER="\033[4m"
 GREEN="\033[1;32m"
 RED="\033[1;31m"
 YELLOW="\033[1;33m"
@@ -74,8 +75,11 @@ RESET="\033[0m"
 function 1ll-colors() {
     local options=("⦿ 1llicit Theme (Gogh Sync)" "⦿ Termux Styling (Official)" "⦿ Favorites (Recommended)")
     
-    echo -e "\n${WHITE}${B}╔═════════ THEME LIBRARY ════════════════════════════ ◈${RESET}"
-    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Selection ⫸ " --height=10 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+    # Corrected Header: Default Border, White/Bold/Under Title
+    echo -e "\n╔═════════ ${WHITE}${B}${UNDER}THEME LIBRARY${RESET} ════════════════════════════ ◈"
+    echo "╬"
+    
+    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Selection ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     if [[ -z "$choice" ]]; then
         echo -e "╬ ${RED}${B}[-]${RESET} Cancelled."
@@ -103,7 +107,7 @@ function 1ll-colors() {
             
             printf "\r\033[K"
 
-            local selected=$(printf "%s\n" "$themes" | fzf --prompt="╬ Official ⫸ " --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local selected=$(printf "%s\n" "$themes" | fzf --prompt="╬ Official ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
                 printf "╬ ${CYAN}[*]${RESET} Applying color scheme: $(echo $selected | sed 's/\.properties//')...\r"
                 mkdir -p ~/.termux
@@ -124,7 +128,7 @@ function 1ll-colors() {
                 return
             fi
 
-            local selected=$(printf "%s\n" "$themes" | fzf --prompt="╬ Favorites ⫸ " --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local selected=$(printf "%s\n" "$themes" | fzf --prompt="╬ Favorites ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
                 printf "╬ ${CYAN}[*]${RESET} Applying color scheme: $selected...\r"
                 mkdir -p ~/.termux
@@ -150,8 +154,10 @@ function 1ll-syntax() {
 
     local options=("⦿ Browse Theme List (Preview)" "⦿ Select Theme (Fast-Theme)")
     
-    echo -e "\n${WHITE}${B}╔═════════ SYNTAX THEME ═════════════════════════════ ◈${RESET}"
-    local mode=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Mode ⫸ " --height=10 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+    echo -e "\n╔═════════ ${WHITE}${B}${UNDER}SYNTAX THEME${RESET} ════════════════════════════ ◈"
+    echo "╬"
+    
+    local mode=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Mode ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     if [[ -z "$mode" ]]; then
         echo -e "╬ ${RED}${B}[-]${RESET} Cancelled."
@@ -166,7 +172,7 @@ function 1ll-syntax() {
             ;; 
         *"Select"*) 
             local themes=$(fast-theme -l | awk '{print $1}')
-            local selected=$(echo "$themes" | fzf --prompt="╬ Syntax ⫸ " --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local selected=$(echo "$themes" | fzf --prompt="╬ Syntax ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
             if [[ -n "$selected" ]]; then
                 printf "╬ ${CYAN}[*]${RESET} Applying syntax theme: $selected...\r"
@@ -184,7 +190,8 @@ function 1ll-syntax() {
 
 # --- FONT MANAGER ---
 function 1ll-fonts() {
-    echo -e "\n${WHITE}${B}╔═════════ FONT LIBRARY ═════════════════════════════ ◈${RESET}"
+    echo -e "\n╔═════════ ${WHITE}${B}${UNDER}FONT LIBRARY${RESET} ════════════════════════════ ◈"
+    echo "╬"
     
     for pkg in jq curl fzf; do
         if ! command -v $pkg >/dev/null 2>&1; then
@@ -196,7 +203,7 @@ function 1ll-fonts() {
     done
 
     local options=("⦿ Nerd Fonts (2600+)" "⦿ Standard Meslo (Recommended)" "⦿ Favorites")
-    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Fonts ⫸ " --height=10 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Fonts ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     if [[ -z "$choice" ]]; then
         echo -e "╬ ${RED}${B}[-]${RESET} Cancelled."
@@ -211,7 +218,7 @@ function 1ll-fonts() {
                 
                 local selection=$(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | \
                     jq -r '.tree[] | select(.path|test("\\.(ttf|otf)$"; "i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | (.path | split("/") | last) + " | " + .url' | \
-                    fzf --delimiter=" | " --with-nth=1 --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]" --prompt="╬ Select ⫸ ")
+                    fzf --delimiter=" | " --with-nth=1 --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]" --prompt="╬ Select ⫸ ")
                 
                 printf "\r\033[K"
 
@@ -235,7 +242,7 @@ function 1ll-fonts() {
         *"Standard Meslo"*) 
             local meslo_base="https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts"
             local variants=("MesloLGS NF Regular.ttf" "MesloLGS NF Bold.ttf" "MesloLGS NF Italic.ttf" "MesloLGS NF Bold Italic.ttf")
-            local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="╬ Meslo ⫸ " --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="╬ Meslo ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
             if [[ -n "$sel" ]]; then
                 printf "╬ ${CYAN}[*]${RESET} Installing font: $sel...\r"
@@ -257,7 +264,7 @@ function 1ll-fonts() {
                 return
             fi
 
-            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="╬ Favorites ⫸ " --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="╬ Favorites ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$sel" ]]; then
                 printf "╬ ${CYAN}[*]${RESET} Installing font: $sel...\r"
                 mkdir -p ~/.termux
@@ -275,7 +282,7 @@ function 1ll-fonts() {
 }
 
 function 1ll-update() {
-    echo -e "\n${WHITE}${B}╔═════════ SYSTEM UPDATE ════════════════════════════ ◈${RESET}"
+    echo -e "\n╔═════════ ${WHITE}${B}${UNDER}SYSTEM UPDATE${RESET} ════════════════════════════ ◈"
     echo "╬"
     
     printf "╬ ${CYAN}[*]${RESET} Updating system packages...\r"
@@ -284,7 +291,7 @@ function 1ll-update() {
     printf "\r\033[K"
     echo -e "╬ ${GREEN}•${RESET} System packages updated.    [ ${GREEN}OK${RESET} ]"
     
-    printf "╬ ${CYAN}[*]${RESET} Updating ZSH/Zinit stuff (may take 1-2 minutes)...\r"
+    printf "╬ ${CYAN}[*]${RESET} Updating ZSH/Zinit stuff (may take 1-2 minutes)..."
     zi update --all >/dev/null 2>&1
     printf "\r\033[K"
     echo -e "╬ ${GREEN}•${RESET} ZSH/Zinit updated.          [ ${GREEN}OK${RESET} ]"
