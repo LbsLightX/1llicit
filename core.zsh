@@ -75,7 +75,7 @@ function 1ll-colors() {
     local options=("⦿ 1llicit Theme (Gogh Sync)" "⦿ Termux Styling (Official)" "⦿ Favorites (Recommended)")
     
     # Fixed Header Color: Border normal, Title White/Bold
-    echo -e "\n╔═════════ ${WHITE}${B}THEME LIBRARY${RESET} ══════════════════ ◈"
+    echo -e "\n╔══════════════ ${WHITE}${B}THEME LIBRARY${RESET} ═════════════ ◈"
     local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Selection ⫸ " --height=10 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     case "$choice" in
@@ -143,22 +143,20 @@ function 1ll-syntax() {
         return 1
     fi
 
-    local options=("⦿ Browse Theme List (Preview)" "⦿ Select via Menu (Quick)")
+    # Only one option: The Quick Menu
+    local options=("⦿ Select via Menu (Quick)")
     
-    echo -e "\n╔═════════ ${WHITE}${B}SYNTAX THEME${RESET} ══════════════════ ◈"
+    echo -e "\n${WHITE}${B}╔═══════════════════ SYNTAX THEME ═══════════════════ ◈${RESET}"
     local mode=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Mode ⫸ " --height=10 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     case "$mode" in
-        *"Browse"*) 
-            echo -e "╬ ${CYAN}[*]${RESET} Loading previews..."
-            fast-theme -l
-            ;; 
-        *"Select"*) 
+        *"Select via Menu"*) 
+            # This logic only runs after you select the option above
             local themes=$(fast-theme -l | awk '{print $1}')
             local selected=$(echo "$themes" | fzf --prompt="╬ Syntax ⫸ " --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
             if [[ -n "$selected" ]]; then
-                printf "╬ ${CYAN}[*]${RESET} Applying: $selected...\r"
+                printf "╬ ${CYAN}[*]${RESET} Applying syntax theme: $selected...\r"
                 fast-theme "$selected" >/dev/null 2>&1
                 printf "\r\033[K"
                 echo -e "╬ ${GREEN}${B}[+] Applied syntax theme:${RESET} $selected"
@@ -168,12 +166,13 @@ function 1ll-syntax() {
             ;; 
         *) ;; 
     esac
-    echo -e "╚══════════════════════════════════════════ ◈"
+    echo -e "╚════════════════════════════════════════════════════ ◈"
 }
+
 
 # --- FONT MANAGER ---
 function 1ll-fonts() {
-    echo -e "\n╔═════════ ${WHITE}${B}FONT LIBRARY${RESET} ══════════════════ ◈"
+    echo -e "\n╔══════════════ ${WHITE}${B}FONT LIBRARY${RESET} ══════════════ ◈"
     
     for pkg in jq curl fzf; do
         if ! command -v $pkg >/dev/null 2>&1; then
@@ -258,7 +257,7 @@ function 1ll-fonts() {
 }
 
 function 1ll-update() {
-    echo -e "\n╔═════════ ${WHITE}${B}SYSTEM UPDATE${RESET} ══════════════════ ◈"
+    echo -e "\n╔══════════════ ${WHITE}${B}SYSTEM UPDATE${RESET} ═════════════ ◈"
     echo "╬"
     
     printf "╬ ${CYAN}[*]${RESET} Updating system packages...\r"
@@ -290,7 +289,7 @@ function 1ll-update() {
     echo -e "╬ ${GREEN}•${RESET} 1llicit Core updated.       [ ${GREEN}OK${RESET} ]"
     
     echo "╬"
-    echo -e "╚═════════ ${GREEN}${B}COMPLETE${RESET} ══════════════════════ ◈"
+    echo -e "╚════════════════ ${GREEN}${B}COMPLETE${RESET} ═══════════════ ◈"
     sleep 1
     clear
     exec zsh
