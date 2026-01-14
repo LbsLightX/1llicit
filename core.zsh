@@ -84,7 +84,7 @@ function 1ll-colors() {
             else
                 echo -e "╬ ${RED}${B}[!] Error:${RESET} Can't connect to repository."
             fi
-            ;;;;
+            ;;
         *"Termux Styling"*) 
             printf "╬ ${CYAN}[*]${RESET} Fetching official Termux themes...\r"
             local themes=$(curl -fsSL "https://api.github.com/repos/termux/termux-styling/contents/app/src/main/assets/colors" | jq -r '.[].name' | command grep ".properties")
@@ -108,7 +108,7 @@ function 1ll-colors() {
             else
                 echo -e "╬ ${RED}${B}[-] Cancelled.${RESET}"
             fi
-            ;;;;
+            ;;
         *"Favorites"*) 
             local url_base="https://raw.githubusercontent.com/LbsLightX/1llicit/main/favorites/themes"
             local themes=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/themes" | jq -r '.[].name' | command grep ".properties")
@@ -129,7 +129,7 @@ function 1ll-colors() {
             else
                 echo -e "╬ ${RED}${B}[-] Cancelled.${RESET}"
             fi
-            ;;;;
+            ;;
         *)
             ;;
     esac
@@ -152,7 +152,7 @@ function 1ll-syntax() {
         *"Browse"*) 
             echo -e "╬ ${CYAN}[*]${RESET} Loading previews..."
             fast-theme -l
-            ;;;;
+            ;;
         *"Select"*) 
             local themes=$(fast-theme -l | awk '{print $1}')
             local selected=$(echo "$themes" | fzf --prompt="╬ Syntax ⫸ " --height=15 --layout=reverse --header="╬ [ Ctrl-c to Cancel ] | [ Enter to Apply ]")
@@ -165,7 +165,7 @@ function 1ll-syntax() {
             else
                 echo -e "╬ ${RED}${B}[-] Cancelled.${RESET}"
             fi
-            ;;;;
+            ;;
         *)
             ;;
     esac
@@ -215,7 +215,7 @@ function 1ll-fonts() {
             else
                 echo -e "╬ ${RED}${B}[!]${RESET} Connection error."
             fi
-            ;;;;
+            ;;
         *"Standard Meslo"*) 
             local meslo_base="https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts"
             local variants=("MesloLGS NF Regular.ttf" "MesloLGS NF Bold.ttf" "MesloLGS NF Italic.ttf" "MesloLGS NF Bold Italic.ttf")
@@ -231,7 +231,7 @@ function 1ll-fonts() {
             else
                 echo -e "╬ ${RED}${B}[-] Cancelled.${RESET}"
             fi
-            ;;;;
+            ;;
         *"Favorites"*) 
             local url_base="https://raw.githubusercontent.com/LbsLightX/1llicit/main/favorites/fonts"
             local fonts_list=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/fonts" | jq -r '.[].name' | command grep -E ".ttf|.otf")
@@ -252,7 +252,7 @@ function 1ll-fonts() {
             else
                 echo -e "╬ ${RED}${B}[-] Cancelled.${RESET}"
             fi
-            ;;;;
+            ;;
         *)
             ;;
     esac
@@ -269,23 +269,27 @@ function 1ll-update() {
     printf "\r\033[K"
     echo -e "╬ ${GREEN}${B}[+]${RESET} System packages updated."
     
-    printf "╬ ${CYAN}[*]${RESET} Updating ZSH/Zinit stuff (may take 1-2 mins)..."
+    printf "╬ ${CYAN}[*]${RESET} Updating ZSH/Zinit stuff (may take 1-2 mins)...
+"
     zi update --all >/dev/null 2>&1
     printf "\r\033[K"
     echo -e "╬ ${GREEN}${B}[+]${RESET} ZSH/Zinit updated."
     
-    printf "╬ ${CYAN}[*]${RESET} Updating bSUDO..."
+    printf "╬ ${CYAN}[*]${RESET} Updating bSUDO...
+"
     curl -fsSL 'https://github.com/agnostic-apollo/sudo/releases/latest/download/sudo' -o $PREFIX/bin/bsudo >/dev/null 2>&1
     chmod 700 "$PREFIX/bin/bsudo"
     printf "\r\033[K"
     echo -e "╬ ${GREEN}${B}[+]${RESET} bSUDO updated."
     
-    printf "╬ ${CYAN}[*]${RESET} Updating Fastfetch..."
+    printf "╬ ${CYAN}[*]${RESET} Updating Fastfetch...
+"
     pkg install --only-upgrade fastfetch -y > /dev/null 2>&1
     printf "\r\033[K"
     echo -e "╬ ${GREEN}${B}[+]${RESET} Fastfetch updated."
     
-    printf "╬ ${CYAN}[*]${RESET} Updating 1llicit Core..."
+    printf "╬ ${CYAN}[*]${RESET} Updating 1llicit Core...
+"
     curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > $HOME/.1llicit/core.zsh
     printf "\r\033[K"
     echo -e "╬ ${GREEN}${B}[+]${RESET} 1llicit Core updated."
