@@ -223,7 +223,7 @@ function 1ll-fonts() {
                 
                 local selection=$(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | \
                     jq -r '.tree[] | select(.path|test("\\.(ttf|otf)$"; "i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | (.path | split("/") | last) + " | " + .url' | \
-                    fzf --delimiter=" | " --with-nth=1 --height=15 --layout=reverse --header=$'[ Ctrl-c to Cancel ] | [ Enter to Apply ] \n\033[1;31m[!] ONLY SELECT .TTF OR .OTF FILES\033[0m' --prompt="╬ Nerd ⫸ ")
+                    fzf --delimiter=" | " --with-nth=1 --height=15 --layout=reverse --header=$'[ Ctrl-c to Cancel ] | [ Enter to Apply ] \n\033[1;31m[!] ONLY SELECT .TTF OR .OTF FILES\033[0m' --prompt="╬ Nerd fonts ⫸ ")
                 
                 printf "\r\033[K"
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# 1llicit one-line Uninstaller
+# 1llicit Uninstaller
+# Simplified + Fixed Layout
 
 # Colors & Styles
 BOLD="\033[1m"
@@ -13,13 +14,12 @@ WHITE="\033[1;97m"
 YELLOW="\033[1;33m"
 RESET="\033[0m"
 
-
-# header
+# Header: Border default, Title Bold White
 echo -e "\n╔═══════════════ ${WHITE}${BOLD}${UNDER}UNINSTALLER${RESET} ══════════════ ◈"
 echo "╬"
 
-# verification
-echo -e "╬ ${RED}${BOLD}[!] WARNING:${RESET} This will remove 1llicit configuration."
+# 1. Verification
+echo -e "╬ ${RED}${BOLD}[!] WARNING:${RESET} This will remove 1llicit config."
 echo -e "╬     Your original ${RED}${BOLD}.zshrc${RESET} will be restored."
 echo "╬"
 echo -ne "╬ ${YELLOW}${BOLD}[?]${RESET} Are you sure? (y/N) "
@@ -34,8 +34,7 @@ fi
 
 echo "╬"
 
-
-# find backup
+# 2. Find Backup
 BACKUP_DIR="$HOME/storage/shared/1llicit/backup"
 if [ -d "$BACKUP_DIR" ]; then
     LATEST_BACKUP=$(ls -td "$BACKUP_DIR"/*/ 2>/dev/null | head -1)
@@ -48,48 +47,42 @@ if [ -d "$BACKUP_DIR" ]; then
     else
         echo -e "╬ ${RED}${BOLD}[!]${RESET} No .zshrc backup found."
         echo -e "╬     Hint: Check ${BOLD}${BACKUP_DIR/$HOME/\~}${RESET} manually."
+        
+        # Safety Check (Automated or Prompt? Keeping prompt as safety net)
+        rm -f "$HOME/.zshrc"
+        echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Deleted .zshrc to prevent errors."
     fi
 else
     echo -e "╬ ${RED}${BOLD}[!]${RESET} No backup directory found."
-    echo "╬     Skipping restore."
+    rm -f "$HOME/.zshrc"
+    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Deleted .zshrc to prevent errors."
 fi
 
-# cleanup core
-if [ -d "$HOME/.1llicit" ]; then
-    rm -rf "$HOME/.1llicit"
-    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Removed core files."
-fi
-
-
-# optional cleanup (storage)
+# 3. Deep Clean (Merged Storage + Plugins)
 echo "╬"
-echo -ne "╬ ${YELLOW}${BOLD}[?]${RESET} Remove backup folder? (y/N) "
+echo -e "╬ ${RED}${BOLD}[!]${RESET} Perform Deep Clean"
+echo -ne "╬ ${YELLOW}${BOLD}[?]${RESET} Delete (Plugins/Cache/Backups) (y/N) "
 read -n 1 -r REPLY
 [[ -n "$REPLY" ]] && echo ""
 
+# Always remove core
+rm -rf "$HOME/.1llicit"
+
 if [[ $REPLY =~ ^[Yy]$ ]]; then
+    rm -rf "$HOME/.local/share/zinit"
+    rm -rf "$HOME/.cache/p10k"*
+    rm -f "$PREFIX/bin/bsudo"
     rm -rf "$HOME/storage/shared/1llicit"
-    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Backups removed."
+    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Deep cleanup complete."
 else
-    echo -e "╬ ${CYAN}[-]${RESET} Backups retained."
+    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Removed core files only."
 fi
 
-
-# shell reset
-echo "╬"
-echo -ne "╬ ${YELLOW}${BOLD}[?]${RESET} Switch default shell back to Bash? (y/N) "
-read -n 1 -r REPLY
-[[ -n "$REPLY" ]] && echo ""
-
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    chsh -s bash
-    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Shell switched to Bash."
-else
-    echo -e "╬ ${RED}${BOLD}[-]${RESET} Aborted."
-fi
+# 4. Auto-Reset Shell
+chsh -s bash
+echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Shell reset to Bash."
 
 echo "╬"
 echo -e "╚═══════════ ${GREEN}${BOLD}UNINSTALL COMPLETE${RESET} ═══════════ ◈"
-
-
-# LbsLightX
+echo
+echo -e " - - - ${RED}${BOLD}${UNDER}PLEASE RESTART TERMUX TO FINISH.${RESET} - - -\n"
