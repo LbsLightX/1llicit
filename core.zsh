@@ -287,6 +287,39 @@ function 1ll-fonts() {
 }
 
 
+# backup utility
+function 1ll-backup() {
+        echo -e "\n╔════════════ ${WHITE}${BOLD}${UNDER}SYSTEM BACKUP${RESET} ════════════ ❐"
+    echo "╬"
+    
+    local backup_root="/storage/emulated/0/Download/1llicit-Backups"
+    local timestamp=$(date +%Y-%m-%d_%H-%M-%S)
+    local target="$backup_root/$timestamp"
+    
+    # check storage access
+    if [ ! -d "/storage/emulated/0/Download" ]; then
+        echo -e "╬ ${RED}${BOLD}[!] Error:${RESET} Storage permission denied."
+        echo -e "╚══════════════════════════════════ ❏"
+        return 1
+    fi
+    
+    printf "╬ ${CYAN}[*]${RESET} Creating backup at: $timestamp...\r"
+    mkdir -p "$target"
+    
+    # critical files
+    cp -r ~/.zshrc "$target/" 2>/dev/null
+    cp -r ~/.1llicit "$target/" 2>/dev/null
+    cp -r ~/.termux "$target/" 2>/dev/null
+    
+    printf "\r\033[K"
+    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Backup saved to:"
+    echo -e "╬     ${DIM}Download/1llicit-Backups/$timestamp${RESET}"
+    echo "╬"
+    echo -e "╚══════════ ${GREEN}${BOLD}BACKUP COMPLETE${RESET} ══════════ ❐"
+}
+
+
+# update utility
 function 1ll-update() {
     echo -e "\n╔════════════════ ${WHITE}${BOLD}${UNDER}SYSTEM UPDATE${RESET} ═════════════════ ❐"
     echo "╬"
@@ -328,6 +361,14 @@ function 1ll-update() {
 # set default syntax theme
 if command -v fast-theme >/dev/null 2>&1; then
     fast-theme zdharma >/dev/null 2>&1
+fi
+
+
+ # ==========================================
+ # USER CUSTOMIZATION HOOK
+  # ==========================================
+  if [[ -f "$HOME/.1llicit/user.zsh" ]]; then
+    source "$HOME/.1llicit/user.zsh"
 fi
 
 
