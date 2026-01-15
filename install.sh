@@ -38,7 +38,7 @@ echo "  ⠀⠀⠠⢾⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣷⡤"
 echo -e "\033[0m"
 echo -e "${WHITE}${BOLD}!-1llicit-!-1llicit-!-1llicit-!${RESET}"
 echo ""
-echo -e "╔═══════════════ ${WHITE}${BOLD}${UNDER}INSTALLER${RESET} ════════════════ ◈"
+echo -e "╔═══════════════ ${WHITE}${BOLD}${UNDER}INSTALLER${RESET} ════════════════ ✧"
 echo "╬"
 
 
@@ -151,18 +151,20 @@ echo -e "╬ ${GREEN}${BOLD}[+]${RESET} .zshrc generated."
 
 
 # assets
+REPO_URL="https://raw.githubusercontent.com/LbsLightX/1llicit/main/defaults"
+      
 if [ ! -f ~/.termux/font.ttf ]; then
-    curl -fsSL -o ~/.termux/font.ttf 'https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts/MesloLGS%20NF%20Regular.ttf' >/dev/null 2>&1
+    curl -fsSL -o ~/.termux/font.ttf '$REPO_URL/font.ttf' >/dev/null 2>&1
     echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Default font installed."
 fi
 
 if [ ! -f ~/.termux/colors.properties ]; then
-    curl -fsSL -o ~/.termux/colors.properties 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/3024-night.properties' >/dev/null 2>&1
+    curl -fsSL -o ~/.termux/colors.properties '$REPO_URL/colors.properties' >/dev/null 2>&1
     echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Default theme set."
 fi
 
 if [ ! -f ~/.termux/termux.properties ]; then
-    curl -fsSL -o ~/.termux/termux.properties 'https://raw.githubusercontent.com/LbsLightX/1llicit/main/.termux/termux.properties' >/dev/null 2>&1
+    curl -fsSL -o ~/.termux/termux.properties '$REPO_URL/termux.properties' >/dev/null 2>&1
     echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Custom keys configured."
 fi
 
@@ -172,7 +174,7 @@ termux-reload-settings
 zsh -ic "fast-theme zdharma" > /dev/null 2>&1
 
 echo "╬"
-echo -e "╚═══════════════ ${GREEN}${BOLD}COMPLETE${RESET} ════════════════ ◈"
+echo -e "╚═══════════════ ${GREEN}${BOLD}COMPLETE${RESET} ════════════════ ✧"
 echo ""
 sleep 2
 

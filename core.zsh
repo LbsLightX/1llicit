@@ -160,7 +160,7 @@ function 1ll-syntax() {
         return 1
     fi
 
-    local options=("⦿ Browse Theme List (Preview)" "⦿ Select Theme (Fast-Theme)")
+    local options=("⦿ Fast-Theme (Recommended)")
     
     echo -e "\n╔════════════════ ${WHITE}${BOLD}${UNDER}SYNTAX THEME${RESET} ═════════════════ ❐"
     echo "╬"
@@ -174,11 +174,7 @@ function 1ll-syntax() {
     fi
 
     case "$mode" in
-        *"Browse"*) 
-            echo -e "╬ ${CYAN}[*]${RESET} Loading previews..."
-            fast-theme -l
-            ;; 
-        *"Select"*) 
+        *"Select Theme"*) 
             local themes=$(fast-theme -l | awk '{print $1}')
             local selected=$(echo "$themes" | fzf --prompt="╬ Syntax ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
@@ -186,7 +182,7 @@ function 1ll-syntax() {
                 printf "╬ ${CYAN}[*]${RESET} Applying syntax theme: $selected...\r"
                 fast-theme "$selected" >/dev/null 2>&1
                 printf "\r\033[K"
-                echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Applied: $selected"
+                echo -e "╬ ${GREEN}${BOLD}[+] Applied syntax theme:${RESET} $selected"
             else
                 echo -e "╬ ${RED}${BOLD}[-]${RESET} Cancelled."
             fi
@@ -302,7 +298,7 @@ function 1ll-update() {
     echo -e "╬ ${GREEN}•${RESET} System packages updated.    [ ${GREEN}OK${RESET} ]"
     
     printf "╬ ${CYAN}[*]${RESET} Updating ZSH/Zinit stuff (may take 1-2 minutes)...
-"
+\r
     zi update --all >/dev/null 2>&1
     printf "\r\033[K"
     echo -e "╬ ${GREEN}•${RESET} ZSH/Zinit updated.          [ ${GREEN}OK${RESET} ]"
@@ -324,7 +320,7 @@ function 1ll-update() {
     echo -e "╬ ${GREEN}•${RESET} 1llicit Core updated.       [ ${GREEN}OK${RESET} ]"
     
     echo "╬"
-    echo -e "╚═════════ ${GREEN}${BOLD}COMPLETE${RESET} ════════════════════════════ ❏"
+    echo -e "╚═══════════════════ ${GREEN}${BOLD}COMPLETE${RESET} ════════════════════ ❏"
     sleep 1
     clear
     exec zsh
