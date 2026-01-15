@@ -114,7 +114,7 @@ function 1ll-colors() {
             
             printf "\r\033[K"
 
-            local selected=$(printf "%s\n" "$themes" | fzf --prompt="╬ Selection ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local selected=$(printf "%s\n" "$themes" | fzf --prompt="╬ Styling color theme ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
                 printf "╬ ${CYAN}[*]${RESET} Applying color scheme: $(echo $selected | sed 's/\.properties//')...\r"
                 mkdir -p ~/.termux
@@ -165,7 +165,7 @@ function 1ll-syntax() {
     echo -e "\n╔════════════════ ${WHITE}${BOLD}${UNDER}SYNTAX THEME${RESET} ═════════════════ ❐"
     echo "╬"
     
-    local mode=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Mode ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+    local mode=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Selection ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     if [[ -z "$mode" ]]; then
         echo -e "╬ ${RED}${BOLD}[-]${RESET} Cancelled."
@@ -176,7 +176,7 @@ function 1ll-syntax() {
     case "$mode" in
         *"Fast-Theme"*)
             local themes=$(fast-theme -l | awk '{print $1}')
-            local selected=$(echo "$themes" | fzf --prompt="╬ Syntax ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local selected=$(echo "$themes" | fzf --prompt="╬ Syntax highlighting ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
             if [[ -n "$selected" ]]; then
                 printf "╬ ${CYAN}[*]${RESET} Applying syntax theme: $selected...\r"
@@ -208,7 +208,7 @@ function 1ll-fonts() {
     done
 
     local options=("⦿ Nerd Fonts (2600+)" "⦿ Standard Meslo (Recommended)" "⦿ Favorites")
-    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Fonts ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Selection ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     if [[ -z "$choice" ]]; then
         echo -e "╬ ${RED}${BOLD}[-]${RESET} Cancelled."
@@ -223,7 +223,7 @@ function 1ll-fonts() {
                 
                 local selection=$(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | \
                     jq -r '.tree[] | select(.path|test("\\.(ttf|otf)$"; "i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | (.path | split("/") | last) + " | " + .url' | \
-                    fzf --delimiter=" | " --with-nth=1 --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ] \n\033[1;31m[!] ONLY SELECT .TTF OR .OTF FILES\033[0m" --prompt="╬ Select ⫸ ")
+                    fzf --delimiter=" | " --with-nth=1 --height=15 --layout=reverse --header=$'[ Ctrl-c to Cancel ] | [ Enter to Apply ] \n\033[1;31m[!] ONLY SELECT .TTF OR .OTF FILES\033[0m' --prompt="╬ Nerd ⫸ ")
                 
                 printf "\r\033[K"
 
@@ -247,7 +247,7 @@ function 1ll-fonts() {
         *"Standard Meslo"*) 
             local meslo_base="https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts"
             local variants=("MesloLGS NF Regular.ttf" "MesloLGS NF Bold.ttf" "MesloLGS NF Italic.ttf" "MesloLGS NF Bold Italic.ttf")
-            local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="╬ Meslo ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="╬ Meslo family ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
             if [[ -n "$sel" ]]; then
                 printf "╬ ${CYAN}[*]${RESET} Installing font: $sel...\r"
@@ -300,7 +300,7 @@ function 1ll-update() {
     printf "╬ ${CYAN}[*]${RESET} Updating ZSH/Zinit stuff (may take 1-2 minutes)...\r"
     zi update --all >/dev/null 2>&1
     printf "\r\033[K"
-    echo -e "╬ ${GREEN}•${RESET} ZSH/Zinit updated.                                    [ ${GREEN}OK${RESET} ]"
+    echo -e "╬ ${GREEN}•${RESET} ZSH/Zinit updated.          [ ${GREEN}OK${RESET} ]"
     
     printf "╬ ${CYAN}[*]${RESET} Updating bSUDO...\r"
     curl -fsSL 'https://github.com/agnostic-apollo/sudo/releases/latest/download/sudo' -o $PREFIX/bin/bsudo >/dev/null 2>&1
