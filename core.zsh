@@ -83,14 +83,14 @@ RESET="\033[0m"
 function 1ll-colors() {
     local options=("⦿ 1llicit Theme (Gogh Sync)" "⦿ Termux Styling (Official)" "⦿ Favorites (Recommended)")
     
-    echo -e "\n╔═════════ ${WHITE}${BOLD}${UNDER}THEME LIBRARY${RESET} ════════════════════════════ ◈"
+    echo -e "\n╔═════════════════ ${WHITE}${BOLD}${UNDER}THEME LIBRARY${RESET} ═════════════════ ❐"
         echo "╬"
-        echo -e
+        
     local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Selection ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     if [[ -z "$choice" ]]; then
         echo -e "╬ ${RED}${BOLD}[-]${RESET} Cancelled."
-        echo -e "╚════════════════════════════════════════════════════ ◈"
+        echo -e "╚══════════════════════════════════ ❏"
         return
     fi
 
@@ -149,7 +149,7 @@ function 1ll-colors() {
             ;; 
         *) ;; 
     esac
-    echo -e "╚════════════════════════════════════════════════════ ◈"
+    echo -e "╚══════════════════════════════════ ❏"
 }
 
 
@@ -162,14 +162,14 @@ function 1ll-syntax() {
 
     local options=("⦿ Browse Theme List (Preview)" "⦿ Select Theme (Fast-Theme)")
     
-    echo -e "\n╔═════════ ${WHITE}${BOLD}${UNDER}SYNTAX THEME${RESET} ════════════════════════════ ◈"
+    echo -e "\n╔════════════════ ${WHITE}${BOLD}${UNDER}SYNTAX THEME${RESET} ═════════════════ ❐"
     echo "╬"
     
     local mode=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Mode ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     if [[ -z "$mode" ]]; then
         echo -e "╬ ${RED}${BOLD}[-]${RESET} Cancelled."
-        echo -e "╚════════════════════════════════════════════════════ ◈"
+        echo -e "╚══════════════════════════════════ ❏"
         return
     fi
 
@@ -193,13 +193,13 @@ function 1ll-syntax() {
             ;; 
         *) ;; 
     esac
-    echo -e "╚════════════════════════════════════════════════════ ◈"
+    echo -e "╚══════════════════════════════════ ❏"
 }
 
 
 # font manager
 function 1ll-fonts() {
-    echo -e "\n╔═════════ ${WHITE}${BOLD}${UNDER}FONT LIBRARY${RESET} ════════════════════════════ ◈"
+    echo -e "\n╔════════════════ ${WHITE}${BOLD}${UNDER}FONT LIBRARY${RESET} ═════════════════ ❐"
     echo "╬"
     
     for pkg in jq curl fzf; do
@@ -216,7 +216,7 @@ function 1ll-fonts() {
 
     if [[ -z "$choice" ]]; then
         echo -e "╬ ${RED}${BOLD}[-]${RESET} Cancelled."
-        echo -e "╚════════════════════════════════════════════════════ ◈"
+        echo -e "╚══════════════════════════════════ ❏"
         return
     fi
 
@@ -287,11 +287,12 @@ function 1ll-fonts() {
             ;; 
         *) ;; 
     esac
-    echo -e "╚════════════════════════════════════════════════════ ◈"
+    echo -e "╚══════════════════════════════════ ❏"
 }
 
+
 function 1ll-update() {
-    echo -e "\n╔═════════ ${WHITE}${BOLD}${UNDER}SYSTEM UPDATE${RESET} ════════════════════════════ ◈"
+    echo -e "\n╔════════════════ ${WHITE}${BOLD}${UNDER}SYSTEM UPDATE${RESET} ═════════════════ ❐"
     echo "╬"
     
     printf "╬ ${CYAN}[*]${RESET} Updating system packages...\r"
@@ -323,7 +324,7 @@ function 1ll-update() {
     echo -e "╬ ${GREEN}•${RESET} 1llicit Core updated.       [ ${GREEN}OK${RESET} ]"
     
     echo "╬"
-    echo -e "╚═════════ ${GREEN}${BOLD}COMPLETE${RESET} ════════════════════════════════ ◈"
+    echo -e "╚═════════ ${GREEN}${BOLD}COMPLETE${RESET} ════════════════════════════ ❏"
     sleep 1
     clear
     exec zsh
