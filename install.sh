@@ -172,6 +172,12 @@ fi
 # reload
 termux-reload-settings
 
+# Pre-compile Zinit
+printf "╬ ${CYAN}${BOLD}[*]${RESET} Optimizing ZSH environment (Wait...)\r"
+zsh -ic "source $HOME/.zshrc; zinit compile --all" >/dev/null 2>&1
+printf "\r\033[K"
+echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Environment optimized."
+
 echo "╬"
 echo -e "╚═══════════════ ${GREEN}${BOLD}COMPLETE${RESET} ════════════════ ✧"
 echo ""
@@ -180,12 +186,10 @@ sleep 2
 # restore cursor
 setterm -cursor on
 
-alias fetch='fastfetch'
-
 # unconditional reload
 clear
-exec zsh -l
 printf "╬ ${CYAN}[*]${RESET} Launching Zsh (First load may take few seconds)...\r"
+exec zsh -l
 exit
 
 
