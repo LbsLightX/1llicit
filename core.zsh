@@ -1,14 +1,16 @@
 # 1llicit Core Configuration
 # This file contains the logic for the 1llicit environment.
 
+
 # -----------------------------------------------------------------------------
 # 1. Oh-My-Zsh Libraries (via Zinit)
 # -----------------------------------------------------------------------------
+
 zinit lucid light-mode for \
     OMZL::history.zsh \
     OMZL::completion.zsh \
     OMZL::key-bindings.zsh
-
+    
 # -----------------------------------------------------------------------------
 # 2. Plugins (Syntax Highlighting, Autosuggestions, History Search)
 # -----------------------------------------------------------------------------
@@ -31,11 +33,13 @@ zinit wait lucid light-mode for \
 # -----------------------------------------------------------------------------
 # 3. Theme (Powerlevel10k)
 # -----------------------------------------------------------------------------
+
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 
 # -----------------------------------------------------------------------------
 # 4. FZF Configuration
 # -----------------------------------------------------------------------------
+
 zinit wait lucid is-snippet for \
     $PREFIX/share/fzf/key-bindings.zsh \
     $PREFIX/share/fzf/completion.zsh
@@ -46,7 +50,6 @@ export FZF_DEFAULT_OPTS='--color 16'
 # -----------------------------------------------------------------------------
 # 5. Custom Functions & Widgets
 # -----------------------------------------------------------------------------
-
 # Magic Backspace: cd .. on empty line (Stops at HOME)
 function magic-backspace() {
     if [[ -z "$BUFFER" ]]; then
@@ -60,7 +63,11 @@ function magic-backspace() {
 zle -N magic-backspace
 bindkey "^?" magic-backspace
 
-# Styles
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+
+# styles & colors
 B="\033[1m"
 DIM="\033[2m"
 UNDER="\033[4m"
@@ -71,13 +78,12 @@ CYAN="\033[1;36m"
 WHITE="\033[1;97m"
 RESET="\033[0m"
 
-# --- THEME MANAGER ---
+
+# theme manager
 function 1ll-colors() {
     local options=("⦿ 1llicit Theme (Gogh Sync)" "⦿ Termux Styling (Official)" "⦿ Favorites (Recommended)")
     
-    # Corrected Header: Default Border, White/Bold/Under Title
     echo -e "\n╔═════════ ${WHITE}${B}${UNDER}THEME LIBRARY${RESET} ════════════════════════════ ◈"
-    echo "╬"
     
     local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Selection ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
@@ -107,7 +113,7 @@ function 1ll-colors() {
             
             printf "\r\033[K"
 
-            local selected=$(printf "%s\n" "$themes" | fzf --prompt="╬ Official ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local selected=$(printf "%s\n" "$themes" | fzf --prompt="╬ Selection ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
                 printf "╬ ${CYAN}[*]${RESET} Applying color scheme: $(echo $selected | sed 's/\.properties//')...\r"
                 mkdir -p ~/.termux
@@ -128,7 +134,7 @@ function 1ll-colors() {
                 return
             fi
 
-            local selected=$(printf "%s\n" "$themes" | fzf --prompt="╬ Favorites ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local selected=$(printf "%s\n" "$themes" | fzf --prompt="╬ Selection ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$selected" ]]; then
                 printf "╬ ${CYAN}[*]${RESET} Applying color scheme: $selected...\r"
                 mkdir -p ~/.termux
@@ -145,7 +151,8 @@ function 1ll-colors() {
     echo -e "╚════════════════════════════════════════════════════ ◈"
 }
 
-# --- SYNTAX HIGHLIGHTING MANAGER ---
+
+# syntax highlighting manager 
 function 1ll-syntax() {
     if ! command -v fast-theme >/dev/null 2>&1; then
         echo -e "╬ ${RED}${B}[!] Error:${RESET} fast-syntax-highlighting plugin not loaded."
@@ -188,7 +195,8 @@ function 1ll-syntax() {
     echo -e "╚════════════════════════════════════════════════════ ◈"
 }
 
-# --- FONT MANAGER ---
+
+# font manager
 function 1ll-fonts() {
     echo -e "\n╔═════════ ${WHITE}${B}${UNDER}FONT LIBRARY${RESET} ════════════════════════════ ◈"
     echo "╬"
@@ -264,7 +272,7 @@ function 1ll-fonts() {
                 return
             fi
 
-            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="╬ Favorites ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="╬ Selection ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             if [[ -n "$sel" ]]; then
                 printf "╬ ${CYAN}[*]${RESET} Installing font: $sel...\r"
                 mkdir -p ~/.termux
@@ -319,3 +327,6 @@ function 1ll-update() {
     clear
     exec zsh
 }
+
+
+# LbsLightX
