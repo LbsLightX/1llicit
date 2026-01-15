@@ -171,7 +171,6 @@ fi
 
 # reload
 termux-reload-settings
-zsh -ic "fast-theme zdharma" > /dev/null 2>&1
 
 echo "╬"
 echo -e "╚═══════════════ ${GREEN}${BOLD}COMPLETE${RESET} ════════════════ ✧"
@@ -186,6 +185,7 @@ alias fetch='fastfetch'
 # unconditional reload
 clear
 exec zsh -l
+printf "╬ ${CYAN}[*]${RESET} Launching Zsh (First load may take few seconds)...\r"
 exit
 
 

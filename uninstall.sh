@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-# 1llicit Uninstaller
-# Simplified + Fixed Layout
+# 1llicit One-line Uninstaller
 
-# Colors & Styles
+# colors & styles
 BOLD="\033[1m"
 DIM="\033[2m"
 UNDER="\033[4m"
@@ -14,11 +13,11 @@ WHITE="\033[1;97m"
 YELLOW="\033[1;33m"
 RESET="\033[0m"
 
-# Header: Border default, Title Bold White
+# header
 echo -e "\n╔═══════════════ ${WHITE}${BOLD}${UNDER}UNINSTALLER${RESET} ══════════════ ◈"
 echo "╬"
 
-# 1. Verification
+# verification
 echo -e "╬ ${RED}${BOLD}[!] WARNING:${RESET} This will remove 1llicit config."
 echo -e "╬     Your original ${RED}${BOLD}.zshrc${RESET} will be restored."
 echo "╬"
@@ -34,7 +33,7 @@ fi
 
 echo "╬"
 
-# 2. Find Backup
+# find backup
 BACKUP_DIR="$HOME/storage/shared/1llicit/backup"
 if [ -d "$BACKUP_DIR" ]; then
     LATEST_BACKUP=$(ls -td "$BACKUP_DIR"/*/ 2>/dev/null | head -1)
@@ -48,7 +47,7 @@ if [ -d "$BACKUP_DIR" ]; then
         echo -e "╬ ${RED}${BOLD}[!]${RESET} No .zshrc backup found."
         echo -e "╬     Hint: Check ${BOLD}${BACKUP_DIR/$HOME/\~}${RESET} manually."
         
-        # Safety Check (Automated or Prompt? Keeping prompt as safety net)
+        # safety check 
         rm -f "$HOME/.zshrc"
         echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Deleted .zshrc to prevent errors."
     fi
@@ -58,14 +57,14 @@ else
     echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Deleted .zshrc to prevent errors."
 fi
 
-# 3. Deep Clean (Merged Storage + Plugins)
+# deep clean (merged storage + plugins)
 echo "╬"
 echo -e "╬ ${RED}${BOLD}[!]${RESET} Perform Deep Clean"
 echo -ne "╬ ${YELLOW}${BOLD}[?]${RESET} Delete (Plugins/Cache/Backups) (y/N) "
 read -n 1 -r REPLY
 [[ -n "$REPLY" ]] && echo ""
 
-# Always remove core
+# always remove core
 rm -rf "$HOME/.1llicit"
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -78,7 +77,7 @@ else
     echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Removed core files only."
 fi
 
-# 4. Auto-Reset Shell
+# auto-reset shell
 chsh -s bash
 echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Shell reset to Bash."
 
@@ -86,3 +85,6 @@ echo "╬"
 echo -e "╚═══════════ ${GREEN}${BOLD}UNINSTALL COMPLETE${RESET} ═══════════ ◈"
 echo
 echo -e " - - - ${RED}${BOLD}${UNDER}PLEASE RESTART TERMUX TO FINISH.${RESET} - - -\n"
+
+
+# LbsLightX

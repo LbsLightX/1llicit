@@ -325,5 +325,10 @@ function 1ll-update() {
     exec zsh
 }
 
+# set default syntax theme
+if command -v fast-theme >/dev/null 2>&1; then
+    fast-theme zdharma >/dev/null 2>&1
+fi
+
 
 # LbsLightX
