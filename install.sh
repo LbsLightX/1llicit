@@ -3,7 +3,7 @@
 # 1llicit One-line Installer
 
 # colors & styles
-B="\033[1m"
+BOLD="\033[1m"
 DIM="\033[2m"
 UNDER="\033[4m"
 CYAN="\033[1;36m"
@@ -36,55 +36,55 @@ echo "  ⠀⠀⠀⠀⢠⣿⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⣧⠀⠀ "
 echo "  ⠀⠀⠀⢀⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣆⠀ "
 echo "  ⠀⠀⠠⢾⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣷⡤"
 echo -e "\033[0m"
-echo -e "${WHITE}${B}!-1llicit-!-1llicit-!-1llicit-!${RESET}"
+echo -e "${WHITE}${BOLD}!-1llicit-!-1llicit-!-1llicit-!${RESET}"
 echo ""
-echo -e "╔═════════ ${WHITE}${B}${UNDER}INSTALLER${RESET} ════════════════════════════════ ◈"
+echo -e "╔═══════════════ ${WHITE}${BOLD}${UNDER}INSTALLER${RESET} ════════════════ ◈"
 echo "╬"
 
 
 # mirrors
-printf "╬ ${CYAN}${B}[*]${RESET} Syncing mirrors...\r"
+printf "╬ ${CYAN}${BOLD}[*]${RESET} Syncing mirrors...\r"
 (echo 'n' | pkg update 2>/dev/null) | while read -r line; do :; done
 printf "\r\033[K" 
-echo -e "╬ ${GREEN}${B}[+]${RESET} Mirrors synced."
+echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Mirrors synced."
 
 
 # update
-printf "╬ ${CYAN}${B}[*]${RESET} Updating system...\r"
+printf "╬ ${CYAN}${BOLD}[*]${RESET} Updating system...\r"
 pkg upgrade -y -o Dpkg::Options::='--force-confnew' >/dev/null 2>&1
 printf "\r\033[K"
-echo -e "╬ ${GREEN}${B}[+]${RESET} System updated."
+echo -e "╬ ${GREEN}${BOLD}[+]${RESET} System updated."
 
 
 # packages
-printf "╬ ${CYAN}${B}[*]${RESET} Installing packages...\r"
+printf "╬ ${CYAN}${BOLD}[*]${RESET} Installing packages...\r"
 pkg install -y curl git zsh man jq perl fzf fastfetch termux-api >/dev/null 2>&1
 printf "\r\033[K"
-echo -e "╬ ${GREEN}${B}[+]${RESET} Core packages installed."
+echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Core packages installed."
 
 
 # bsudo
-printf "╬ ${CYAN}${B}[*]${RESET} Installing bSUDO...\r"
+printf "╬ ${CYAN}${BOLD}[*]${RESET} Installing bSUDO...\r"
 curl -fsSL 'https://github.com/agnostic-apollo/sudo/releases/latest/download/sudo' -o $PREFIX/bin/bsudo >/dev/null 2>&1
 chmod 700 "$PREFIX/bin/bsudo"
 printf "\r\033[K"
-echo -e "╬ ${GREEN}${B}[+]${RESET} bSUDO installed."
+echo -e "╬ ${GREEN}${BOLD}[+]${RESET} bSUDO installed."
 
 
 # storage
 if [ ! -d ~/storage ]; then
-    printf "╬ ${CYAN}${B}[*]${RESET} Requesting storage...\r"
+    printf "╬ ${CYAN}${BOLD}[*]${RESET} Requesting storage...\r"
     termux-setup-storage
     sleep 2
     printf "\r\033[K"
-    echo -e "╬ ${GREEN}${B}[+]${RESET} Storage access granted."
+    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Storage access granted."
 fi
 
 
 # backup
 BACKUP_PATH="$HOME/storage/shared/1llicit/backup/$(date +%Y_%m_%d_%H_%M)"
 mkdir -p "$BACKUP_PATH"
-printf "╬ ${CYAN}${B}[*]${RESET} Backing up configs...\r"
+printf "╬ ${CYAN}${BOLD}[*]${RESET} Backing up configs...\r"
 for i in "$HOME/.zshrc" "$HOME/.termux/font.ttf" "$HOME/.termux/colors.properties" "$HOME/.termux/termux.properties"
 do
     if [ -f $i ]; then
@@ -92,7 +92,7 @@ do
     fi
 done
 printf "\r\033[K"
-echo -e "╬ ${GREEN}${B}[+]${RESET} Configuration backed up."
+echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Configuration backed up."
 
 
 # clean slate
@@ -102,19 +102,19 @@ rm -f "$HOME/.zshrc"
 # shell
 if [[ "$SHELL" != *"zsh"* ]]; then
    chsh -s zsh
-   echo -e "╬ ${GREEN}${B}[+]${RESET} Default shell set to Zsh."
+   echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Default shell set to Zsh."
 fi
 
 
 # core download
 mkdir -p "$HOME/.1llicit"
-printf "╬ ${CYAN}${B}[*]${RESET} Downloading Core...\r"
+printf "╬ ${CYAN}${BOLD}[*]${RESET} Downloading Core...\r"
 if curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > "$HOME/.1llicit/core.zsh"; then
     printf "\r\033[K"
-    echo -e "╬ ${GREEN}${B}[+]${RESET} Core logic installed."
+    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Core logic installed."
 else
     printf "\r\033[K"
-    echo -e "╬ ${RED}${B}[!]${RESET} Failed to download Core."
+    echo -e "╬ ${RED}${BOLD}[!]${RESET} Failed to download Core."
     exit 1
 fi
 
@@ -147,23 +147,23 @@ if [[ -f "$HOME/.1llicit/core.zsh" ]]; then
     source "$HOME/.1llicit/core.zsh"
 fi
 EOF
-echo -e "╬ ${GREEN}${B}[+]${RESET} .zshrc generated."
+echo -e "╬ ${GREEN}${BOLD}[+]${RESET} .zshrc generated."
 
 
 # assets
 if [ ! -f ~/.termux/font.ttf ]; then
     curl -fsSL -o ~/.termux/font.ttf 'https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts/MesloLGS%20NF%20Regular.ttf' >/dev/null 2>&1
-    echo -e "╬ ${GREEN}${B}[+]${RESET} Default font installed."
+    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Default font installed."
 fi
 
 if [ ! -f ~/.termux/colors.properties ]; then
     curl -fsSL -o ~/.termux/colors.properties 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/themes/3024-night.properties' >/dev/null 2>&1
-    echo -e "╬ ${GREEN}${B}[+]${RESET} Default theme set."
+    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Default theme set."
 fi
 
 if [ ! -f ~/.termux/termux.properties ]; then
     curl -fsSL -o ~/.termux/termux.properties 'https://raw.githubusercontent.com/LbsLightX/1llicit/main/.termux/termux.properties' >/dev/null 2>&1
-    echo -e "╬ ${GREEN}${B}[+]${RESET} Custom keys configured."
+    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Custom keys configured."
 fi
 
 
@@ -172,16 +172,14 @@ termux-reload-settings
 zsh -ic "fast-theme zdharma" > /dev/null 2>&1
 
 echo "╬"
-echo -e "╚═════════ ${GREEN}${B}COMPLETE${RESET} ════════════════════════════════ ◈"
+echo -e "╚═══════════════ ${GREEN}${BOLD}COMPLETE${RESET} ════════════════ ◈"
 echo ""
 sleep 2
-
 
 # restore cursor
 setterm -cursor on
 
 alias fetch='fastfetch'
-
 
 # unconditional reload
 clear

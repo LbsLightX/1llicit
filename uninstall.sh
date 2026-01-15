@@ -54,12 +54,12 @@ else
     echo "╬     Skipping restore."
 fi
 
-
 # cleanup core
 if [ -d "$HOME/.1llicit" ]; then
     rm -rf "$HOME/.1llicit"
     echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Removed core files."
 fi
+
 
 # optional cleanup (storage)
 echo "╬"
@@ -84,6 +84,8 @@ read -n 1 -r REPLY
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     chsh -s bash
     echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Shell switched to Bash."
+else
+    echo -e "╬ ${RED}${BOLD}[-]${RESET} Aborted."
 fi
 
 echo "╬"
