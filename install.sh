@@ -154,17 +154,17 @@ echo -e "╬ ${GREEN}${BOLD}[+]${RESET} .zshrc generated."
 REPO_URL="https://raw.githubusercontent.com/LbsLightX/1llicit/main/defaults"
       
 if [ ! -f ~/.termux/font.ttf ]; then
-    curl -fsSL -o ~/.termux/font.ttf '$REPO_URL/font.ttf' >/dev/null 2>&1
+    curl -fsSL -o ~/.termux/font.ttf "$REPO_URL/font.ttf" >/dev/null 2>&1
     echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Default font installed."
 fi
 
 if [ ! -f ~/.termux/colors.properties ]; then
-    curl -fsSL -o ~/.termux/colors.properties '$REPO_URL/colors.properties' >/dev/null 2>&1
+    curl -fsSL -o ~/.termux/colors.properties "$REPO_URL/colors.properties" >/dev/null 2>&1
     echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Default theme set."
 fi
 
 if [ ! -f ~/.termux/termux.properties ]; then
-    curl -fsSL -o ~/.termux/termux.properties '$REPO_URL/termux.properties' >/dev/null 2>&1
+    curl -fsSL -o ~/.termux/termux.properties "$REPO_URL/termux.properties" >/dev/null 2>&1
     echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Custom keys configured."
 fi
 
@@ -188,7 +188,6 @@ setterm -cursor on
 
 # unconditional reload
 clear
-printf "╬ ${CYAN}[*]${RESET} Launching Zsh (First load may take few seconds)...\r"
 exec zsh -l
 exit
 
