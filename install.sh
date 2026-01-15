@@ -173,7 +173,7 @@ fi
 termux-reload-settings
 
 # Pre-compile Zinit
-printf "╬ ${CYAN}${BOLD}[*]${RESET} Optimizing ZSH environment (Wait...)\r"
+printf "╬ ${CYAN}${BOLD}[*]${RESET} Optimizing ZSH environment (Wait, it may take 1-2 minutes.)\r"
 zsh -ic "source $HOME/.zshrc; zinit compile --all" >/dev/null 2>&1
 printf "\r\033[K"
 echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Environment optimized."

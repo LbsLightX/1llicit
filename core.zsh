@@ -315,7 +315,7 @@ function 1ll-backup() {
     echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Backup saved to:"
     echo -e "╬     ${DIM}Download/1llicit-Backups/$timestamp${RESET}"
     echo "╬"
-    echo -e "╚══════════ ${GREEN}${BOLD}BACKUP COMPLETE${RESET} ══════════ ❐"
+    echo -e "╚═══════════ ${GREEN}${BOLD}BACKUP COMPLETE${RESET} ══════════ ❐"
 }
 
 
@@ -330,7 +330,7 @@ function 1ll-update() {
     printf "\r\033[K"
     echo -e "╬ ${GREEN}•${RESET} System packages updated.    [ ${GREEN}OK${RESET} ]"
     
-    printf "╬ ${CYAN}[*]${RESET} Updating ZSH/Zinit stuff (may take 1-2 minutes)...\r"
+    printf "╬ ${CYAN}[*]${RESET} Updating ZSH/Zinit stuff (Wait, it may take 1-2 minutes.)...\r"
     zi update --all >/dev/null 2>&1
     printf "\r\033[K"
     echo -e "╬ ${GREEN}•${RESET} ZSH/Zinit updated.          [ ${GREEN}OK${RESET} ]"
