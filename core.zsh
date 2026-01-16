@@ -47,6 +47,23 @@ zinit wait lucid is-snippet for \
 # Use 16 colors
 export FZF_DEFAULT_OPTS='--color 16'
 
+
+# -----------------------------------------------------------------------------
+# FZF-TAB Configuration
+# -----------------------------------------------------------------------------
+# Disable 'sort' (let FZF handle sorting)
+zstyle ':completion:*:git-checkout:*' sort false
+# Set group order
+zstyle ':completion:*:descriptions' format '[%d]'
+# Preview directory contents with eza/ls when completing cd
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color=always -1 --group-directories-first $realpath'
+# Switch to 'eza' if you have it installed:
+# zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+# Custom fzf flags (Match your 1llicit style)
+zstyle ':fzf-tab:*' fzf-flags --height=15 --layout=reverse --prompt="╬ Select ⫸ "
+
+
+
 # -----------------------------------------------------------------------------
 # 5. Custom Functions & Widgets
 # -----------------------------------------------------------------------------
@@ -330,7 +347,7 @@ function 1ll-update() {
     printf "\r\033[K"
     echo -e "╬ ${GREEN}•${RESET} System packages updated.    [ ${GREEN}OK${RESET} ]"
     
-    printf "╬ ${CYAN}[*]${RESET} Updating ZSH/Zinit stuff (Wait, it may take 1-2 minutes.)...\r"
+    printf "╬ ${CYAN}[*]${RESET} Updating ZSH/Zinit stuff (Wait, it may take 1-2 minutes.)\r"
     zi update --all >/dev/null 2>&1
     printf "\r\033[K"
     echo -e "╬ ${GREEN}•${RESET} ZSH/Zinit updated.          [ ${GREEN}OK${RESET} ]"
@@ -352,7 +369,7 @@ function 1ll-update() {
     echo -e "╬ ${GREEN}•${RESET} 1llicit Core updated.       [ ${GREEN}OK${RESET} ]"
     
     echo "╬"
-    echo -e "╚═══════════════════ ${GREEN}${BOLD}COMPLETE${RESET} ════════════════════ ❏"
+    echo -e "╚═══════════════════ ${GREEN}${BOLD}COMPLETE${RESET} ══════════════════ ❏"
     sleep 1
     clear
     exec zsh
