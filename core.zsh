@@ -37,6 +37,11 @@ zinit wait lucid light-mode for \
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 
 # -----------------------------------------------------------------------------
+
+zinit light Aloxaf/fzf-tab
+zinit light hlissner/zsh-autopair
+
+# -----------------------------------------------------------------------------
 # 4. FZF Configuration
 # -----------------------------------------------------------------------------
 
