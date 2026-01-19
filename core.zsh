@@ -149,7 +149,7 @@ function 1ll-colors() {
             fi
             ;; 
         *"Favorites"*) 
-            local url_base="https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/themes/favorites"
+            local url_base="https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/themes/favorites"
             local themes=$(curl -fsSL "https://api.github.com/repos/LbsLightX/lbs-archives/contents/themes/favorites" | jq -r '.[].name' | command grep ".properties")
             
             if [ -z "$themes" ]; then
@@ -283,7 +283,7 @@ function 1ll-fonts() {
             fi
             ;; 
         *"Favorites"*) 
-            local url_base="https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/fonts/favorites"
+            local url_base="https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/fonts/favorites"
             local fonts_list=$(curl -fsSL "https://api.github.com/repos/LbsLightX/lbs-archives/contents/fonts/favorites" | jq -r '.[].name' | command grep -E ".ttf|.otf")
             
             if [ -z "$fonts_list" ]; then
