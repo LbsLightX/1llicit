@@ -151,7 +151,7 @@ echo -e "╬ ${GREEN}${BOLD}[+]${RESET} .zshrc generated."
 
 
 # assets
-REPO_URL="https://raw.githubusercontent.com/LbsLightX/1llicit/main/defaults"
+REPO_URL="https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/defaults"
       
 if [ ! -f ~/.termux/font.ttf ]; then
     curl -fsSL -o ~/.termux/font.ttf "$REPO_URL/font.ttf" >/dev/null 2>&1

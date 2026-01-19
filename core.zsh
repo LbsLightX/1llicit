@@ -149,8 +149,8 @@ function 1ll-colors() {
             fi
             ;; 
         *"Favorites"*) 
-            local url_base="https://raw.githubusercontent.com/LbsLightX/1llicit/main/favorites/themes"
-            local themes=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/themes" | jq -r '.[].name' | command grep ".properties")
+            local url_base="https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/themes/favorites"
+            local themes=$(curl -fsSL "https://api.github.com/repos/LbsLightX/lbs-archives/contents/themes/favorites" | jq -r '.[].name' | command grep ".properties")
             
             if [ -z "$themes" ]; then
                 echo -e "╬ ${RED}${BOLD}[!]${RESET} No favorites found in repository."
@@ -283,8 +283,8 @@ function 1ll-fonts() {
             fi
             ;; 
         *"Favorites"*) 
-            local url_base="https://raw.githubusercontent.com/LbsLightX/1llicit/main/favorites/fonts"
-            local fonts_list=$(curl -fsSL "https://api.github.com/repos/LbsLightX/1llicit/contents/favorites/fonts" | jq -r '.[].name' | command grep -E ".ttf|.otf")
+            local url_base="https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/fonts/favorites"
+            local fonts_list=$(curl -fsSL "https://api.github.com/repos/LbsLightX/lbs-archives/contents/fonts/favorites" | jq -r '.[].name' | command grep -E ".ttf|.otf")
             
             if [ -z "$fonts_list" ]; then
                 echo -e "╬ ${RED}${BOLD}[!]${RESET} No favorites found in repository."
