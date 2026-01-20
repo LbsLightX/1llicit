@@ -363,11 +363,6 @@ function 1ll-update() {
     printf "\r\033[K"
     echo -e "╬ ${GREEN}•${RESET} bSUDO updated.              [ ${GREEN}OK${RESET} ]"
     
-    printf "╬ ${CYAN}[*]${RESET} Updating Fastfetch...\r"
-    pkg install --only-upgrade fastfetch -y > /dev/null 2>&1
-    printf "\r\033[K"
-    echo -e "╬ ${GREEN}•${RESET} Fastfetch updated.          [ ${GREEN}OK${RESET} ]"
-    
     printf "╬ ${CYAN}[*]${RESET} Updating 1llicit Core...\r"
     curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > $HOME/.1llicit/core.zsh
     printf "\r\033[K"
