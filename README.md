@@ -1,10 +1,39 @@
+<div align="center">
+
 # !-1llicit-!-1llicit-!-1llicit-!
 
-**💠 1llicit Termux Bootstrap Framework.**
+### Termux Bootstrap Framework
 
-> Heavily inspired by the **[LITMux](https://github.com/AvinashReddy3108/LITMux)**, for Original work - **[AvinashReddy3108](https://github.com/AvinashReddy3108)**. 🛐
+> Built upon the foundation of **[LITMux](https://github.com/AvinashReddy3108/LITMux)** by **[AvinashReddy3108](https://github.com/AvinashReddy3108)**. 🛐
 
-This is not just a theme. It is a complete environment takeover. It automates Zsh, Powerlevel10k, Nerd Fonts, and custom tools into a unified system.
+**More than a theme.** 1llicit is a complete environment overhaul. It automates Zsh, Powerlevel10k, Nerd Fonts, and custom tools into a single, unified system.
+
+</div>
+
+---
+
+### ✨ Showcase
+
+*A unified, aesthetic terminal experience.*
+
+![Dark Theme Preview](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/1llicit-1.jpg)
+![Light Theme Preview](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/1llicit-2.jpg)
+
+
+**＊ Interactive Theme Library (`1ll-colors`)**
+*Browse and apply 370+ themes instantly with a live preview.*
+
+![Theme Installer Menu](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/1ll-colors-2.gif)
+
+**＊ Nerd Fonts Manager (`1ll-fonts`)**
+*Install 2600+ patched fonts without leaving the terminal.*
+
+![Font Manager](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/1ll-fonts.gif)
+
+**＊ Powerlevel10k Configuration (`p10k configure`)**
+*Effortlessly set up your prompt wizard.*
+
+![P10k Configuration](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/p10k-configure.gif)
 
 ---
 
@@ -82,7 +111,7 @@ Anything you write in `user.zsh` is loaded automatically on startup.
 
 ### 💀 Uninstallation
 
-If you want to go back to normal, run this command. It will restore your previous configuration if a backup exists.
+To revert changes, run this command. It will restore your previous configuration if a backup exists.
 
 ```bash
 bash -c "$(curl -fsSL https://LbsLightX.github.io/1llicit/uninstall.sh)"
