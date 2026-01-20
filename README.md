@@ -26,6 +26,24 @@ This is not just a theme. It is a complete environment takeover. It automates Zs
 
 ---
 
+### 📥 Requirements
+
+> **⚠️ IMPORTANT:** Do not install Termux from the Google Play Store. It is outdated and unsupported.
+
+#### 📱 Termux App
+Install only from official sources:
+*   **GitHub:** [Termux](https://github.com/termux/termux-app/releases)
+*   **F-Droid:** [Termux](https://f-droid.org/en/packages/com.termux/)
+
+
+#### 🧩 Termux:API
+Required for system integration. Install from the **same source** as the main app:
+*   **GitHub:** [Termux:API](https://github.com/termux/termux-api)
+*   **F-Droid:** [Termux:API](https://f-droid.org/packages/com.termux.api/)
+
+
+---
+
 ### 📥 Installation
 
 Copy and paste this one-line command into Termux:
@@ -40,6 +58,7 @@ bash -c "$(curl -fsSL https://lbslightx.github.io/1llicit/install.sh)"
 
 Once installed, you have access to the **1ll-** suite of tools. Type them in your terminal to launch.
 
+*   **`p10k configure`** ⚙️ - Run the Powerlevel10k configuration wizard.
 *   **`1ll-colors`** 🎨 - Browse and install 370+ color schemes instantly.
 *   **`1ll-fonts`** 🔡 - Install Nerd Fonts without manual downloading.
 *   **`1ll-syntax`** 🖋️ - Change your syntax highlighting theme.
@@ -61,7 +80,7 @@ Anything you write in `user.zsh` is loaded automatically on startup.
 
 ---
 
-### 🗑️ Uninstallation
+### 💀 Uninstallation
 
 If you want to go back to normal, run this command. It will restore your previous configuration if a backup exists.
 
@@ -90,15 +109,6 @@ This project is built on the work of open-source legends.
 
 <div align="center">
 
-
-
-
-
 **Maintained with ❤️ by LbsLightX**
 
-
-
-
-
 </div>
-
