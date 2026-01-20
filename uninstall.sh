@@ -49,12 +49,14 @@ if [ -d "$BACKUP_DIR" ]; then
         
         # safety check 
         rm -f "$HOME/.zshrc"
-        echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Deleted .zshrc to prevent errors."
+        echo "# Default .zshrc (Restored by 1llicit)" > "$HOME/.zshrc"
+        echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Reset .zshrc to defaults."
     fi
 else
     echo -e "╬ ${RED}${BOLD}[!]${RESET} No backup directory found."
     rm -f "$HOME/.zshrc"
-    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Deleted .zshrc to prevent errors."
+    echo "# Default .zshrc (Restored by 1llicit)" > "$HOME/.zshrc"
+    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Reset .zshrc to defaults."
 fi
 
 # deep clean (merged storage + plugins)

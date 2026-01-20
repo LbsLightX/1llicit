@@ -364,9 +364,16 @@ function 1ll-update() {
     echo -e "╬ ${GREEN}•${RESET} bSUDO updated.              [ ${GREEN}OK${RESET} ]"
     
     printf "╬ ${CYAN}[*]${RESET} Updating 1llicit Core...\r"
-    curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > $HOME/.1llicit/core.zsh
-    printf "\r\033[K"
-    echo -e "╬ ${GREEN}•${RESET} 1llicit Core updated.       [ ${GREEN}OK${RESET} ]"
+    local temp_core="$HOME/.1llicit/core.zsh.tmp"
+    if curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > "$temp_core"; then
+        mv "$temp_core" "$HOME/.1llicit/core.zsh"
+        printf "\r\033[K"
+        echo -e "╬ ${GREEN}•${RESET} 1llicit Core updated.       [ ${GREEN}OK${RESET} ]"
+    else
+        rm -f "$temp_core"
+        printf "\r\033[K"
+        echo -e "╬ ${RED}•${RESET} Core update failed.         [ ${RED}ERROR${RESET} ]"
+    fi
     
     echo "╬"
     echo -e "╚═══════════════════ ${GREEN}${BOLD}COMPLETE${RESET} ══════════════════ ❏"
