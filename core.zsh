@@ -150,7 +150,7 @@ function 1ll-colors() {
             ;; 
         *"Favorites"*) 
             local url_base="https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/themes/favorites"
-            local themes=$(curl -fsSL "https://api.github.com/repos/LbsLightX/lbs-archives/contents/themes/favorites" | jq -r '.[].name' | command grep ".properties")
+            local themes=$(curl -fsSL "https://api.github.com/repos/LbsLightX/lbs-archives/contents/1llicit/themes/favorites" | jq -r '.[].name' | command grep ".properties")
             
             if [ -z "$themes" ]; then
                 echo -e "╬ ${RED}${BOLD}[!]${RESET} No favorites found in repository."
@@ -267,7 +267,7 @@ function 1ll-fonts() {
             fi
             ;; 
         *"Standard Meslo"*) 
-            local meslo_base="https://github.com/romkatv/dotfiles-public/raw/master/.local/share/fonts/NerdFonts"
+            local meslo_base="https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/fonts/meslolgs/powerlevel10k"
             local variants=("MesloLGS NF Regular.ttf" "MesloLGS NF Bold.ttf" "MesloLGS NF Italic.ttf" "MesloLGS NF Bold Italic.ttf")
             local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="╬ Meslo family ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
@@ -284,7 +284,7 @@ function 1ll-fonts() {
             ;; 
         *"Favorites"*) 
             local url_base="https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/fonts/favorites"
-            local fonts_list=$(curl -fsSL "https://api.github.com/repos/LbsLightX/lbs-archives/contents/fonts/favorites" | jq -r '.[].name' | command grep -E ".ttf|.otf")
+            local fonts_list=$(curl -fsSL "https://api.github.com/repos/LbsLightX/lbs-archives/contents/1llicit/fonts/favorites" | jq -r '.[].name' | command grep -E ".ttf|.otf")
             
             if [ -z "$fonts_list" ]; then
                 echo -e "╬ ${RED}${BOLD}[!]${RESET} No favorites found in repository."
