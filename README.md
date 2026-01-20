@@ -14,21 +14,25 @@
 
 ### ✨ Showcase
 
+![Dark Theme 1llicit](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/1llicit-1.jpg)
+
+![Light Theme 1llicit](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/1llicit-2.jpg)
+
 *A unified, aesthetic terminal experience.*
 
-![Dark Theme Preview](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/1llicit-1.jpg)
-![Light Theme Preview](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/1llicit-2.jpg)
+![Font Theme Preview](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/fonts-1.jpg)
+![Font Theme Preview](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/fonts-2.jpg)
 
 
 **＊ Interactive Theme Library (`1ll-colors`)**
 *Browse and apply 370+ themes instantly with a live preview.*
 
-![Theme Installer Menu](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/1ll-colors-2.gif)
+![Theme Installer Menu](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/colors-2.gif)
 
 **＊ Nerd Fonts Manager (`1ll-fonts`)**
 *Install 2600+ patched fonts without leaving the terminal.*
 
-![Font Manager](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/1ll-fonts.gif)
+![Font Manager](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/fonts.gif)
 
 **＊ Powerlevel10k Configuration (`p10k configure`)**
 *Effortlessly set up your prompt wizard.*
