@@ -60,7 +60,7 @@ fi
 # deep clean (merged storage + plugins)
 echo "╬"
 echo -e "╬ ${RED}${BOLD}[!]${RESET} Perform Deep Clean"
-echo -ne "╬ ${YELLOW}${BOLD}[?]${RESET} Delete (Plugins/Cache/Backups) (y/N) "
+echo -ne "╬ ${YELLOW}${BOLD}[?]${RESET} Full Environment Reset? (Plugins/UI/Backups) (y/N) "
 read -n 1 -r REPLY
 [[ -n "$REPLY" ]] && echo ""
 
@@ -72,6 +72,9 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     rm -rf "$HOME/.cache/p10k"*
     rm -f "$PREFIX/bin/bsudo"
     rm -rf "$HOME/storage/shared/1llicit"
+    rm -f "$HOME/.termux/colors.properties"
+    rm -f "$HOME/.termux/font.ttf"
+    rm -f "$HOME/.termux/termux.properties"
     echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Deep cleanup complete."
 else
     echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Removed core files only."
