@@ -91,6 +91,7 @@ bash -c "$(curl -fsSL https://lbslightx.github.io/1llicit/install.sh)"
 
 Once installed, you have access to the **1ll-** suite of tools. Type them in your terminal to launch.
 
+*   **`1llicit`** 💠 - Show framework status.
 *   **`p10k configure`** ⚙️ - Run the Powerlevel10k configuration wizard.
 *   **`1ll-colors`** 🎨 - Browse and install 370+ color schemes instantly.
 *   **`1ll-fonts`** 🔡 - Install Nerd Fonts without manual downloading.
