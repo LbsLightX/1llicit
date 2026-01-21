@@ -41,6 +41,31 @@
 
 ---
 
+## ⚡ Features
+
+I built this because I was tired of setting up Termux from scratch. Here is what makes it different:
+
+### 🧠 It Predicts You
+*   **Ghost Text:** It learns from your history. Start typing a command, and it suggests the rest. Press `→` to accept.
+*   **Smart History:** For example, Type `git` and press `UP`. It won't just show the last command; it finds the last time you used `git`.
+*   **Syntax Checking:** Commands turn **Green** if they work, **Red** if they contain typos. (depends which theme you are using) You know if it's wrong before you even hit Enter.
+
+### 🎮 It Feels Like a Game
+*   **Visual Menus:** Press `TAB` and instead of a boring text list, you get a navigable menu where you can see file details before you select them.
+*   **Magic Backspace:** Backspace on an empty line takes you up a directory (`cd ..`). It sounds small, but once you use it, you can't go back.
+*   **Master Grade Keyboard:** A custom 7-key touch bar designed for coding. The **Menu** key and **Pipe (|)** key are exactly where your thumbs expect them.
+
+### 🎨 It Looks Professional
+*   **The Theme/font Engine:** Swap between **370+** professional color schemes & **2600+** fonts instantly. No restarting required.
+*   **Official Fonts:** We use the official **MesloLGS NF** patched for Powerlevel10k / Nerdfonts, so your icons never break.
+*   **Heavy Box UI:** Every script follows a strict "Industrial" design language. It feels cohesive, not like a bunch of random scripts glued together.
+
+### 🛡️ It Protects You
+*   **Snapshot Backups:** Messed up your config? `1ll-backup` saves your entire shell state to a `.tar.gz` file in your Downloads.
+*   **Safe Updates:** The updater downloads new code to a temp file first. If your internet cuts out, your shell doesn't break.
+*   **Clean Uninstaller:** If you ever want to leave, the uninstaller can wipe everything—including the fonts and colors—restoring your Termux to factory settings.
+* 
+
 ### ⚠️ CRITICAL WARNING ⚠️
 
 **READ BEFORE INSTALLING:**
