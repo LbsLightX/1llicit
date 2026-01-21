@@ -73,6 +73,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     rm -rf "$HOME/.local/share/zinit"
     rm -rf "$HOME/.cache/p10k"*
     rm -f "$PREFIX/bin/bsudo"
+    rm -f "$PREFIX/bin/1llicit"
     rm -rf "$HOME/storage/shared/1llicit"
     rm -f "$HOME/.termux/colors.properties"
     rm -f "$HOME/.termux/font.ttf"

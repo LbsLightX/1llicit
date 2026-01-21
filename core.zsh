@@ -388,7 +388,7 @@ clear
 1llicit
 echo ""
 echo -e "${GREEN}${BOLD}Update Complete!${RESET}"
-read -n 1 -s -r -p "Press any key to continue..."
+read -k 1 "?Press any key to continue..."
 
 # reload
 exec zsh
