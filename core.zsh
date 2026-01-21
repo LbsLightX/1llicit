@@ -389,7 +389,7 @@ clear
 echo ""
 echo -e "${GREEN}${BOLD}Update Complete!${RESET}"
 read -k 1 "?Press any key to continue..."
-echo -ne "\r\033[K"
+printf "\r\033[2K\r"
 
 # reload
 exec zsh
