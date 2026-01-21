@@ -378,8 +378,21 @@ function 1ll-update() {
     echo "╬"
     echo -e "╚═══════════════════ ${GREEN}${BOLD}COMPLETE${RESET} ══════════════════ ❏"
     sleep 1
-    clear
-    exec zsh
+
+# update the showcase tool
+curl -fsSL "https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/binaries/1llicit/showcase" -o $PREFIX/bin/1llicit >/dev/null 2>&1
+chmod +x $PREFIX/bin/1llicit
+
+# show success art
+clear
+1llicit
+echo ""
+echo -e "${GREEN}${BOLD}Update Complete!${RESET}"
+read -n 1 -s -r -p "Press any key to continue..."
+
+# reload
+exec zsh
+
 }
 
 # set default syntax theme
