@@ -1,81 +1,83 @@
 <div align="center">
 
 # !-1llicit-!-1llicit-!-1llicit-!
-
-### Termux Bootstrap Framework
+### The Ultimate Termux Bootstrap Framework
 
 > Built upon the foundation of **[LITMux](https://github.com/AvinashReddy3108/LITMux)** by **[AvinashReddy3108](https://github.com/AvinashReddy3108)**. 🛐
 
-**More than a theme.** 1llicit is a complete environment overhaul. It automates Zsh, Powerlevel10k, Nerd Fonts, and custom tools into a single, unified system.
+**More than a theme.**  
+1llicit is a complete environment overhaul. It automates Zsh, Powerlevel10k, Nerd Fonts, and custom tools into a single, unified system.
 
 </div>
 
 ---
 
-### ✨ Showcase
+> A Termux bootstrap framework focused on automation and consistency.
 
-![Dark Theme 1llicit](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/1llicit-1.jpg)
+## ✨ Showcase
 
-![Light Theme 1llicit](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/1llicit-2.jpg)
+### Visual Style
 
 *A unified, aesthetic terminal experience.*
+
+![Dark Theme 1llicit](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/1llicit-1.jpg)
+![Light Theme 1llicit](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/1llicit-2.jpg)
 
 ![Font Theme Preview](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/fonts-1.jpg)
 ![Font Theme Preview](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/fonts-2.jpg)
 
+### Features in Action
 
-**＊ Interactive Theme Library (`1ll-colors`)**
+**1. Interactive Theme Library (`1ll-colors`)**
 *Browse and apply 370+ themes instantly with a live preview.*
 
 ![Theme Installer Menu](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/colors-2.gif)
 
-**＊ Nerd Fonts Manager (`1ll-fonts`)**
+**2. Nerd Fonts Manager (`1ll-fonts`)**
 *Install 2600+ patched fonts without leaving the terminal.*
 
 ![Font Manager](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/fonts.gif)
 
-**＊ Powerlevel10k Configuration (`p10k configure`)**
+**3. Powerlevel10k Configuration (`p10k configure`)**
 *Effortlessly set up your prompt wizard.*
 
 ![P10k Configuration](https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/assets/p10k-configure.gif)
 
 ---
 
-## ⚡ Features
+### ⚡ Features - Why It Feels Different
 
-I built this because I was tired of setting up Termux from scratch. Here is what makes it different:
+Here is what makes it different:
 
-### 🧠 It Predicts You
+#### 🧠 Intelligent Prediction.
 *   **Ghost Text:** It learns from your history. Start typing a command, and it suggests the rest. Press `→` to accept.
 *   **Smart History:** For example, Type `git` and press `UP`. It won't just show the last command; it finds the last time you used `git`.
-*   **Syntax Checking:** Commands turn **Green** if they work, **Red** if they contain typos. (depends which theme you are using) You know if it's wrong before you even hit Enter.
+*   **Syntax Checking:** Commands turn **green** if they work, **red** if they contain typos. (Theme dependent) You know if it's wrong before you even hit Enter.
 
-### 🎮 It Feels Like a Game
+#### 🎮 Gamified Workflow.
 *   **Visual Menus:** Press `TAB` and instead of a boring text list, you get a navigable menu where you can see file details before you select them.
-*   **Magic Backspace:** Backspace on an empty line takes you up a directory (`cd ..`). It sounds small, but once you use it, you can't go back.
-*   **Master Grade Keyboard:** A custom 7-key touch bar designed for coding. The **Menu** key and **Pipe (|)** key are exactly where your thumbs expect them.
+*   **Magic Backspace:** Backspace on an empty line takes you up a directory (`cd ..`). It sounds small, but it quickly becomes indispensable.
+*   **Master Grade Keyboard:** A custom 7-key touch bar designed for coding. The **Menu** keys are exactly where your thumbs expect them.
 
-### 🎨 It Looks Professional
-*   **The Theme/font Engine:** Swap between **370+** professional color schemes & **2600+** fonts instantly. No restarting required.
+#### 🎨 Industrial Aesthetics.
+*   **The Theme & Font Engine:** Swap between **370+** professional color schemes & **2600+** fonts instantly. No restarting required.
 *   **Official Fonts:** We use the official **MesloLGS NF** patched for Powerlevel10k / Nerdfonts, so your icons never break.
-*   **Heavy Box UI:** Every script follows a strict "Industrial" design language. It feels cohesive, not like a bunch of random scripts glued together.
+*   **Heavy Box UI:** Every script follows a strict "industrial" design language. It feels cohesive, not like a bunch of random scripts glued together.
 
-### 🛡️ It Protects You
+#### 🛡️ Safety Systems.
 *   **Snapshot Backups:** Messed up your config? `1ll-backup` saves your entire shell state to a `.tar.gz` file in your Downloads.
 *   **Safe Updates:** The updater downloads new code to a temp file first. If your internet cuts out, your shell doesn't break.
-*   **Clean Uninstaller:** If you ever want to leave, the uninstaller can wipe everything—including the fonts and colors—restoring your Termux to factory settings.
-* 
+*   **Clean Uninstaller:** If you ever want to leave, the uninstaller wipes everything, including installed fonts and color schemes - restoring your Termux to factory settings.
 
-### ⚠️ CRITICAL WARNING ⚠️
+## ⚠️ CRITICAL WARNING 
 
-**READ BEFORE INSTALLING:**
+**READ BEFORE INSTALLING — THIS IS IMPORTANT**
 
-1.  **This tool takes control of your `~/.zshrc` file.**
-2.  Your existing `.zshrc` will be **automatically backed up** to your internal storage (`~/storage/shared/1llicit/backup/`). It is not deleted.
-3.  However, the active `.zshrc` will be replaced by the 1llicit logic.
-4. **Do not edit `.zshrc` directly anymore.** Updates will overwrite it.
+1.  **Automatic Control:** This tool takes full control of your `~/.zshrc` file.
+2.  **Safety Backup:** Your existing `.zshrc` is **automatically backed up** to `~/storage/shared/1llicit/backup/` before changes are made.
+3.  **Immutable Core:** Do not edit `.zshrc` directly anymore. Updates to 1llicit will overwrite manual changes in that file.
 
-**Where to put your custom stuff:**
+**📍 User Configuration Locations:**
 *   Use `~/.zshenv` for environment variables.
 *   Use `~/.1llicit/user.zsh` for personal aliases (this file survives updates).
 *   Use `~/.bashrc` if you want to keep using Bash separately.
@@ -89,7 +91,7 @@ I built this because I was tired of setting up Termux from scratch. Here is what
 > **⚠️ IMPORTANT:** Do not install Termux from the Google Play Store. It is outdated and unsupported.
 
 #### 📱 Termux App
-Install only from official sources:
+Install only from the official sources:
 *   **GitHub:** [Termux](https://github.com/termux/termux-app/releases)
 *   **F-Droid:** [Termux](https://f-droid.org/en/packages/com.termux/)
 
@@ -102,7 +104,7 @@ Required for system integration. Install from the **same source** as the main ap
 
 ---
 
-### 📥 Installation
+### 🚀 Installation
 
 Copy and paste this one-line command into Termux:
 
@@ -112,14 +114,14 @@ bash -c "$(curl -fsSL https://lbslightx.github.io/1llicit/install.sh)"
 
 ---
 
-### 🎮 How to Use
+### 📘 How to Use
 
 Once installed, you have access to the **1ll-** suite of tools. Type them in your terminal to launch.
 
-*   **`1llicit`** 💠 - Show framework status.
-*   **`p10k configure`** ⚙️ - Run the Powerlevel10k configuration wizard.
+*   **`1llicit`** 💠 - Show framework status & artwork.
 *   **`1ll-colors`** 🎨 - Browse and install 370+ color schemes instantly.
 *   **`1ll-fonts`** 🔡 - Install Nerd Fonts without manual downloading.
+*   **`p10k configure`** ⚙️ - Run the Powerlevel10k configuration wizard.
 *   **`1ll-syntax`** 🖋️ - Change your syntax highlighting theme.
 *   **`1ll-update`** 🔄 - Update the core framework from the 1llicit GitHub repository.
 *   **`1ll-backup`** 💾 - Create a full snapshot of your shell config in Downloads.
@@ -141,7 +143,7 @@ Anything you write in `user.zsh` is loaded automatically on startup.
 
 ### 💀 Uninstallation
 
-To revert changes, run this command. It will restore your previous configuration if a backup exists.
+To revert all changes, run this command. It will restore your previous configuration if a backup exists.
 
 ```bash
 bash -c "$(curl -fsSL https://LbsLightX.github.io/1llicit/uninstall.sh)"
@@ -149,7 +151,7 @@ bash -c "$(curl -fsSL https://LbsLightX.github.io/1llicit/uninstall.sh)"
 
 ---
 
-### 🏆 Acknowledgements
+## 🏆 Acknowledgements
 
 This project is built on the work of open-source legends.
 
