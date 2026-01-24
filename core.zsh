@@ -388,8 +388,8 @@ clear
 1llicit
 echo ""
 echo -e "${GREEN}${BOLD}Update Complete!${RESET}"
-read -k 1 "?Press any key to continue..."
-printf "\r\033[2K\r"
+read -k 1 -s "?Press any key to continue..."
+printf "\033[1A\033[2K"
 
 # reload
 exec zsh
