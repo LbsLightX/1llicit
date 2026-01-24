@@ -379,19 +379,8 @@ function 1ll-update() {
     echo -e "╚═══════════════════ ${GREEN}${BOLD}COMPLETE${RESET} ══════════════════ ❏"
     sleep 1
 
-# update the showcase tool
-curl -fsSL "https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/binaries/1llicit/showcase" -o $PREFIX/bin/1llicit >/dev/null 2>&1
-chmod +x $PREFIX/bin/1llicit
-
-# show success art
-clear
-1llicit
-echo ""
-echo -e "${GREEN}${BOLD}Update Complete!${RESET}"
-read -k 1 -s "?Press any key to continue..."
-printf "\033[1A\033[2K"
-
 # reload
+clear
 exec zsh
 
 }

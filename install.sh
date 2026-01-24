@@ -186,17 +186,6 @@ sleep 2
 # restore cursor
 setterm -cursor on
 
-# install 1llicit showcase command
-curl -fsSL "https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/binaries/1llicit/showcase" -o $PREFIX/bin/1llicit >/dev/null 2>&1
-chmod +x $PREFIX/bin/1llicit
-
-# show success screen
-clear
-1llicit
-echo ""
-echo -e "${GREEN}${BOLD}Installation Complete!${RESET}"
-read -n 1 -s -r -p "Press any key to enter 1llicit..."
-
 # unconditional reload
 clear
 exec zsh -l
