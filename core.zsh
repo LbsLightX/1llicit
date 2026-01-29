@@ -10,7 +10,12 @@ zinit lucid light-mode for \
     OMZL::history.zsh \
     OMZL::completion.zsh \
     OMZL::key-bindings.zsh
-    
+   
+
+# Zsh Options (Optimization)
+   setopt hist_ignore_dups   # Don't save duplicate commands
+   setopt pushd_ignore_dups  # Don't save duplicate directories in stack
+
 # -----------------------------------------------------------------------------
 # 2. Plugins (Syntax Highlighting, Autosuggestions, History Search)
 # -----------------------------------------------------------------------------
@@ -37,7 +42,7 @@ zinit wait lucid light-mode for \
 # 3. Theme (Powerlevel10k)
 # -----------------------------------------------------------------------------
 
-zinit ice depth=1; zinit light romkatv/powerlevel10k
+zinit ice depth=1 compile'(pure|async).zsh'; zinit light romkatv/powerlevel10k
 
 # -----------------------------------------------------------------------------
 
