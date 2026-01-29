@@ -42,7 +42,6 @@ zinit light Aloxaf/fzf-tab
 zinit light hlissner/zsh-autopair
 zinit light wfxr/forgit
 zinit light djui/alias-tips
-zinit light peterhurford/up.zsh
 
 # -----------------------------------------------------------------------------
 # 4. FZF Configuration
