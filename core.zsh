@@ -40,6 +40,9 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 
 zinit light Aloxaf/fzf-tab
 zinit light hlissner/zsh-autopair
+zinit light wfxr/forgit
+zinit light djui/alias-tips
+zinit light peterhurford/up.zsh
 
 # -----------------------------------------------------------------------------
 # 4. FZF Configuration
@@ -229,7 +232,7 @@ function 1ll-fonts() {
         fi
     done
 
-    local options=("⦿ Nerd Fonts (2600+)" "⦿ Standard Meslo (Recommended)" "⦿ Favorites")
+    local options=("⦿ Nerd Fonts (2600+)" "⦿ Standard Meslo (Recommended)" "⦿ The Collection (Curated)" "⦿ Favorites")
     local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Selection ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
     if [[ -z "$choice" ]]; then
@@ -281,7 +284,44 @@ function 1ll-fonts() {
             else
                 echo -e "╬ ${RED}${BOLD}[-]${RESET} Cancelled."
             fi
-            ;; 
+            ;;
+        *"The Collection"*)
+            local collections=("SFMono Ligaturized" "Maple Mono NF")
+            local coll_choice=$(printf "%s\n" "${collections[@]}" | fzf --prompt="╬ Select Family ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            
+            if [[ -z "$coll_choice" ]]; then return; fi
+            
+            local folder=""
+            case "$coll_choice" in
+                *"SFMono"*) folder="sfmono" ;; 
+                *"Maple"*)  folder="maple" ;; 
+            esac
+            
+            printf "╬ ${CYAN}[*]${RESET} Fetching variants...\r"
+            local api_url="https://api.github.com/repos/LbsLightX/lbs-archives/contents/1llicit/fonts/$folder"
+            local raw_base="https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/fonts/$folder"
+            
+            local fonts_list=$(curl -fsSL "$api_url" | jq -r '.[].name' | command grep -E ".ttf|.otf")
+            printf "\r\033[K"
+            
+            if [ -z "$fonts_list" ]; then
+                echo -e "╬ ${RED}${BOLD}[!]${RESET} Error fetching fonts list."
+                return
+            fi
+
+            local selected=$(printf "%s\n" "$fonts_list" | fzf --prompt="╬ Select Variant ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            
+            if [[ -n "$selected" ]]; then
+                printf "╬ ${CYAN}[*]${RESET} Installing font: $selected...\r"
+                mkdir -p ~/.termux
+                curl -fsSL "$raw_base/${selected// /%20}" -o ~/.termux/font.ttf >/dev/null 2>&1
+                termux-reload-settings
+                printf "\r\033[K"
+                echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Installed: $selected"
+            else
+                echo -e "╬ ${RED}${BOLD}[-]${RESET} Cancelled."
+            fi
+            ;;
         *"Favorites"*) 
             local url_base="https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/fonts/favorites"
             local fonts_list=$(curl -fsSL "https://api.github.com/repos/LbsLightX/lbs-archives/contents/1llicit/fonts/favorites" | jq -r '.[].name' | command grep -E ".ttf|.otf")
