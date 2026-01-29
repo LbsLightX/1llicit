@@ -54,7 +54,7 @@ echo -e "╬ ${GREEN}${BOLD}[+]${RESET} System updated."
 
 # packages
 printf "╬ ${CYAN}${BOLD}[*]${RESET} Installing packages...\r"
-pkg install -y curl git zsh man jq fzf termux-api >/dev/null 2>&1
+pkg install -y curl git zsh man jq fzf which termux-api >/dev/null 2>&1
 printf "\r\033[K"
 echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Core packages installed."
 
@@ -177,4 +177,3 @@ clear
 exec zsh -l
 
 # LbsLightX
-
