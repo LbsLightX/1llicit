@@ -13,7 +13,6 @@ WHITE="\033[1;97m"
 YELLOW="\033[1;33m"
 RESET="\033[0m"
 
-
 # turn off cursor.
 setterm -cursor off
 
@@ -41,13 +40,11 @@ echo ""
 echo -e "╔═══════════════ ${WHITE}${BOLD}${UNDER}INSTALLER${RESET} ════════════════ ✧"
 echo "╬"
 
-
 # mirrors
 printf "╬ ${CYAN}${BOLD}[*]${RESET} Syncing mirrors...\r"
 (echo 'n' | pkg update 2>/dev/null) | while read -r line; do :; done
-printf "\r\033[K" 
+printf "\r\033[K"
 echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Mirrors synced."
-
 
 # update
 printf "╬ ${CYAN}${BOLD}[*]${RESET} Updating system...\r"
@@ -55,13 +52,11 @@ pkg upgrade -y -o Dpkg::Options::='--force-confnew' >/dev/null 2>&1
 printf "\r\033[K"
 echo -e "╬ ${GREEN}${BOLD}[+]${RESET} System updated."
 
-
 # packages
 printf "╬ ${CYAN}${BOLD}[*]${RESET} Installing packages...\r"
 pkg install -y curl git zsh man jq fzf termux-api >/dev/null 2>&1
 printf "\r\033[K"
 echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Core packages installed."
-
 
 # bsudo
 printf "╬ ${CYAN}${BOLD}[*]${RESET} Installing bSUDO...\r"
@@ -70,57 +65,50 @@ chmod 700 "$PREFIX/bin/bsudo"
 printf "\r\033[K"
 echo -e "╬ ${GREEN}${BOLD}[+]${RESET} bSUDO installed."
 
-
 # storage
 if [ ! -d ~/storage ]; then
-    printf "╬ ${CYAN}${BOLD}[*]${RESET} Requesting storage...\r"
-    termux-setup-storage
-    sleep 2
-    printf "\r\033[K"
-    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Storage access granted."
+  printf "╬ ${CYAN}${BOLD}[*]${RESET} Requesting storage...\r"
+  termux-setup-storage
+  sleep 2
+  printf "\r\033[K"
+  echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Storage access granted."
 fi
-
 
 # backup
 BACKUP_PATH="$HOME/storage/shared/1llicit/backup/$(date +%Y_%m_%d_%H_%M)"
 mkdir -p "$BACKUP_PATH"
 printf "╬ ${CYAN}${BOLD}[*]${RESET} Backing up configs...\r"
-for i in "$HOME/.zshrc" "$HOME/.termux/font.ttf" "$HOME/.termux/colors.properties" "$HOME/.termux/termux.properties"
-do
-    if [ -f $i ]; then
-        mv -f "$i" "$BACKUP_PATH/$(basename $i)"
-    fi
+for i in "$HOME/.zshrc" "$HOME/.termux/font.ttf" "$HOME/.termux/colors.properties" "$HOME/.termux/termux.properties"; do
+  if [ -f $i ]; then
+    mv -f "$i" "$BACKUP_PATH/$(basename $i)"
+  fi
 done
 printf "\r\033[K"
 echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Configuration backed up."
 
-
 # clean slate
 rm -f "$HOME/.zshrc"
 
-
 # shell
 if [[ "$SHELL" != *"zsh"* ]]; then
-   chsh -s zsh
-   echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Default shell set to Zsh."
+  chsh -s zsh
+  echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Default shell set to Zsh."
 fi
-
 
 # core download
 mkdir -p "$HOME/.1llicit"
 printf "╬ ${CYAN}${BOLD}[*]${RESET} Downloading Core...\r"
-if curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > "$HOME/.1llicit/core.zsh"; then
-    printf "\r\033[K"
-    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Core logic installed."
+if curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/dev/core.zsh >"$HOME/.1llicit/core.zsh"; then
+  printf "\r\033[K"
+  echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Core logic installed."
 else
-    printf "\r\033[K"
-    echo -e "╬ ${RED}${BOLD}[!]${RESET} Failed to download Core."
-    exit 1
+  printf "\r\033[K"
+  echo -e "╬ ${RED}${BOLD}[!]${RESET} Failed to download Core."
+  exit 1
 fi
 
-
 # generate config
-cat <<'EOF' > $HOME/.zshrc
+cat <<'EOF' >$HOME/.zshrc
 # Enable Powerlevel10k instant prompt.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
@@ -149,25 +137,23 @@ fi
 EOF
 echo -e "╬ ${GREEN}${BOLD}[+]${RESET} .zshrc generated."
 
-
 # assets
 REPO_URL="https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/defaults"
-      
+
 if [ ! -f ~/.termux/font.ttf ]; then
-    curl -fsSL -o ~/.termux/font.ttf "$REPO_URL/font.ttf" >/dev/null 2>&1
-    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Default font installed."
+  curl -fsSL -o ~/.termux/font.ttf "$REPO_URL/font.ttf" >/dev/null 2>&1
+  echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Default font installed."
 fi
 
 if [ ! -f ~/.termux/colors.properties ]; then
-    curl -fsSL -o ~/.termux/colors.properties "$REPO_URL/colors.properties" >/dev/null 2>&1
-    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Default theme set."
+  curl -fsSL -o ~/.termux/colors.properties "$REPO_URL/colors.properties" >/dev/null 2>&1
+  echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Default theme set."
 fi
 
 if [ ! -f ~/.termux/termux.properties ]; then
-    curl -fsSL -o ~/.termux/termux.properties "$REPO_URL/termux.properties" >/dev/null 2>&1
-    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Custom keys configured."
+  curl -fsSL -o ~/.termux/termux.properties "$REPO_URL/termux.properties" >/dev/null 2>&1
+  echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Custom keys configured."
 fi
-
 
 # reload
 termux-reload-settings
@@ -190,5 +176,5 @@ setterm -cursor on
 clear
 exec zsh -l
 
-
 # LbsLightX
+
