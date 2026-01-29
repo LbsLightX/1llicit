@@ -348,6 +348,37 @@ function 1ll-fonts() {
 }
 
 
+
+# 1llicit forgit auto-menu
+function forgit() {
+    # Curated list with clear descriptions
+    local options=(
+        "log              | View commit history"
+        "add              | Stage changed files"
+        "diff             | View file changes"
+        "reset::head      | Unstage files (Undo Add)"
+        "checkout::branch | Switch branch"
+        "stash::show      | View saved stashes"
+        "stash::push      | Save current changes to stash"
+        "ignore           | Create .gitignore file"
+        "blame            | View line-by-line history"
+        "checkout::file   | Revert file (Discard changes) [Destructive]"
+        "branch::delete   | Delete branch [Destructive]"
+        "clean            | Delete untracked files [Destructive]"
+        "rebase           | Interactive Rebase"
+        "cherry::pick     | Apply commit to current branch"
+    )
+    
+    local selected=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Git Tools ⫸ " --height=20 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+    
+    if [[ -n "$selected" ]]; then
+        # Extract the command name (everything before the " | ")
+        local cmd=$(echo "$selected" | awk '{print $1}')
+        eval "forgit::$cmd"
+    fi
+}
+
+
 # backup utility
 function 1ll-backup() {
         echo -e "\n╔════════════ ${WHITE}${BOLD}${UNDER}SYSTEM BACKUP${RESET} ════════════ ❐"
