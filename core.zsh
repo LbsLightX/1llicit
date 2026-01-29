@@ -40,7 +40,7 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 
 zinit light Aloxaf/fzf-tab
 zinit light hlissner/zsh-autopair
-zinit light wfxr/forgit
+zinit wait lucid for wfxr/forgit
 zinit light djui/alias-tips
 
 # -----------------------------------------------------------------------------
