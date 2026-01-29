@@ -30,6 +30,9 @@ zinit wait lucid light-mode for \
   atload"bindkey '^[[A' history-substring-search-up; bindkey '^[[B' history-substring-search-down; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=magenta,bold'; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='fg=red,bold'" \
       zsh-users/zsh-history-substring-search
 
+  zinit wait lucid for zdharma-continuum/history-search-multi-word
+  bindkey "^R" history-search-multi-word
+
 # -----------------------------------------------------------------------------
 # 3. Theme (Powerlevel10k)
 # -----------------------------------------------------------------------------
@@ -48,7 +51,6 @@ zinit light djui/alias-tips
 # -----------------------------------------------------------------------------
 
 zinit wait lucid is-snippet for \
-    $PREFIX/share/fzf/key-bindings.zsh \
     $PREFIX/share/fzf/completion.zsh
 
 # Use 16 colors
