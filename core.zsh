@@ -9,7 +9,8 @@
 zinit lucid light-mode for \
     OMZL::history.zsh \
     OMZL::completion.zsh \
-    OMZL::key-bindings.zsh
+    OMZL::key-bindings.zsh \
+    OMZP::extract
    
 
 # Zsh Options (Optimization)
@@ -49,6 +50,7 @@ zinit ice depth=1 compile'(pure|async).zsh'; zinit light romkatv/powerlevel10k
 zinit light Aloxaf/fzf-tab
 zinit light hlissner/zsh-autopair
 zinit wait lucid for wfxr/forgit
+zinit wait lucid for zdharma-continuum/zinit-console
 zinit light djui/alias-tips
 
 # -----------------------------------------------------------------------------
