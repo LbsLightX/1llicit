@@ -50,7 +50,8 @@ zinit ice depth=1 compile'(pure|async).zsh'; zinit light romkatv/powerlevel10k
 zinit light Aloxaf/fzf-tab
 zinit light hlissner/zsh-autopair
 zinit wait lucid for wfxr/forgit
-zinit wait lucid for zdharma-continuum/zinit-console
+zinit light zdharma-continuum/zui
+zinit light zdharma-continuum/zinit-console
 zinit light djui/alias-tips
 
 # -----------------------------------------------------------------------------
