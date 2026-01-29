@@ -17,6 +17,12 @@ zinit lucid light-mode for \
    setopt hist_ignore_dups   # Don't save duplicate commands
    setopt pushd_ignore_dups  # Don't save duplicate directories in stack
 
+
+# Load History Search BEFORE Syntax Highlighting
+zinit wait lucid for zdharma-continuum/history-search-multi-word
+bindkey "^R" history-search-multi-word
+
+
 # -----------------------------------------------------------------------------
 # 2. Plugins (Syntax Highlighting, Autosuggestions, History Search)
 # -----------------------------------------------------------------------------
