@@ -11,16 +11,10 @@ zinit lucid light-mode for \
     OMZL::completion.zsh \
     OMZL::key-bindings.zsh \
     OMZP::extract
-   
 
-# Zsh Options (Optimization)
-   setopt hist_ignore_dups   # Don't save duplicate commands
-   setopt pushd_ignore_dups  # Don't save duplicate directories in stack
-
-
-# Load History Search BEFORE Syntax Highlighting
-zinit wait lucid for zdharma-continuum/history-search-multi-word
-bindkey "^R" history-search-multi-word
+# Zsh Optimization
+setopt hist_ignore_dups
+setopt pushd_ignore_dups
 
 
 # -----------------------------------------------------------------------------
@@ -42,8 +36,6 @@ zinit wait lucid light-mode for \
   atload"bindkey '^[[A' history-substring-search-up; bindkey '^[[B' history-substring-search-down; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=magenta,bold'; HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='fg=red,bold'" \
       zsh-users/zsh-history-substring-search
 
-  zinit wait lucid for zdharma-continuum/history-search-multi-word
-  bindkey "^R" history-search-multi-word
 
 # -----------------------------------------------------------------------------
 # 3. Theme (Powerlevel10k)
@@ -51,6 +43,9 @@ zinit wait lucid light-mode for \
 
 zinit ice depth=1 compile'(pure|async).zsh'; zinit light romkatv/powerlevel10k
 
+
+# -----------------------------------------------------------------------------
+# 4. Tools & Utilities
 # -----------------------------------------------------------------------------
 
 zinit wait lucid for wfxr/forgit
@@ -61,35 +56,34 @@ zinit light zdharma-continuum/zui
 zinit light zdharma-continuum/zinit-console
 zinit light djui/alias-tips
 
+
 # -----------------------------------------------------------------------------
-# 4. FZF Configuration
+# 5. FZF Configuration
 # -----------------------------------------------------------------------------
 
 zinit wait lucid is-snippet for \
     $PREFIX/share/fzf/completion.zsh
 
-# Use 16 colors
-export FZF_DEFAULT_OPTS='--color 16'
-
-
-# -----------------------------------------------------------------------------
 # FZF-TAB Configuration
-# -----------------------------------------------------------------------------
 # Disable 'sort' (let FZF handle sorting)
 zstyle ':completion:*:git-checkout:*' sort false
+
 # Set group order
 zstyle ':completion:*:descriptions' format '[%d]'
-# Preview directory contents with eza/ls when completing cd
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color=always -1 --group-directories-first $realpath'
-# Switch to 'eza' if you have it installed:
-# zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+
+# Smart Preview: Use eza if available, fallback to ls
+if command -v eza >/dev/null; then
+    zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+else
+    zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color=always -1 --group-directories-first $realpath'
+fi
+
 # Custom fzf flags (Match your 1llicit style)
 zstyle ':fzf-tab:*' fzf-flags --height=15 --layout=reverse --prompt="╬ Select ⫸ "
 
 
-
 # -----------------------------------------------------------------------------
-# 5. Custom Functions & Widgets
+# 6. Custom Functions & Widgets
 # -----------------------------------------------------------------------------
 # Magic Backspace: cd .. on empty line (Stops at HOME)
 function magic-backspace() {
@@ -105,10 +99,9 @@ zle -N magic-backspace
 bindkey "^?" magic-backspace
 
 # -----------------------------------------------------------------------------
+# Styles & Colors
 # -----------------------------------------------------------------------------
 
-
-# styles & colors
 BOLD="\033[1m"
 DIM="\033[2m"
 UNDER="\033[4m"
@@ -120,22 +113,25 @@ WHITE="\033[1;97m"
 RESET="\033[0m"
 
 
-# theme manager
+# -----------------------------------------------------------------------------
+# Theme Manager
+# -----------------------------------------------------------------------------
+
 function 1ll-colors() {
     local options=("⦿ 1llicit Theme (Gogh Sync)" "⦿ Termux Styling (Official)" "⦿ Favorites (Recommended)")
     
     echo -e "\n╔═════════════════ ${WHITE}${BOLD}${UNDER}THEME LIBRARY${RESET} ═════════════════ ❐"
-        echo "╬"
+    echo "╬"
         
-    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Selection ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+    local selection=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Selection ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
-    if [[ -z "$choice" ]]; then
+    if [[ -z "$selection" ]]; then
         echo -e "╬ ${RED}${BOLD}[-]${RESET} Cancelled."
         echo -e "╚══════════════════════════════════ ❏"
         return
     fi
 
-    case "$choice" in
+    case "$selection" in
         *"1llicit Theme"*) 
             if curl --output /dev/null --silent --head --fail "https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh"; then
                 bash -c "$(curl -fsSL 'https://raw.githubusercontent.com/LbsLightX/1llicit-colors/main/install.sh')"
@@ -150,19 +146,20 @@ function 1ll-colors() {
             if [ -z "$themes" ]; then
                 printf "\r\033[K"
                 echo -e "╬ ${RED}${BOLD}[!] Error:${RESET} Could not fetch official themes."
+                echo -e "╚══════════════════════════════════ ❏"
                 return
             fi
             
             printf "\r\033[K"
 
-            local selected=$(printf "%s\n" "$themes" | fzf --prompt="╬ Styling color theme ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
-            if [[ -n "$selected" ]]; then
-                printf "╬ ${CYAN}[*]${RESET} Applying color scheme: $(echo $selected | sed 's/\.properties//')...\r"
+            local sub_selection=$(printf "%s\n" "$themes" | fzf --prompt="╬ Styling color theme ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            if [[ -n "$sub_selection" ]]; then
+                printf "╬ ${CYAN}[*]${RESET} Applying color scheme: $(echo $sub_selection | sed 's/\.properties//')...\r"
                 mkdir -p ~/.termux
-                curl -fsSL "https://raw.githubusercontent.com/termux/termux-styling/master/app/src/main/assets/colors/$selected" -o ~/.termux/colors.properties >/dev/null 2>&1
+                curl -fsSL "https://raw.githubusercontent.com/termux/termux-styling/master/app/src/main/assets/colors/$sub_selection" -o ~/.termux/colors.properties >/dev/null 2>&1
                 termux-reload-settings
                 printf "\r\033[K"
-                echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Applied: $(echo $selected | sed 's/\.properties//')"
+                echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Applied: $(echo $sub_selection | sed 's/\.properties//')"
             else
                 echo -e "╬ ${RED}${BOLD}[-]${RESET} Cancelled."
             fi
@@ -173,17 +170,18 @@ function 1ll-colors() {
             
             if [ -z "$themes" ]; then
                 echo -e "╬ ${RED}${BOLD}[!]${RESET} No favorites found in repository."
+                echo -e "╚══════════════════════════════════ ❏"
                 return
             fi
 
-            local selected=$(printf "%s\n" "$themes" | fzf --prompt="╬ Selection ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
-            if [[ -n "$selected" ]]; then
-                printf "╬ ${CYAN}[*]${RESET} Applying color scheme: $selected...\r"
+            local sub_selection=$(printf "%s\n" "$themes" | fzf --prompt="╬ Selection ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            if [[ -n "$sub_selection" ]]; then
+                printf "╬ ${CYAN}[*]${RESET} Applying color scheme: $sub_selection...\r"
                 mkdir -p ~/.termux
-                curl -fsSL "$url_base/$selected" -o ~/.termux/colors.properties >/dev/null 2>&1
+                curl -fsSL "$url_base/$sub_selection" -o ~/.termux/colors.properties >/dev/null 2>&1
                 termux-reload-settings
                 printf "\r\033[K"
-                echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Applied: $selected"
+                echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Applied: $sub_selection"
             else
                 echo -e "╬ ${RED}${BOLD}[-]${RESET} Cancelled."
             fi
@@ -193,8 +191,10 @@ function 1ll-colors() {
     echo -e "╚══════════════════════════════════ ❏"
 }
 
+# -----------------------------------------------------------------------------
+# Syntax Highlighting Manager
+# -----------------------------------------------------------------------------
 
-# syntax highlighting manager 
 function 1ll-syntax() {
     if ! command -v fast-theme >/dev/null 2>&1; then
         echo -e "╬ ${RED}${BOLD}[!] Error:${RESET} fast-syntax-highlighting plugin not loaded."
@@ -206,24 +206,24 @@ function 1ll-syntax() {
     echo -e "\n╔════════════════ ${WHITE}${BOLD}${UNDER}SYNTAX THEME${RESET} ═════════════════ ❐"
     echo "╬"
     
-    local mode=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Selection ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+    local selection=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Selection ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
-    if [[ -z "$mode" ]]; then
+    if [[ -z "$selection" ]]; then
         echo -e "╬ ${RED}${BOLD}[-]${RESET} Cancelled."
         echo -e "╚══════════════════════════════════ ❏"
         return
     fi
 
-    case "$mode" in
+    case "$selection" in
         *"Fast-Theme"*)
             local themes=$(fast-theme -l | awk '{print $1}')
-            local selected=$(echo "$themes" | fzf --prompt="╬ Syntax highlighting ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local sub_selection=$(echo "$themes" | fzf --prompt="╬ Syntax highlighting ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
-            if [[ -n "$selected" ]]; then
-                printf "╬ ${CYAN}[*]${RESET} Applying syntax theme: $selected...\r"
-                fast-theme "$selected" >/dev/null 2>&1
+            if [[ -n "$sub_selection" ]]; then
+                printf "╬ ${CYAN}[*]${RESET} Applying syntax theme: $sub_selection...\r"
+                fast-theme "$sub_selection" >/dev/null 2>&1
                 printf "\r\033[K"
-                echo -e "╬ ${GREEN}${BOLD}[+] Applied syntax theme:${RESET} $selected"
+                echo -e "╬ ${GREEN}${BOLD}[+] Applied syntax theme:${RESET} $sub_selection"
             else
                 echo -e "╬ ${RED}${BOLD}[-]${RESET} Cancelled."
             fi
@@ -234,7 +234,10 @@ function 1ll-syntax() {
 }
 
 
-# font manager
+# -----------------------------------------------------------------------------
+# Font Manager
+# -----------------------------------------------------------------------------
+
 function 1ll-fonts() {
     echo -e "\n╔════════════════ ${WHITE}${BOLD}${UNDER}FONT LIBRARY${RESET} ═════════════════ ❐"
     echo "╬"
@@ -249,28 +252,28 @@ function 1ll-fonts() {
     done
 
     local options=("⦿ Nerd Fonts (2600+)" "⦿ Standard Meslo (Recommended)" "⦿ The Collection (Curated)" "⦿ Favorites")
-    local choice=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Selection ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+    local selection=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Selection ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
 
-    if [[ -z "$choice" ]]; then
+    if [[ -z "$selection" ]]; then
         echo -e "╬ ${RED}${BOLD}[-]${RESET} Cancelled."
         echo -e "╚══════════════════════════════════ ❏"
         return
     fi
 
-    case "$choice" in
+    case "$selection" in
         *"Nerd Fonts"*) 
             if curl --output /dev/null --silent --head --fail "https://github.com/LbsLightX/1llicit"; then
                 printf "╬ ${CYAN}[*]${RESET} Fetching list (v3.4.0)... please wait.\r"
                 
-                local selection=$(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | \
+                local nf_selection=$(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | \
                     jq -r '.tree[] | select(.path|test("\\.(ttf|otf)$"; "i")) | select(.path|contains("Windows Compatible")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | (.path | split("/") | last) + " | " + .url' | \
                     fzf --delimiter=" | " --with-nth=1 --height=15 --layout=reverse --header=$'[ Ctrl-c to Cancel ] | [ Enter to Apply ] \n\033[1;31m[!] ONLY SELECT .TTF OR .OTF FILES\033[0m' --prompt="╬ Nerd fonts ⫸ ")
                 
                 printf "\r\033[K"
 
-                if [[ -n "$selection" ]]; then
-                    local url=$(echo "$selection" | sed 's/.* | //')
-                    local name=$(echo "$selection" | sed 's/ | .*//')
+                if [[ -n "$nf_selection" ]]; then
+                    local url=$(echo "$nf_selection" | sed 's/.* | //')
+                    local name=$(echo "$nf_selection" | sed 's/ | .*//')
                     
                     printf "╬ ${CYAN}[*]${RESET} Installing font: $name...\r"
                     mkdir -p ~/.termux
@@ -288,15 +291,15 @@ function 1ll-fonts() {
         *"Standard Meslo"*) 
             local meslo_base="https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/fonts/meslolgs/powerlevel10k"
             local variants=("MesloLGS NF Regular.ttf" "MesloLGS NF Bold.ttf" "MesloLGS NF Italic.ttf" "MesloLGS NF Bold Italic.ttf")
-            local sel=$(printf "%s\n" "${variants[@]}" | fzf --prompt="╬ Meslo family ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local sub_selection=$(printf "%s\n" "${variants[@]}" | fzf --prompt="╬ Meslo family ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
-            if [[ -n "$sel" ]]; then
-                printf "╬ ${CYAN}[*]${RESET} Installing font: $sel...\r"
+            if [[ -n "$sub_selection" ]]; then
+                printf "╬ ${CYAN}[*]${RESET} Installing font: $sub_selection...\r"
                 mkdir -p ~/.termux
-                curl -fsSL "$meslo_base/${sel// /%20}" -o ~/.termux/font.ttf >/dev/null 2>&1
+                curl -fsSL "$meslo_base/${sub_selection// /%20}" -o ~/.termux/font.ttf >/dev/null 2>&1
                 termux-reload-settings
                 printf "\r\033[K"
-                echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Installed: $sel"
+                echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Installed: $sub_selection"
             else
                 echo -e "╬ ${RED}${BOLD}[-]${RESET} Cancelled."
             fi
@@ -325,15 +328,15 @@ function 1ll-fonts() {
                 return
             fi
 
-            local selected=$(printf "%s\n" "$fonts_list" | fzf --prompt="╬ Select Variant ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            local sub_selection=$(printf "%s\n" "$fonts_list" | fzf --prompt="╬ Select Variant ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
-            if [[ -n "$selected" ]]; then
-                printf "╬ ${CYAN}[*]${RESET} Installing font: $selected...\r"
+            if [[ -n "$sub_selection" ]]; then
+                printf "╬ ${CYAN}[*]${RESET} Installing font: $sub_selection...\r"
                 mkdir -p ~/.termux
-                curl -fsSL "$raw_base/${selected// /%20}" -o ~/.termux/font.ttf >/dev/null 2>&1
+                curl -fsSL "$raw_base/${sub_selection// /%20}" -o ~/.termux/font.ttf >/dev/null 2>&1
                 termux-reload-settings
                 printf "\r\033[K"
-                echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Installed: $selected"
+                echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Installed: $sub_selection"
             else
                 echo -e "╬ ${RED}${BOLD}[-]${RESET} Cancelled."
             fi
@@ -347,14 +350,14 @@ function 1ll-fonts() {
                 return
             fi
 
-            local sel=$(printf "%s\n" "$fonts_list" | fzf --prompt="╬ Selection ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
-            if [[ -n "$sel" ]]; then
-                printf "╬ ${CYAN}[*]${RESET} Installing font: $sel...\r"
+            local sub_selection=$(printf "%s\n" "$fonts_list" | fzf --prompt="╬ Selection ⫸ " --height=15 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+            if [[ -n "$sub_selection" ]]; then
+                printf "╬ ${CYAN}[*]${RESET} Installing font: $sub_selection...\r"
                 mkdir -p ~/.termux
-                curl -fsSL "$url_base/${sel// /%20}" -o ~/.termux/font.ttf >/dev/null 2>&1
+                curl -fsSL "$url_base/${sub_selection// /%20}" -o ~/.termux/font.ttf >/dev/null 2>&1
                 termux-reload-settings
                 printf "\r\033[K"
-                echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Installed: $sel"
+                echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Installed: $sub_selection"
             else
                 echo -e "╬ ${RED}${BOLD}[-]${RESET} Cancelled."
             fi
@@ -364,16 +367,17 @@ function 1ll-fonts() {
     echo -e "╚══════════════════════════════════ ❏"
 }
 
+# -----------------------------------------------------------------------------
+# Git Tools (Forgit Menu)
+# -----------------------------------------------------------------------------
 
-
-# 1llicit forgit auto-menu
 function forgit() {
     # Curated list with clear descriptions
     local options=(
-        "log              | View commit history"
         "add              | Stage changed files"
         "diff             | View file changes"
         "reset::head      | Unstage files (Undo Add)"
+        "log              | View commit history"
         "checkout::branch | Switch branch"
         "stash::show      | View saved stashes"
         "stash::push      | Save current changes to stash"
@@ -386,26 +390,29 @@ function forgit() {
         "cherry::pick     | Apply commit to current branch"
     )
     
-    local selected=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Git Tools ⫸ " --height=20 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
+    local selection=$(printf "%s\n" "${options[@]}" | fzf --prompt="╬ Git Tools ⫸ " --height=20 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
     
-    if [[ -n "$selected" ]]; then
+    if [[ -n "$selection" ]]; then
         # Extract the command name (everything before the " | ")
-        local cmd=$(echo "$selected" | awk '{print $1}')
+        local cmd=$(echo "$selection" | awk '{print $1}')
         eval "forgit::$cmd"
     fi
 }
 
 
-# backup utility
+# -----------------------------------------------------------------------------
+# System Backup
+# -----------------------------------------------------------------------------
+
 function 1ll-backup() {
-        echo -e "\n╔════════════ ${WHITE}${BOLD}${UNDER}SYSTEM BACKUP${RESET} ════════════ ❐"
+    echo -e "\n╔════════════ ${WHITE}${BOLD}${UNDER}SYSTEM BACKUP${RESET} ════════════ ❐"
     echo "╬"
     
     local backup_root="/storage/emulated/0/Download/1llicit-Backups"
     local timestamp=$(date +%Y-%m-%d_%H-%M-%S)
     local target="$backup_root/$timestamp"
     
-    # check storage access
+    # Check storage access
     if [ ! -d "/storage/emulated/0/Download" ]; then
         echo -e "╬ ${RED}${BOLD}[!] Error:${RESET} Storage permission denied."
         echo -e "╚══════════════════════════════════ ❏"
@@ -415,7 +422,7 @@ function 1ll-backup() {
     printf "╬ ${CYAN}[*]${RESET} Creating backup at: $timestamp...\r"
     mkdir -p "$target"
     
-    # critical files
+    # Critical files
     cp -r ~/.zshrc "$target/" 2>/dev/null
     cp -r ~/.1llicit "$target/" 2>/dev/null
     cp -r ~/.termux "$target/" 2>/dev/null
@@ -428,7 +435,10 @@ function 1ll-backup() {
 }
 
 
-# update utility
+# -----------------------------------------------------------------------------
+# Update Utility
+# -----------------------------------------------------------------------------
+
 function 1ll-update() {
     echo -e "\n╔════════════════ ${WHITE}${BOLD}${UNDER}SYSTEM UPDATE${RESET} ═════════════════ ❐"
     echo "╬"
@@ -466,24 +476,25 @@ function 1ll-update() {
     echo -e "╚═══════════════════ ${GREEN}${BOLD}COMPLETE${RESET} ══════════════════ ❏"
     sleep 1
 
-# reload
-clear
-exec zsh
-
+    # Reload
+    clear
+    exec zsh
 }
 
-# set default syntax theme
+
+# -----------------------------------------------------------------------------
+# Finalization & Hooks
+# -----------------------------------------------------------------------------
+
+# Set default syntax theme
 if command -v fast-theme >/dev/null 2>&1; then
     fast-theme zdharma >/dev/null 2>&1
 fi
 
 
- # ==========================================
- # USER CUSTOMIZATION HOOK
-  # ==========================================
-  if [[ -f "$HOME/.1llicit/user.zsh" ]]; then
+# User Customization Hook
+if [[ -f "$HOME/.1llicit/user.zsh" ]]; then
     source "$HOME/.1llicit/user.zsh"
 fi
-
 
 # LbsLightX
