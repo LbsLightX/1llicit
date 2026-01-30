@@ -2,7 +2,7 @@
 
 # 1llicit One-line Installer
 
-# colors & styles
+# Colors & Styles
 BOLD="\033[1m"
 DIM="\033[2m"
 UNDER="\033[4m"
@@ -13,7 +13,7 @@ WHITE="\033[1;97m"
 YELLOW="\033[1;33m"
 RESET="\033[0m"
 
-# turn off cursor.
+# Turn off cursor
 setterm -cursor off
 
 clear
@@ -40,32 +40,32 @@ echo ""
 echo -e "╔═══════════════ ${WHITE}${BOLD}${UNDER}INSTALLER${RESET} ════════════════ ✧"
 echo "╬"
 
-# mirrors
+# Mirrors
 printf "╬ ${CYAN}${BOLD}[*]${RESET} Syncing mirrors...\r"
 (echo 'n' | pkg update 2>/dev/null) | while read -r line; do :; done
 printf "\r\033[K"
 echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Mirrors synced."
 
-# update
+# Update
 printf "╬ ${CYAN}${BOLD}[*]${RESET} Updating system...\r"
 pkg upgrade -y -o Dpkg::Options::='--force-confnew' >/dev/null 2>&1
 printf "\r\033[K"
 echo -e "╬ ${GREEN}${BOLD}[+]${RESET} System updated."
 
-# packages
+# Packages
 printf "╬ ${CYAN}${BOLD}[*]${RESET} Installing packages...\r"
 pkg install -y curl git zsh man jq fzf which termux-api >/dev/null 2>&1
 printf "\r\033[K"
 echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Core packages installed."
 
-# bsudo
+# bSUDO
 printf "╬ ${CYAN}${BOLD}[*]${RESET} Installing bSUDO...\r"
 curl -fsSL 'https://github.com/agnostic-apollo/sudo/releases/latest/download/sudo' -o $PREFIX/bin/bsudo >/dev/null 2>&1
 chmod 700 "$PREFIX/bin/bsudo"
 printf "\r\033[K"
 echo -e "╬ ${GREEN}${BOLD}[+]${RESET} bSUDO installed."
 
-# storage
+# Storage
 if [ ! -d ~/storage ]; then
   printf "╬ ${CYAN}${BOLD}[*]${RESET} Requesting storage...\r"
   termux-setup-storage
@@ -74,28 +74,32 @@ if [ ! -d ~/storage ]; then
   echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Storage access granted."
 fi
 
-# backup
+# Backup
 BACKUP_PATH="$HOME/storage/shared/1llicit/backup/$(date +%Y_%m_%d_%H_%M)"
 mkdir -p "$BACKUP_PATH"
 printf "╬ ${CYAN}${BOLD}[*]${RESET} Backing up configs...\r"
-for i in "$HOME/.zshrc" "$HOME/.termux/font.ttf" "$HOME/.termux/colors.properties" "$HOME/.termux/termux.properties"; do
-  if [ -f $i ]; then
-    mv -f "$i" "$BACKUP_PATH/$(basename $i)"
+
+# Array of files to backup
+files_to_backup=("$HOME/.zshrc" "$HOME/.termux/font.ttf" "$HOME/.termux/colors.properties" "$HOME/.termux/termux.properties")
+
+for i in "${files_to_backup[@]}"; do
+  if [ -f "$i" ]; then
+    cp "$i" "$BACKUP_PATH/$(basename $i)" # Use cp (Copy) first
   fi
 done
 printf "\r\033[K"
 echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Configuration backed up."
 
-# clean slate
+# Clean Slate
 rm -f "$HOME/.zshrc"
 
-# shell
+# Shell
 if [[ "$SHELL" != *"zsh"* ]]; then
   chsh -s zsh
   echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Default shell set to Zsh."
 fi
 
-# core download
+# Core Download
 mkdir -p "$HOME/.1llicit"
 printf "╬ ${CYAN}${BOLD}[*]${RESET} Downloading Core...\r"
 if curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/dev/core.zsh >"$HOME/.1llicit/core.zsh"; then
@@ -107,7 +111,7 @@ else
   exit 1
 fi
 
-# generate config
+# Generate Config
 cat <<'EOF' >$HOME/.zshrc
 # Enable Powerlevel10k instant prompt.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
@@ -137,7 +141,7 @@ fi
 EOF
 echo -e "╬ ${GREEN}${BOLD}[+]${RESET} .zshrc generated."
 
-# assets
+# Assets
 REPO_URL="https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/defaults"
 
 if [ ! -f ~/.termux/font.ttf ]; then
@@ -155,7 +159,7 @@ if [ ! -f ~/.termux/termux.properties ]; then
   echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Custom keys configured."
 fi
 
-# reload
+# Reload
 termux-reload-settings
 
 # Pre-compile Zinit
@@ -163,16 +167,15 @@ printf "╬ ${CYAN}${BOLD}[*]${RESET} Optimizing ZSH environment (Wait, it may t
 zsh -ic "source $HOME/.zshrc; zinit compile --all" >/dev/null 2>&1
 printf "\r\033[K"
 echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Environment optimized."
-
 echo "╬"
 echo -e "╚═══════════════ ${GREEN}${BOLD}COMPLETE${RESET} ════════════════ ✧"
 echo ""
 sleep 2
 
-# restore cursor
+# Restore Cursor
 setterm -cursor on
 
-# unconditional reload
+# Unconditional Reload
 clear
 exec zsh -l
 
