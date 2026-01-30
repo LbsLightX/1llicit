@@ -26,9 +26,9 @@ read -n 1 -r REPLY
 [[ -n "$REPLY" ]] && echo ""
 
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo -e "╬ ${RED}${BOLD}[-]${RESET} Aborted."
-    echo -e "╚══════════════════════════════════════════ ◈"
-    exit 1
+  echo -e "╬ ${RED}${BOLD}[-]${RESET} Aborted."
+  echo -e "╚══════════════════════════════════════════ ◈"
+  exit 1
 fi
 
 echo "╬"
@@ -36,29 +36,35 @@ echo "╬"
 # Find Backup
 BACKUP_DIR="$HOME/storage/shared/1llicit/backup"
 if [ -d "$BACKUP_DIR" ]; then
-    # Find the newest directory inside backup folder
-    LATEST_BACKUP=$(ls -td "$BACKUP_DIR"/*/ 2>/dev/null | head -1)
-    
-    # Check if a .zshrc exists inside that newest backup folder
-    if [ -n "$LATEST_BACKUP" ] && [ -f "${LATEST_BACKUP}.zshrc" ]; then
-        echo -e "╬ ${CYAN}[*]${RESET} Found backup: ${BOLD}$(basename "$LATEST_BACKUP")${RESET}"
-        sleep 0.5
-        cp -f "${LATEST_BACKUP}.zshrc" "$HOME/.zshrc"
-        echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Restored shell configuration."
-    else
-        echo -e "╬ ${RED}${BOLD}[!]${RESET} No .zshrc backup found."
-        echo -e "╬     Hint: Check ${BOLD}${BACKUP_DIR/$HOME/\~}${RESET} manually."
-        
-        # Safety Check 
-        rm -f "$HOME/.zshrc"
-        echo "# Default .zshrc (Restored by 1llicit)" > "$HOME/.zshrc"
-        echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Reset .zshrc to defaults."
-    fi
-else
-    echo -e "╬ ${RED}${BOLD}[!]${RESET} No backup directory found."
+  # Find the newest directory inside backup folder
+  LATEST_BACKUP=$(ls -td "$BACKUP_DIR"/*/ 2>/dev/null | head -1)
+
+  # Check if a .zshrc exists inside that newest backup folder
+  if [ -n "$LATEST_BACKUP" ] && [ -f "${LATEST_BACKUP}.zshrc" ]; then
+    echo -e "╬ ${CYAN}[*]${RESET} Found backup: ${BOLD}$(basename "$LATEST_BACKUP")${RESET}"
+    sleep 0.5
+    cp -f "${LATEST_BACKUP}.zshrc" "$HOME/.zshrc"
+    [ -f "${LATEST_BACKUP}/font.ttf" ] && cp -f "${LATEST_BACKUP}/font.ttf" "$HOME/.termux/font.ttf"
+    [ -f "${LATEST_BACKUP}/colors.properties" ] && cp -f "${LATEST_BACKUP}/colors.properties" "$HOME/.termux/colors.properties"
+    [ -f "${LATEST_BACKUP}/termux.properties" ] && cp -f "${LATEST_BACKUP}/termux.properties" "$HOME/.termux/termux.properties"
+
+    # Apply Changes
+    termux-reload-settings
+    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Restored shell configuration."
+  else
+    echo -e "╬ ${RED}${BOLD}[!]${RESET} No .zshrc backup found."
+    echo -e "╬     Hint: Check ${BOLD}${BACKUP_DIR/$HOME/\~}${RESET} manually."
+
+    # Safety Check
     rm -f "$HOME/.zshrc"
-    echo "# Default .zshrc (Restored by 1llicit)" > "$HOME/.zshrc"
+    echo "# Default .zshrc (Restored by 1llicit)" >"$HOME/.zshrc"
     echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Reset .zshrc to defaults."
+  fi
+else
+  echo -e "╬ ${RED}${BOLD}[!]${RESET} No backup directory found."
+  rm -f "$HOME/.zshrc"
+  echo "# Default .zshrc (Restored by 1llicit)" >"$HOME/.zshrc"
+  echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Reset .zshrc to defaults."
 fi
 
 # Deep Clean (Merged Storage + Plugins)
@@ -72,27 +78,27 @@ read -n 1 -r REPLY
 rm -rf "$HOME/.1llicit"
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    # Remove Plugin Data
-    rm -rf "$HOME/.local/share/zinit"
-    rm -rf "$HOME/.cache/p10k"*
-    
-    # Remove Binaries
-    rm -f "$PREFIX/bin/bsudo"
-    rm -f "$PREFIX/bin/1llicit"
-    
-    # Remove Storage Data (Only if exists)
-    if [ -d "$HOME/storage/shared/1llicit" ]; then
-        rm -rf "$HOME/storage/shared/1llicit"
-    fi
+  # Remove Plugin Data
+  rm -rf "$HOME/.local/share/zinit"
+  rm -rf "$HOME/.cache/p10k"*
 
-    # Remove Termux Styling Configs
-    rm -f "$HOME/.termux/colors.properties"
-    rm -f "$HOME/.termux/font.ttf"
-    rm -f "$HOME/.termux/termux.properties"
-    
-    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Deep cleanup complete."
+  # Remove Binaries
+  rm -f "$PREFIX/bin/bsudo"
+  rm -f "$PREFIX/bin/1llicit"
+
+  # Remove Storage Data (Only if exists)
+  if [ -d "$HOME/storage/shared/1llicit" ]; then
+    rm -rf "$HOME/storage/shared/1llicit"
+  fi
+
+  # Remove Termux Styling Configs
+  rm -f "$HOME/.termux/colors.properties"
+  rm -f "$HOME/.termux/font.ttf"
+  rm -f "$HOME/.termux/termux.properties"
+
+  echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Deep cleanup complete."
 else
-    echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Removed core files only."
+  echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Removed core files only."
 fi
 
 # Auto-Reset Shell
