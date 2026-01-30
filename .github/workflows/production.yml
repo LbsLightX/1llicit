@@ -1,0 +1,27 @@
+name: "🌟 Production Defense"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  prod-audit:
+    name: "👀 Critical Audit"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: "ShellCheck"
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: '.'
+          ignore: core.zsh
+          severity: error
+      - name: "Security Scan"
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
