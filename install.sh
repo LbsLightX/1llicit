@@ -102,7 +102,7 @@ fi
 # Core Download
 mkdir -p "$HOME/.1llicit"
 printf "╬ ${CYAN}${BOLD}[*]${RESET} Downloading Core...\r"
-if curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/dev/core.zsh >"$HOME/.1llicit/core.zsh"; then
+if curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh >"$HOME/.1llicit/core.zsh"; then
   printf "\r\033[K"
   echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Core logic installed."
 else
