@@ -71,8 +71,10 @@ zstyle ':completion:*:git-checkout:*' sort false
 # Set group order
 zstyle ':completion:*:descriptions' format '[%d]'
 
-# Smart Preview: Use eza if available, fallback to ls
-if command -v eza >/dev/null; then
+# Smart Preview: Use eza / lsd if available, fallback to ls
+if command -v lsd >/dev/null; then
+    zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd -1 --color=always --icon=always $realpath'
+elif command -v eza >/dev/null; then
     zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
 else
     zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color=always -1 --group-directories-first $realpath'
