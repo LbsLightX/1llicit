@@ -1,0 +1,31 @@
+name: "Dev Lab Audit"
+
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
+
+permissions:
+  contents: read
+
+jobs:
+  dev-test:
+    name: "Experiment Check"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "ShellCheck"
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: '.'
+          ignore_names: core.zsh
+          severity: error
+
+      - name: "Security Scan"
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
