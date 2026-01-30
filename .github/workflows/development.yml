@@ -19,7 +19,7 @@ jobs:
         uses: ludeeus/action-shellcheck@master
         with:
           scandir: '.'
-          ignore: core.zsh
+          ignore_names: core.zsh
           severity: error
       - name: "Security Scan"
         uses: gitleaks/gitleaks-action@v2
