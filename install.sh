@@ -144,20 +144,14 @@ echo -e "╬ ${GREEN}${BOLD}[+]${RESET} .zshrc generated."
 # Assets
 REPO_URL="https://raw.githubusercontent.com/LbsLightX/lbs-archives/main/1llicit/defaults"
 
-if [ ! -f ~/.termux/font.ttf ]; then
   curl -fsSL -o ~/.termux/font.ttf "$REPO_URL/font.ttf" >/dev/null 2>&1
   echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Default font installed."
-fi
 
-if [ ! -f ~/.termux/colors.properties ]; then
   curl -fsSL -o ~/.termux/colors.properties "$REPO_URL/colors.properties" >/dev/null 2>&1
   echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Default theme set."
-fi
 
-if [ ! -f ~/.termux/termux.properties ]; then
   curl -fsSL -o ~/.termux/termux.properties "$REPO_URL/termux.properties" >/dev/null 2>&1
   echo -e "╬ ${GREEN}${BOLD}[+]${RESET} Custom keys configured."
-fi
 
 # Reload
 termux-reload-settings
