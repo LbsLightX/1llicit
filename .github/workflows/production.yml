@@ -1,4 +1,4 @@
-name: "🌟 Production Defense"
+name: "Production Defense"
 
 on:
   push:
@@ -11,10 +11,12 @@ permissions:
 
 jobs:
   prod-audit:
-    name: "👀 Critical Audit"
+    name: "Critical Audit"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+        fetch-depth: 0
       - name: "ShellCheck"
         uses: ludeeus/action-shellcheck@master
         with:

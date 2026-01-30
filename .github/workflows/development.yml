@@ -1,4 +1,4 @@
-name: "🧪 Dev Lab Audit"
+name: "Dev Lab Audit"
 
 on:
   push:
@@ -11,10 +11,12 @@ permissions:
 
 jobs:
   dev-test:
-    name: "🔎 Experiment Check"
+    name: "Experiment Check"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+        fetch-depth: 0
       - name: "ShellCheck"
         uses: ludeeus/action-shellcheck@master
         with:
