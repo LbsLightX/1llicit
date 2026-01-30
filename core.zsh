@@ -464,7 +464,7 @@ function 1ll-update() {
     
     printf "╬ ${CYAN}[*]${RESET} Updating 1llicit Core...\r"
     local temp_core="$HOME/.1llicit/core.zsh.tmp"
-    if curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/dev/core.zsh > "$temp_core"; then
+    if curl -fsSL https://raw.githubusercontent.com/LbsLightX/1llicit/main/core.zsh > "$temp_core"; then
         mv "$temp_core" "$HOME/.1llicit/core.zsh"
         printf "\r\033[K"
         echo -e "╬ ${GREEN}•${RESET} 1llicit Core updated.       [ ${GREEN}OK${RESET} ]"
