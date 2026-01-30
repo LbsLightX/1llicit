@@ -16,13 +16,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-        fetch-depth: 0
+          fetch-depth: 0
+
       - name: "ShellCheck"
         uses: ludeeus/action-shellcheck@master
         with:
           scandir: '.'
           ignore_names: core.zsh
           severity: error
+
       - name: "Security Scan"
         uses: gitleaks/gitleaks-action@v2
         env:
