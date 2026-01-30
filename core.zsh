@@ -53,12 +53,26 @@ zinit ice depth=1 compile'(pure|async).zsh'; zinit light romkatv/powerlevel10k
 
 # -----------------------------------------------------------------------------
 
+
 zinit light Aloxaf/fzf-tab
 zinit light hlissner/zsh-autopair
-zinit wait lucid for wfxr/forgit
 zinit light zdharma-continuum/zui
 zinit light zdharma-continuum/zinit-console
 zinit light djui/alias-tips
+
+zinit wait lucid for \
+   wfxr/forgit \
+   ChrisPenner/copy-pasta \
+   Automaat/zsh-clean-history \
+   reegnz/jq-zsh-plugin \
+   Hoid/line-bisect \
+   nyoungstudios/zsh-history-on-success \
+   Thearas/zsh-watch \
+   championswimmer/zsh-llm-assist \
+   p1r473/zsh-hist-delete-fzf \
+   zshzoo/magic-enter \
+   NorthIsMirror/zsh-startify
+
 
 # -----------------------------------------------------------------------------
 # 4. FZF Configuration
