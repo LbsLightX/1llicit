@@ -60,18 +60,15 @@ zinit light zdharma-continuum/zui
 zinit light zdharma-continuum/zinit-console
 zinit light djui/alias-tips
 
+zinit wait lucid atload"zsh-startify" for NorthIsMirror/zsh-startify
+
 zinit wait lucid for \
    wfxr/forgit \
-   ChrisPenner/copy-pasta \
    Automaat/zsh-clean-history \
    reegnz/jq-zsh-plugin \
-   Hoid/line-bisect \
    nyoungstudios/zsh-history-on-success \
    Thearas/zsh-watch \
-   championswimmer/zsh-llm-assist \
-   p1r473/zsh-hist-delete-fzf \
-   zshzoo/magic-enter \
-   NorthIsMirror/zsh-startify
+   championswimmer/zsh-llm-assist 
 
 
 # -----------------------------------------------------------------------------
