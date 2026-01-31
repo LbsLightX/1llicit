@@ -62,21 +62,19 @@ zinit light djui/alias-tips
 # 5. FZF & Completion Configuration
 # -----------------------------------------------------------------------------
 
-# [CRITICAL Load color module so %F{cyan} works
-zmodload zsh/complist
-
 zinit wait lucid is-snippet for \
     $PREFIX/share/fzf/completion.zsh \
     $PREFIX/share/fzf/key-bindings.zsh
 
 # FZF-TAB Settings
-# Disable 'sort' (let FZF handle sorting)
 zstyle ':completion:*:git-checkout:*' sort false
 
-# [STYLE] Cyan headers to match 1llicit theme
-zstyle ':completion:*:descriptions' format '── %F{cyan}%d%f ──'
+# [THE FIX] Use ANSI codes (\033[36m) instead of Zsh codes (%F)
+# \033[36m = Cyan
+# \033[0m  = Reset
+zstyle ':completion:*:descriptions' format '── \033[36m%d\033[0m ──'
 
-# Smart Preview: Use eza / lsd if available, fallback to ls
+# Smart Preview
 if command -v lsd >/dev/null; then
     zstyle ':fzf-tab:complete:cd:*' fzf-preview 'lsd -1 --color=always --icon=always $realpath'
 elif command -v eza >/dev/null; then
@@ -85,7 +83,6 @@ else
     zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color=always -1 --group-directories-first $realpath'
 fi
 
-# Custom fzf flags (Match your 1llicit style)
 zstyle ':fzf-tab:*' fzf-flags --height=15 --layout=reverse --prompt="╬ Select ⫸ "
 
 
@@ -322,7 +319,6 @@ function 1ll-fonts() {
             
             if [[ -z "$coll_choice" ]]; then
                 echo -e "╬ ${RED}[-]${RESET} Cancelled."
-                echo "╬"
                 echo -e "╚══════════════════════════════════════════ ◈"
                 return
             fi
