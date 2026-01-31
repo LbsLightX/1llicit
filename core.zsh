@@ -59,19 +59,22 @@ zinit light djui/alias-tips
 
 
 # -----------------------------------------------------------------------------
-# 5. FZF Configuration
+# 5. FZF & Completion Configuration
 # -----------------------------------------------------------------------------
+
+# [CRITICAL Load color module so %F{cyan} works
+zmodload zsh/complist
 
 zinit wait lucid is-snippet for \
     $PREFIX/share/fzf/completion.zsh \
     $PREFIX/share/fzf/key-bindings.zsh
 
-# FZF-TAB Configuration
+# FZF-TAB Settings
 # Disable 'sort' (let FZF handle sorting)
 zstyle ':completion:*:git-checkout:*' sort false
 
-# Set group order
-zstyle ':completion:*:descriptions' format '── %F{yellow}%d%f ──'
+# [STYLE] Cyan headers to match 1llicit theme
+zstyle ':completion:*:descriptions' format '── %F{cyan}%d%f ──'
 
 # Smart Preview: Use eza / lsd if available, fallback to ls
 if command -v lsd >/dev/null; then
@@ -274,7 +277,8 @@ function 1ll-fonts() {
                 printf "╬ ${CYAN}[*]${RESET} Fetching list (v3.4.0)... please wait.\r"
                 
                 local nf_selection=$(curl -fSsL "https://api.github.com/repos/ryanoasis/nerd-fonts/git/trees/v3.4.0?recursive=1" | \
-                    jq -r '.tree[] | select(.path|test("\\.(ttf|otf)$"; "i")) | select(.path|contains("Windows Compatible")|not) | select(.path|contains("Desktop")|not) | .url="https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v3.4.0/" + .path | (.path | split("/") | last) + " | " + .url' | \
+                    jq -r --arg base "$BASE_URL" '.tree[] | .path | select(test("\\.(ttf|otf)$"; "i") and 
+                    (test("Windows|Desktop|Propo"; "i") | not)) | "\(split("/")[-1]) | \($base)\(.)"' | \
                     fzf --delimiter=" | " --with-nth=1 --height=15 --layout=reverse --header=$'[ Ctrl-c to Cancel ] | [ Enter to Apply ] \n\033[1;31m[!] ONLY SELECT .TTF OR .OTF FILES\033[0m' --prompt="╬ Nerd fonts ⫸ ")
                 
                 printf "\r\033[K"
@@ -316,7 +320,12 @@ function 1ll-fonts() {
             local collections=("SFMono Ligaturized" "Maple Mono NF")
             local coll_choice=$(printf "%s\n" "${collections[@]}" | fzf --prompt="╬ Select Family ⫸ " --height=10 --layout=reverse --header="[ Ctrl-c to Cancel ] | [ Enter to Apply ]")
             
-            if [[ -z "$coll_choice" ]]; then echo -e "╬ ${RED}[-]${RESET} Cancelled."; return; fi
+            if [[ -z "$coll_choice" ]]; then
+                echo -e "╬ ${RED}[-]${RESET} Cancelled."
+                echo "╬"
+                echo -e "╚══════════════════════════════════════════ ◈"
+                return
+            fi
             
             local folder=""
             case "$coll_choice" in
