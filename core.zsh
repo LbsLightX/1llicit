@@ -92,7 +92,11 @@ zstyle ':fzf-tab:*' fzf-flags --height=15 --layout=reverse --prompt="╬ Select 
 # Magic Backspace: cd .. on empty line (Stops at HOME)
 function magic-backspace() {
     if [[ -z "$BUFFER" ]]; then
-        if[[ "$PWD" == "$HOME" ]] || [[ "$PWD" == "/storage/emulated/0" ]]; then return; fi
+        # FIX: Added space after 'if'
+        if [[ "$PWD" == "$HOME" ]] || [[ "$PWD" == "/storage/emulated/0" ]]; then 
+            return
+        fi
+        
         cd ..
         zle reset-prompt
     else
