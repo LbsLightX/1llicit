@@ -69,10 +69,10 @@ zinit wait lucid is-snippet for \
 # FZF-TAB Settings
 zstyle ':completion:*:git-checkout:*' sort false
 
-# [THE FIX] Use ANSI codes (\033[36m) instead of Zsh codes (%F)
-# \033[36m = Cyan
-# \033[0m  = Reset
-zstyle ':completion:*:descriptions' format '── \033[36m%d\033[0m ──'
+# [THE REAL FIX]
+# 1. We use $'... ' (Magic Quotes) so \e becomes a real Escape code.
+# 2. \e[36m = Cyan, \e[0m = Reset
+zstyle ':completion:*:descriptions' format $'\e[36m── %d ──\e[0m'
 
 # Smart Preview
 if command -v lsd >/dev/null; then
@@ -83,7 +83,8 @@ else
     zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color=always -1 --group-directories-first $realpath'
 fi
 
-zstyle ':fzf-tab:*' fzf-flags --height=15 --layout=reverse --prompt="╬ Select ⫸ "
+# [CRITICAL] Added '--ansi' so FZF actually renders the colors
+zstyle ':fzf-tab:*' fzf-flags --ansi --height=15 --layout=reverse --prompt="╬ Select ⫸ "
 
 
 # -----------------------------------------------------------------------------
